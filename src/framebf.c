@@ -1,6 +1,7 @@
 // ----------------------------------- framebf.c -------------------------------------
 #include "mbox.h"
 #include "uart.h"
+#include "fontAutolova.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -16,7 +17,6 @@ unsigned int width, height, pitch;
  * (declare as pointer of unsigned char to access each byte) */
 unsigned char* fb;
 
-
 /**
  * Set screen resolution to 1024x768
  */
@@ -27,10 +27,11 @@ void framebf_init() {
     mBuf[2] = MBOX_TAG_SETPHYWH; //Set physical width-height
     mBuf[3] = 8; // Value size in bytes
     mBuf[4] = 0; // REQUEST CODE = 0
-    mBuf[5] = 500; // Value(width)
-    // mBuf[5] = 1024; // Value(width)
-    // mBuf[6] = 768; // Value(height)
-    mBuf[6] = 500; // Value(height)
+
+    mBuf[5] = 1024; // Value(width)
+    mBuf[6] = 768; // Value(height)
+    // mBuf[5] = 500; // Value(width)
+    // mBuf[6] = 500; // Value(height)
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
@@ -104,10 +105,6 @@ void framebf_init() {
     }
 }
 
-
-
-
-
 void drawPixelARGB32(int x, int y, unsigned int attr) {
     int offs = (y * pitch) + (COLOR_DEPTH / 8 * x);
 
@@ -122,7 +119,6 @@ void drawPixelARGB32(int x, int y, unsigned int attr) {
     *((unsigned int*)(fb + offs)) = attr;
 }
 
-
 void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill) {
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++) {
@@ -133,3 +129,20 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
         }
 }
 
+void drawChar(char ch, int x, int y, unsigned int colorCode) {
+    int pixCount = 0;
+    // Nest loop run through 50x50 pixel area
+    for (int i = y; i < y+50;i++){
+        for(int j = x; j < x+50; j++){
+            if(fontData[0][pixCount] == 0x00000000)
+            {
+                drawPixelARGB32(j,i,colorCode);
+                pixCount++;
+            }
+            else {
+                pixCount++;
+            }
+        }
+    }
+    
+}

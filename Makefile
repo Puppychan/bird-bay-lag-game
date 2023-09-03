@@ -7,7 +7,8 @@ OFILES = $(CFILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 
 # Add -I ./gcclib to GCCFLAGS: to include all necessary header files
 GCCFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -I ./gcclib
-LDFLAGS = -nostdlib -nostartfiles
+#LDFLAGS = -nostdlib -nostartfiles
+LDFLAGS = -nostdlib
 
 all: clean kernel8.img
 
@@ -23,12 +24,12 @@ kernel8.img: $(BUILD_DIR)/start.o $(OFILES)
 
 clean:
 # Window: remove comment this line
-# del *.img .\object\kernel8.elf .\object\*.o
-	rm -f *.img ./object/kernel8.elf ./object/*.o
+	del *.img .\object\kernel8.elf .\object\*.o
+#rm -f *.img ./object/kernel8.elf ./object/*.o
 
 run:
 # Window: remove comment this line
-# qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial null -serial stdio
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial null -serial stdio
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial null -serial stdio
+#qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial null -serial stdio
 
 test: all run
