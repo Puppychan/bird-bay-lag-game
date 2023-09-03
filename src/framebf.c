@@ -129,20 +129,16 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
         }
 }
 
-void drawChar(char ch, int x, int y, unsigned int colorCode) {
-    int pixCount = 0;
-    // Nest loop run through 50x50 pixel area
-    for (int i = y; i < y+50;i++){
-        for(int j = x; j < x+50; j++){
-            if(fontData[0][pixCount] == 0x00000000)
+void drawLetter(char ch, int x, int y, unsigned int colorCode) {
+    int indexCount = 0;
+    //Nest loop run through 40x40 pixel area
+    for (int i = y; i < y + 40;i++){
+        for(int j = x; j < x + 40; j++) {
+            if(fontData[(unsigned int)ch][indexCount] == 0x00000000)
             {
                 drawPixelARGB32(j,i,colorCode);
-                pixCount++;
-            }
-            else {
-                pixCount++;
-            }
+            } 
+            indexCount++;
         }
-    }
-    
+    } 
 }
