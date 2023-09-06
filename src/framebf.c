@@ -28,18 +28,15 @@ void framebf_init() {
     mBuf[3] = 8; // Value size in bytes
     mBuf[4] = 0; // REQUEST CODE = 0
 
+    // ratio: 16/10
     mBuf[5] = 1024; // Value(width)
-    mBuf[6] = 768; // Value(height)
-    // mBuf[5] = 500; // Value(width)
-    // mBuf[6] = 500; // Value(height)
+    mBuf[6] = 640; // Value(height)
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
-    mBuf[10] = 1024;
-    mBuf[11] = 768;
-    // mBuf[10] = 500;
-    // mBuf[11] = 500;
+    mBuf[10] = 1080;
+    mBuf[11] = 675;
 
     mBuf[12] = MBOX_TAG_SETVIRTOFF; //Set virtual offset
     mBuf[13] = 8;
@@ -141,4 +138,14 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
             indexCount++;
         }
     } 
+}
+
+void drawImage(const unsigned long *bitmap, int width, int height, int x, int y) {
+    int index = 0;
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            drawPixelARGB32(w, h, bitmap[index]);
+            index++;
+        }
+    }
 }
