@@ -1,0 +1,4 @@
+# Ignore files in object folder in gitignore
+object/
+
+kernel8.img
