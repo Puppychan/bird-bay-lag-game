@@ -1,11 +1,12 @@
 // ----------------------------------- framebf.c -------------------------------------
+#include "framebf.h"
 #include "mbox.h"
 #include "uart.h"
 #include "fontAutolova.h"
+#include "mylib.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
-// #define COLOR_DEPTH 32
 
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
 #define PIXEL_ORDER 0
@@ -20,6 +21,7 @@ unsigned char* fb;
 /**
  * Set screen resolution to 1024x768
  */
+
 void framebf_init() {
     mBuf[0] = 35 * 4; // Length of message in bytes
     mBuf[1] = MBOX_REQUEST;
@@ -129,18 +131,17 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
 void drawLetter(char ch, int x, int y, unsigned int colorCode) {
     int indexCount = 0;
     //Nest loop run through 40x40 pixel area
-    for (int i = y; i < y + 40;i++){
-        for(int j = x; j < x + 40; j++) {
-            if(fontData[(unsigned int)ch][indexCount] == 0x00000000)
-            {
-                drawPixelARGB32(j,i,colorCode);
-            } 
+    for (int i = y; i < y + 40;i++) {
+        for (int j = x; j < x + 40; j++) {
+            if (fontData[(unsigned int)ch][indexCount] == 0x00000000) {
+                drawPixelARGB32(j, i, colorCode);
+            }
             indexCount++;
         }
-    } 
+    }
 }
 
-void drawImage(const unsigned long *bitmap, int width, int height, int x, int y) {
+void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
     int index = 0;
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
@@ -149,3 +150,33 @@ void drawImage(const unsigned long *bitmap, int width, int height, int x, int y)
         }
     }
 }
+void draw_video(const unsigned long** frames, int num_frames, int width, int height) {
+    for (int i = 0; i < num_frames; i++) {
+        drawImage(frames[i], width, height, 0, 0);
+        delay(FRAME_DURATION);  // assuming you have a delay function
+    }
+    // draw_video(video_frames, sizeof(video_frames) / sizeof(video_frames[0]), frame_width, frame_height);
+
+}
+
+void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
+    // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
+
+    for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
+        // Calculate new x position; simple linear movement for demonstration
+        // int x = (i * 5) % width;  // Move 5 pixels per frame; adjust as desired
+        int x = (i % (width / 5)) * 5; // Reduces the chance of overflow
+
+
+        if (x == width) {
+            // Clear screen or background for each frame
+            drawRectARGB32(0, 0, width, height, 0xFF000000, 1); // Assuming black background; adjust as needed
+        }
+
+        drawImage(bitmap, img_width, img_height, x, 0);
+
+        delay(FRAME_DURATION);
+    }
+
+}
+

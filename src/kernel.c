@@ -4,8 +4,14 @@
 #include "mylib.h"
 #include "background.h"
 
+static int screenHeight = 675;
+static int screenWidth = 1080;
+
 void display_image() {
-	drawImage(background_sky, 1080, 675, 0, 0);
+	drawImage(background_sky, screenWidth, screenHeight, 0, 0);
+}
+void display_video() {
+	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
 }
 
 /* CLI read and handle actions */
@@ -102,7 +108,8 @@ void main()
 	// Display group name
 	// printName();
 
-	display_image();
+	// display_image();
+	display_video();
 
 
 	// echo everything back
