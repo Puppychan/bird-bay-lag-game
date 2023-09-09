@@ -161,32 +161,20 @@ void draw_video(const unsigned long** frames, int num_frames, int width, int hei
 
 void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
     // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
-
-    // for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
-    //     // Calculate new x position; simple linear movement for demonstration
-    //     // int x = (i * 5) % width;  // Move 5 pixels per frame; adjust as desired
-    //     int x = (i % (width / 5)) * 5; // Reduces the chance of overflow
-
-
-    //     if (x == width) {
-    //         // Clear screen or background for each frame
-    //         drawRectARGB32(0, 0, width, height, 0xFF000000, 1); // Assuming black background; adjust as needed
-    //     }
-
-    //     drawImage(bitmap, img_width, img_height, x, 0);
-
-    //     delay(FRAME_DURATION);
-    // }
     int prev_x = 0; // Store the previous X value for efficient redrawing
 
     for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
+        // calculate new x position
+        // simple linear movement for demonstration
         int x = i % (width - img_width);
 
-        drawImage(bitmap, img_width, img_height, x, 0);
-
-        if (x != prev_x && (x > prev_x + img_width || prev_x > x + img_width)) {
-            // Clear the previous image portion only if it doesn't overlap with the current image
-            drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1); // Assuming black background; adjust as needed
+        if (x != prev_x) {
+            if (x > prev_x + img_width || prev_x > x + img_width) {
+                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
+            }
+            else {
+                drawImage(bitmap, img_width, img_height, x, 0);
+            }
         }
 
         delay(FRAME_DURATION);
@@ -195,4 +183,23 @@ void move_image(const unsigned long* bitmap, int img_width, int img_height, int 
     }
 
 }
+void infinite_move_image(const unsigned long* bitmap, int img_width, int img_height, int screen_width, int screen_height) {
+    int x = 0;
 
+    while (1) { // Infinite loop
+        drawImage(bitmap, img_width, img_height, x, 0);
+
+        // Clear the previous image portion if it's completely off the screen
+        if (x >= img_width) {
+            drawRectARGB32(x - img_width, 0, x, screen_height, 0xFF000000, 1); // Assuming black background; adjust as needed
+        }
+
+        delay(FRAME_DURATION);
+
+        x++;
+
+        if (x == screen_width) {
+            x = -img_width + 1; // Reset the image to start just off the left edge of the screen
+        }
+    }
+}
