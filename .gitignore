@@ -1,6 +1,5 @@
 # Ignore files in object folder in gitignore except for kernel8.elf
 object/*
-!object/data.o
 
 kernel8.img
 
