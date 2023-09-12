@@ -12,17 +12,18 @@ void display_image() {
 	drawImage(background_sky, screenWidth, screenHeight, 0, 0);
 }
 void display_video() {
-	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	drawVideo(first_video_array, 89, 480, 636);
+	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
 }
-
+void display_moving_background() {
+	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
+}
 /* CLI read and handle actions */
 void cli() {
 	char c = uart_getc(); // read each char
-	
+
 	if (c == 'w') { // 'w' pressed: scroll up image
-	}	
+	}
 	else if (c == 's') { // 's' pressed: scroll down image
 	}
 	else if (c == 'a') { // slide to previous image
@@ -97,9 +98,8 @@ void printName() {
 	drawLetter('h', 720, 200, 0x00FF7F00);
 }
 
-void main()
-{
-    // set up serial console
+void main() {
+	// set up serial console
 	uart_init();
 
 	// say hello
@@ -112,11 +112,12 @@ void main()
 	// printName();
 
 	// display_image();
-	display_video();
+	// display_video();
+	display_moving_background();
 
 
 	// echo everything back
-	while(1) {
+	while (1) {
 		cli();
 	}
 }

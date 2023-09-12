@@ -151,56 +151,32 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
     }
 }
 
-// void drawVideo(const unsigned long* frames, int num_frames, int img_width, int img_height, int width, int height) {
-//     // // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
-//     // int prev_x = 0; // Store the previous X value for efficient redrawing
-//     // // optimize to reduce calculation inside loops
-//     // int max_x = width - img_width;
-
-//     // for (int i = 0; i < num_frames; i++) {
-//     //     // calculate new x position
-//     //     // simple linear movement for demonstration
-//     //     int x = max_x;
-
-//     //     drawImage(frames[i], img_width, img_height, x, 0);
-
-//     //     delay(FRAME_DURATION);
-//     //     prev_x = x;
-//     // }
-//         // Assuming you have a function to display an image from binary data
-//     // void displayImage(const unsigned char* imageData, unsigned int length);
-//     int IMAGE_SIZE = img_width * img_height;
-//     // display images in a loop
-//     for (int i = 0; i < num_frames; i++) {
-//         drawImage(frames + IMAGE_SIZE * i, img_width, img_height, 0, 0);
-//         delay(FRAME_DURATION);
-//     }
-// }
-
-
-void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height) {
-    // for (int i = 0; i < num_frames; i++) {
-    //     drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
-    //     delay(FRAME_DURATION);  // Delay for the next frame
-    // }
+void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height, int is_infinite) {
+    // is_infinite: if users want to loop the video - 1, if users dont want - 0
+    // define index for looping frames
     int i = 0;
     while (1) {
+        // if reaching final frame
         if (i == num_frames) {
-            i = 0;
+            if (is_infinite == 1) {
+                i = 0;
+            } else {
+                return;
+            }
         }
+        // draw image
         drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
-        delay(FRAME_DURATION);  // Delay for the next frame
+        delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
         i ++;
     }
 }
 
 void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
-    // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
     int prev_x = 0; // Store the previous X value for efficient redrawing
     // optimize to reduce calculation inside loops
     int max_x = width - img_width;
 
-    for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
+    for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION_MOVING; i+=50) {
         // calculate new x position
         // simple linear movement for demonstration
         int x = i % max_x;
@@ -214,7 +190,7 @@ void move_image(const unsigned long* bitmap, int img_width, int img_height, int 
             }
         }
 
-        delay(FRAME_DURATION);
+        delay(FRAME_DURATION_MOVING);
         prev_x = x;
     }
 }
@@ -235,7 +211,7 @@ void infinite_move_image(const unsigned long* bitmap, int img_width, int img_hei
             }
         }
 
-        delay(FRAME_DURATION);
+        delay(FRAME_DURATION_MOVING);
         prev_x = x;
         x = (x + 1) % (screen_width + img_width); // Ensure x remains within bounds 
 

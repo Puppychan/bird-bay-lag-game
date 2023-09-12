@@ -5,6 +5,7 @@
 #include "firstVideo3.h"
 #include "firstVideo4.h"
 #include "firstVideo5.h"
+#include "player.h"
 
 // first video
 // extern const int first_video_array_LEN;
@@ -107,3 +108,11 @@ const unsigned long* first_video_array[89] = {
 extern const unsigned long background_sky[];
 extern const int epd_bitmap_allArray_LEN;
 extern const unsigned long* epd_bitmap_allArray[];
+
+// player
+// Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 4176)
+extern const unsigned long bird_player[];
+const int bird_allArray_LEN = 1;
+const unsigned long* bird_allArray[1] = {
+	bird_player
+};
