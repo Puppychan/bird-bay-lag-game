@@ -9,12 +9,11 @@ static int screenHeight = 675;
 static int screenWidth = 1080;
 
 void display_image() {
-	// drawImage(background_sky, screenWidth, screenHeight, 0, 0);
+	drawImage(background_sky, screenWidth, screenHeight, 0, 0);
 }
 void display_video() {
 	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	// drawVideo(assets_first_video_bin, assets_first_video_bin_len, 480, 636, screenWidth, screenHeight);
 	drawVideo(first_video_array, 89, 480, 636);
 }
 

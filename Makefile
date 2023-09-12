@@ -1,26 +1,28 @@
 #--------------------------------------Makefile-------------------------------------
-BUILD_DIR = ./object
-SRC_DIR = ./src
-DATA_DIR = ./data
+BUILD_DIR := ./object
+SRC_DIR := ./src
+DATA_DIR := ./data
 
-CFILES = $(wildcard $(SRC_DIR)/*.c)
-OFILES = $(CFILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o) $(BUILD_DIR)/data.o
+CFILES := $(wildcard $(SRC_DIR)/*.c)
+OFILES := $(CFILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o) $(BUILD_DIR)/data.o
 
-# Add -I ./gcclib to GCCFLAGS: to include all necessary header files
-GCCFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -I ./gcclib
-LDFLAGS = -nostdlib
+GCCFLAGS := -Wall -O2 -ffreestanding -nostdinc -nostdlib -I ./gcclib
+LDFLAGS := -nostdlib
 
 all: kernel8.img
 
+# Ensure necessary directories exist:
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-$(BUILD_DIR)/data.o: $(DATA_DIR)/data.c
+$(BUILD_DIR)/data.o: $(DATA_DIR)/data.c | $(BUILD_DIR)
 	echo "Compiling data.c..."
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/start.o: $(SRC_DIR)/start.S
+$(BUILD_DIR)/start.o: $(SRC_DIR)/start.S | $(BUILD_DIR)
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
 kernel8.img: $(BUILD_DIR)/start.o $(OFILES)
@@ -31,7 +33,7 @@ kernel8.img: $(BUILD_DIR)/start.o $(OFILES)
 clean:
 ifeq ($(OS),Windows_NT)
 	del /Q *.img .\object\kernel8.elf
-	for %%f in (.object\*.o) do if not "%%f"=="object\data.o" del /Q "%%f"
+	for %%f in (object\*.o) do if not "%%f"=="object\data.o" del /Q "%%f"
 else
 	rm -f *.img $(BUILD_DIR)/kernel8.elf
 	find $(BUILD_DIR) -type f ! -name 'data.o' -delete
