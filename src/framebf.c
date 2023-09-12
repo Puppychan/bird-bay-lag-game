@@ -1,10 +1,12 @@
 // ----------------------------------- framebf.c -------------------------------------
+#include "framebf.h"
 #include "mbox.h"
 #include "uart.h"
+#include "fontAutolova.h"
+#include "mylib.h"
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
-// #define COLOR_DEPTH 32
 
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
 #define PIXEL_ORDER 0
@@ -16,10 +18,10 @@ unsigned int width, height, pitch;
  * (declare as pointer of unsigned char to access each byte) */
 unsigned char* fb;
 
-
 /**
  * Set screen resolution to 1024x768
  */
+
 void framebf_init() {
     mBuf[0] = 35 * 4; // Length of message in bytes
     mBuf[1] = MBOX_REQUEST;
@@ -27,18 +29,16 @@ void framebf_init() {
     mBuf[2] = MBOX_TAG_SETPHYWH; //Set physical width-height
     mBuf[3] = 8; // Value size in bytes
     mBuf[4] = 0; // REQUEST CODE = 0
-    mBuf[5] = 500; // Value(width)
-    // mBuf[5] = 1024; // Value(width)
-    // mBuf[6] = 768; // Value(height)
-    mBuf[6] = 500; // Value(height)
+
+    // ratio: 16/10
+    mBuf[5] = 1024; // Value(width)
+    mBuf[6] = 640; // Value(height)
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
-    mBuf[10] = 1024;
-    mBuf[11] = 768;
-    // mBuf[10] = 500;
-    // mBuf[11] = 500;
+    mBuf[10] = 1080;
+    mBuf[11] = 675;
 
     mBuf[12] = MBOX_TAG_SETVIRTOFF; //Set virtual offset
     mBuf[13] = 8;
@@ -104,10 +104,6 @@ void framebf_init() {
     }
 }
 
-
-
-
-
 void drawPixelARGB32(int x, int y, unsigned int attr) {
     int offs = (y * pitch) + (COLOR_DEPTH / 8 * x);
 
@@ -122,7 +118,6 @@ void drawPixelARGB32(int x, int y, unsigned int attr) {
     *((unsigned int*)(fb + offs)) = attr;
 }
 
-
 void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill) {
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++) {
@@ -133,3 +128,119 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
         }
 }
 
+void drawLetter(char ch, int x, int y, unsigned int colorCode) {
+    int indexCount = 0;
+    //Nest loop run through 40x40 pixel area
+    for (int i = y; i < y + 40;i++) {
+        for (int j = x; j < x + 40; j++) {
+            if (fontData[(unsigned int)ch][indexCount] == 0x00000000) {
+                drawPixelARGB32(j, i, colorCode);
+            }
+            indexCount++;
+        }
+    }
+}
+
+void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
+    int index = 0;
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            drawPixelARGB32(w, h, bitmap[index]);
+            index++;
+        }
+    }
+}
+
+// void drawVideo(const unsigned long* frames, int num_frames, int img_width, int img_height, int width, int height) {
+//     // // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
+//     // int prev_x = 0; // Store the previous X value for efficient redrawing
+//     // // optimize to reduce calculation inside loops
+//     // int max_x = width - img_width;
+
+//     // for (int i = 0; i < num_frames; i++) {
+//     //     // calculate new x position
+//     //     // simple linear movement for demonstration
+//     //     int x = max_x;
+
+//     //     drawImage(frames[i], img_width, img_height, x, 0);
+
+//     //     delay(FRAME_DURATION);
+//     //     prev_x = x;
+//     // }
+//         // Assuming you have a function to display an image from binary data
+//     // void displayImage(const unsigned char* imageData, unsigned int length);
+//     int IMAGE_SIZE = img_width * img_height;
+//     // display images in a loop
+//     for (int i = 0; i < num_frames; i++) {
+//         drawImage(frames + IMAGE_SIZE * i, img_width, img_height, 0, 0);
+//         delay(FRAME_DURATION);
+//     }
+// }
+
+
+void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height) {
+    // for (int i = 0; i < num_frames; i++) {
+    //     drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+    //     delay(FRAME_DURATION);  // Delay for the next frame
+    // }
+    int i = 0;
+    while (1) {
+        if (i == num_frames) {
+            i = 0;
+        }
+        drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+        delay(FRAME_DURATION);  // Delay for the next frame
+        i ++;
+    }
+}
+
+void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
+    // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
+    int prev_x = 0; // Store the previous X value for efficient redrawing
+    // optimize to reduce calculation inside loops
+    int max_x = width - img_width;
+
+    for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
+        // calculate new x position
+        // simple linear movement for demonstration
+        int x = i % max_x;
+
+        if (x != prev_x) {
+            if (x > prev_x + img_width || prev_x > x + img_width) {
+                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
+            }
+            else {
+                drawImage(bitmap, img_width, img_height, x, 0);
+            }
+        }
+
+        delay(FRAME_DURATION);
+        prev_x = x;
+    }
+}
+
+void infinite_move_image(const unsigned long* bitmap, int img_width, int img_height, int screen_width, int screen_height) {
+    int prev_x = 0;
+    int x = 0;
+    int max_x = screen_width - img_width;
+
+    while (1) { // Infinite loop
+
+        if (x != prev_x) {
+            if (x > prev_x + img_width || prev_x > x + img_width) {
+                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
+            }
+            else {
+                drawImage(bitmap, img_width, img_height, x, 0);
+            }
+        }
+
+        delay(FRAME_DURATION);
+        prev_x = x;
+        x = (x + 1) % (screen_width + img_width); // Ensure x remains within bounds 
+
+        if (x == screen_width) {
+            x = -img_width + 1; // Reset the image to start just off the left edge of the screen
+        }
+    }
+}

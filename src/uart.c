@@ -1,7 +1,6 @@
 // -----------------------------------uart.c -------------------------------------
 
 #include "uart.h"
-#include "gpio.h"
 
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
@@ -139,4 +138,19 @@ void uart_dec(int num)
 	str[len] = '\0';
 
 	uart_puts(str);
+}
+
+
+//Check if the user has just inputted a new key
+unsigned int uart_isReadByteReady(){
+	return (*AUX_MU_LSR & 0x01);
+}
+
+
+/* New function: Check and return if no new character, don't wait */
+unsigned char getUart(){
+    unsigned char ch = 0;
+    if (uart_isReadByteReady())
+    	ch = uart_getc();
+    return ch;
 }
