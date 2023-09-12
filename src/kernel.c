@@ -19,7 +19,7 @@ void display_moving_background() {
 	// infinite
 	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, 1);
 	// no infinite
-	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 0);
+	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 1);
 }
 /* CLI read and handle actions */
 void cli() {

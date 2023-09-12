@@ -199,14 +199,17 @@ void move_image(const unsigned long* bitmap, int img_width, int img_height, int 
         // x = (index + 1) % (width + img_width);
         if (direction == 0) {
             // moving from left to right
+            // width + img_width: total space
+            // index % (width + img_width): avoid outbound - [0, width + img_width)
+            // if x reach (width + img_width - 1) % (width + img_width) = width + img_width - 1 => x returns 0
             x = (index + 1) % (width + img_width);
         }
         else {
             // moving from right to left
+            // width + img_width: total space
+            // index % (width + img_width): avoid outbound - [0, width + img_width)
+            // minus 1 -> to give new position in the left
             x = (width + img_width) - (index % (width + img_width)) - 1;
-            if (x < -img_width) {
-                x = width - 1;
-            }
         }
         index += speed;
         if (index >= max_index) {
