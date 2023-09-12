@@ -150,23 +150,60 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
         }
     }
 }
-void draw_video(const unsigned long** frames, int num_frames, int width, int height) {
-    for (int i = 0; i < num_frames; i++) {
-        drawImage(frames[i], width, height, 0, 0);
-        delay(FRAME_DURATION);  // assuming you have a delay function
-    }
-    // draw_video(video_frames, sizeof(video_frames) / sizeof(video_frames[0]), frame_width, frame_height);
 
+// void drawVideo(const unsigned long* frames, int num_frames, int img_width, int img_height, int width, int height) {
+//     // // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
+//     // int prev_x = 0; // Store the previous X value for efficient redrawing
+//     // // optimize to reduce calculation inside loops
+//     // int max_x = width - img_width;
+
+//     // for (int i = 0; i < num_frames; i++) {
+//     //     // calculate new x position
+//     //     // simple linear movement for demonstration
+//     //     int x = max_x;
+
+//     //     drawImage(frames[i], img_width, img_height, x, 0);
+
+//     //     delay(FRAME_DURATION);
+//     //     prev_x = x;
+//     // }
+//         // Assuming you have a function to display an image from binary data
+//     // void displayImage(const unsigned char* imageData, unsigned int length);
+//     int IMAGE_SIZE = img_width * img_height;
+//     // display images in a loop
+//     for (int i = 0; i < num_frames; i++) {
+//         drawImage(frames + IMAGE_SIZE * i, img_width, img_height, 0, 0);
+//         delay(FRAME_DURATION);
+//     }
+// }
+
+
+void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height) {
+    // for (int i = 0; i < num_frames; i++) {
+    //     drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+    //     delay(FRAME_DURATION);  // Delay for the next frame
+    // }
+    int i = 0;
+    while (1) {
+        if (i == num_frames) {
+            i = 0;
+        }
+        drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+        delay(FRAME_DURATION);  // Delay for the next frame
+        i ++;
+    }
 }
 
 void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
     // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
     int prev_x = 0; // Store the previous X value for efficient redrawing
+    // optimize to reduce calculation inside loops
+    int max_x = width - img_width;
 
     for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
         // calculate new x position
         // simple linear movement for demonstration
-        int x = i % (width - img_width);
+        int x = i % max_x;
 
         if (x != prev_x) {
             if (x > prev_x + img_width || prev_x > x + img_width) {
@@ -178,25 +215,29 @@ void move_image(const unsigned long* bitmap, int img_width, int img_height, int 
         }
 
         delay(FRAME_DURATION);
-
         prev_x = x;
     }
-
 }
+
 void infinite_move_image(const unsigned long* bitmap, int img_width, int img_height, int screen_width, int screen_height) {
+    int prev_x = 0;
     int x = 0;
+    int max_x = screen_width - img_width;
 
     while (1) { // Infinite loop
-        drawImage(bitmap, img_width, img_height, x, 0);
 
-        // Clear the previous image portion if it's completely off the screen
-        if (x >= img_width) {
-            drawRectARGB32(x - img_width, 0, x, screen_height, 0xFF000000, 1); // Assuming black background; adjust as needed
+        if (x != prev_x) {
+            if (x > prev_x + img_width || prev_x > x + img_width) {
+                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
+            }
+            else {
+                drawImage(bitmap, img_width, img_height, x, 0);
+            }
         }
 
         delay(FRAME_DURATION);
-
-        x++;
+        prev_x = x;
+        x = (x + 1) % (screen_width + img_width); // Ensure x remains within bounds 
 
         if (x == screen_width) {
             x = -img_width + 1; // Reset the image to start just off the left edge of the screen
