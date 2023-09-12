@@ -13,10 +13,13 @@ void display_image() {
 }
 void display_video() {
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
+	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 1);
 }
 void display_moving_background() {
-	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
+	// infinite
+	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, 1);
+	// no infinite
+	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 0);
 }
 /* CLI read and handle actions */
 void cli() {

@@ -160,48 +160,30 @@ void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width,
         if (i == num_frames) {
             if (is_infinite == 1) {
                 i = 0;
-            } else {
+            }
+            else {
                 return;
             }
         }
         // draw image
         drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
         delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
-        i ++;
+        i++;
     }
 }
 
-void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
-    int prev_x = 0; // Store the previous X value for efficient redrawing
-    // optimize to reduce calculation inside loops
-    int max_x = width - img_width;
-
-    for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION_MOVING; i+=50) {
-        // calculate new x position
-        // simple linear movement for demonstration
-        int x = i % max_x;
-
-        if (x != prev_x) {
-            if (x > prev_x + img_width || prev_x > x + img_width) {
-                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
-            }
-            else {
-                drawImage(bitmap, img_width, img_height, x, 0);
-            }
-        }
-
-        delay(FRAME_DURATION_MOVING);
-        prev_x = x;
-    }
-}
-
-void infinite_move_image(const unsigned long* bitmap, int img_width, int img_height, int screen_width, int screen_height) {
+void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height, int speed, int direction, int is_infinite) {
+    // speed: number > 0
+    // direction: 0: left to right - 1: right to left
+    // is_infinite: the moving image loops or not? 1: true - 0: false
     int prev_x = 0;
     int x = 0;
-    int max_x = screen_width - img_width;
+    int index = 0;
+    int max_index = VIDEO_DURATION * FRAME_DURATION_MOVING;
+    if (speed <= 0) speed = 1;
+    if (direction != 0) direction = 1;
 
-    while (1) { // Infinite loop
-
+    while (1) {
         if (x != prev_x) {
             if (x > prev_x + img_width || prev_x > x + img_width) {
                 drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
@@ -209,14 +191,28 @@ void infinite_move_image(const unsigned long* bitmap, int img_width, int img_hei
             else {
                 drawImage(bitmap, img_width, img_height, x, 0);
             }
+            prev_x = x;
         }
 
         delay(FRAME_DURATION_MOVING);
-        prev_x = x;
-        x = (x + 1) % (screen_width + img_width); // Ensure x remains within bounds 
 
-        if (x == screen_width) {
-            x = -img_width + 1; // Reset the image to start just off the left edge of the screen
+        // x = (index + 1) % (width + img_width);
+        if (direction == 0) {
+            // moving from left to right
+            x = (index + 1) % (width + img_width);
+        }
+        else {
+            // moving from right to left
+            x = (width + img_width) - (index % (width + img_width)) - 1;
+            if (x < -img_width) {
+                x = width - 1;
+            }
+        }
+        index += speed;
+        if (index >= max_index) {
+            if (is_infinite == 0) break;
+            index = 0; // reset index for infinite loop
         }
     }
 }
+
