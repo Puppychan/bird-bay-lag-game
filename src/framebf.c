@@ -192,7 +192,9 @@ void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width,
         }
         // draw image
         drawImage(videoArray[i], img_width, img_height, 0, 0, -1);  // Draw the image at the top-left corner
-        delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
+        // delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
+        wait_msec(1000 * 10 / FRAME_DURATION_VIDEO );
+
         // wait_msec(5000);  // 30 frames per second => wait for about 33 milliseconds
 
         // wait_msec(FRAME_DURATION_VIDEO * VIDEO_DURATION);  // Delay for the next frame

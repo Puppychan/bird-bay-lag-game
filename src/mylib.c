@@ -2,6 +2,8 @@
 
 /* Function to wait for some msec: the program will stop there */
 void wait_msec(unsigned int n) {
+    // 100000: 0.1s = 100ms
+    // 
     register unsigned long f, t, r, expiredTime;
 
     // Get the current counter frequency (Hz)
