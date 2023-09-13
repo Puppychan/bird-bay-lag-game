@@ -112,6 +112,7 @@ extern const unsigned long* epd_bitmap_allArray[];
 // player
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 4176)
 extern const unsigned long bird_player[];
+const image_info bird_player_info = {338, 254, 0x008cc449};
 const int bird_allArray_LEN = 1;
 const unsigned long* bird_allArray[1] = {
 	bird_player

@@ -141,12 +141,37 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
     }
 }
 
-void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
+void drawImage(const unsigned long* bitmap, int width, int height, int x, int y, unsigned int exclude_color) {
     int index = 0;
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
-            drawPixelARGB32(w, h, bitmap[index]);
-            index++;
+            unsigned int color = bitmap[index++];
+            if (color != exclude_color) {
+                drawPixelARGB32(w, h, color);
+            }
+        }
+    }
+}
+
+
+void drawScaledImage(const unsigned long* bitmap, int orig_width, int orig_height, int new_width, int new_height, int x, int y, unsigned int exclude_color) {
+    float x_scale = (float)orig_width / new_width;
+    float y_scale = (float)orig_height / new_height;
+    int orig_i, orig_j;
+
+    for (int i = 0; i < new_height; i++) {
+        orig_i = (int)(i * y_scale);
+        for (int j = 0; j < new_width; j++) {
+            // Find the corresponding pixel in the original image
+            orig_j = (int)(j * x_scale);
+
+            // Get the color of the original pixel
+            unsigned long color = bitmap[orig_i * orig_width + orig_j];
+
+            // Draw this pixel in the new image
+            if (color != exclude_color) {
+                drawPixelARGB32(j + x, i + y, color);
+            }
         }
     }
 }
@@ -166,8 +191,12 @@ void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width,
             }
         }
         // draw image
-        drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+        drawImage(videoArray[i], img_width, img_height, 0, 0, -1);  // Draw the image at the top-left corner
         delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
+        // wait_msec(5000);  // 30 frames per second => wait for about 33 milliseconds
+
+        // wait_msec(FRAME_DURATION_VIDEO * VIDEO_DURATION);  // Delay for the next frame
+        // set_wait_timer(0, FRAME_DURATION_VIDEO * VIDEO_DURATION);  // Delay for the next frame
         i++;
     }
 }
@@ -189,12 +218,13 @@ void move_image(const unsigned long* bitmap, int img_width, int img_height, int 
                 drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
             }
             else {
-                drawImage(bitmap, img_width, img_height, x, 0);
+                drawImage(bitmap, img_width, img_height, x, 0, -1);
             }
             prev_x = x;
         }
 
         delay(FRAME_DURATION_MOVING);
+        // set_wait_timer(1, FRAME_DURATION_MOVING);  // Delay for the next frame
 
         // x = (index + 1) % (width + img_width);
         if (direction == 0) {

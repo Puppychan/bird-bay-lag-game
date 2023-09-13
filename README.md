@@ -12,3 +12,7 @@
     => Run `make cleanall-run`
 - If you do not change any header files in `data` folder
     => Run `make test`
+
+## Remove background of object
+- Choose color that that object does not have to be background color
+- When drawing image, exclude that color

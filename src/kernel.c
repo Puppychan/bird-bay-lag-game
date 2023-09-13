@@ -5,11 +5,21 @@
 #include "mylib.h"
 // #include "./data/test.h"
 
-static int screenHeight = 675;
-static int screenWidth = 1080;
+const int screenHeight = 675;
+const int screenWidth = 1080;
+static float bird_position_x;
+static float bird_position_y;
+
+void initialize_positions() {
+    bird_position_x = (float)screenWidth / 3;
+    bird_position_y = (float)screenHeight / 2;
+}
 
 void display_image() {
-	drawImage(background_sky, screenWidth, screenHeight, 0, 0);
+	drawImage(background_sky, screenWidth, screenHeight, 0, 0, -1);
+	int newWidth = bird_player_info.width / 6;  // Half of the original width for example.
+	int newHeight = bird_player_info.height / 6; // Half of the original height for example.
+	drawScaledImage(bird_allArray[0], bird_player_info.width, bird_player_info.height, newWidth, newHeight, bird_position_x, bird_position_y, bird_player_info.exclude_color);
 }
 void display_video() {
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
@@ -32,6 +42,9 @@ void cli() {
 	else if (c == 'a') { // slide to previous image
 	}
 	else if (c == 'd') { // slide to next image
+	}
+	else if (c == '\n') {
+
 	}
 }
 
@@ -111,12 +124,13 @@ void main() {
 	// Initialize frame buffer
 	framebf_init();
 
+    initialize_positions();
+
 	// Display group name
-	// printName();
 
 	// display_image();
-	// display_video();
-	display_moving_background();
+	display_video();
+	// display_moving_background();
 
 
 	// echo everything back
