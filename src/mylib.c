@@ -2,8 +2,6 @@
 
 /* Function to wait for some msec: the program will stop there */
 void wait_msec(unsigned int n) {
-    // 100000: 0.1s = 100ms
-    // 
     register unsigned long f, t, r, expiredTime;
 
     // Get the current counter frequency (Hz)
@@ -13,7 +11,7 @@ void wait_msec(unsigned int n) {
     asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
 
     // Calculate expire value for counter
-    expiredTime = t + ((f / 1000) * n) / 1000;
+    expiredTime = t + (f * n) / 1000;
     do {
         asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
     } while (r < expiredTime);
@@ -33,18 +31,11 @@ void set_wait_timer(int set, unsigned int msVal) {
         asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
 
         // Calculate expired time:
-        expiredTime = t + ((f / 1000) * msVal) / 1000;
+        expiredTime = t + (f * msVal) / 1000;
     }
     else { /* WAIT FOR TIMER TO EXPIRE */
         do {
             asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
         } while (r < expiredTime);
-    }
-}
-void delay(unsigned int milliseconds) {
-    volatile unsigned int start_time = SYSTEM_TIMER_COUNTER_LOW;
-    // Timer frequency is 1MHz, so wait for the count to go up by 1000 * milliseconds
-    while (SYSTEM_TIMER_COUNTER_LOW - start_time < 1000 * milliseconds) {
-        // Just wait
     }
 }

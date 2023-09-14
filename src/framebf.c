@@ -11,6 +11,11 @@
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
 #define PIXEL_ORDER 0
 
+#define MAX_WIDTH 1920   // maximum expected width
+#define MAX_HEIGHT 1080  // maximum expected height
+unsigned long backupBuffer[MAX_WIDTH * MAX_HEIGHT];
+
+
 //Screen info
 unsigned int width, height, pitch;
 
@@ -140,7 +145,6 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
         }
     }
 }
-
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y, unsigned int exclude_color) {
     int index = 0;
     for (int h = y; h < y + height; h++) {
@@ -153,6 +157,33 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y,
     }
 }
 
+void backupRegion(int x, int y, int width, int height) {
+    int index = 0;
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            backupBuffer[index++] = *((unsigned int*)(fb + (h * pitch) + (COLOR_DEPTH / 8 * w)));
+        }
+    }
+}
+
+void clearImage(int x, int y, int width, int height) {
+    // clear image
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            drawPixelARGB32(w, h, 0x00000000);
+        }
+    }
+}
+
+void clearImageOverlay(int x, int y, int width, int height) {
+    int index = 0;
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            unsigned int originalColor = backupBuffer[index++];
+            drawPixelARGB32(w, h, originalColor);
+        }
+    }
+}
 
 void drawScaledImage(const unsigned long* bitmap, int orig_width, int orig_height, int new_width, int new_height, int x, int y, unsigned int exclude_color) {
     float x_scale = (float)orig_width / new_width;
@@ -193,56 +224,83 @@ void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width,
         // draw image
         drawImage(videoArray[i], img_width, img_height, 0, 0, -1);  // Draw the image at the top-left corner
         // delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
-        wait_msec(1000 * 10 / FRAME_DURATION_VIDEO );
-
-        // wait_msec(5000);  // 30 frames per second => wait for about 33 milliseconds
-
-        // wait_msec(FRAME_DURATION_VIDEO * VIDEO_DURATION);  // Delay for the next frame
-        // set_wait_timer(0, FRAME_DURATION_VIDEO * VIDEO_DURATION);  // Delay for the next frame
+        wait_msec(1000 / FRAME_DURATION_VIDEO);
         i++;
     }
 }
 
-void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height, int speed, int direction, int is_infinite) {
+position identify_next_position(direction direction, position current_position, sizing img_size, sizing screen_size, int index) {
+    position new_pos = current_position;
+
+    switch (direction) {
+    case LEFT:
+        // moving from left to right
+        // width + img_width: total space
+        // index % (width + img_width): avoid outbound - [0, width + img_width)
+        // if x reach (width + img_width - 1) % (width + img_width) = width + img_width - 1 => x returns 0
+        new_pos.x = (index + 1) % (screen_size.width + img_size.width);
+        break;
+    case RIGHT:
+        // moving from right to left
+        // width + img_width: total space
+        // index % (width + img_width): avoid outbound - [0, width + img_width)
+        // minus 1 -> to give new position in the left of the screen
+        new_pos.x = (screen_size.width + img_size.width) - (index % (screen_size.width + img_size.width)) - 1;
+        break;
+    case TOP:
+        new_pos.y = (index + 1) % (screen_size.height + img_size.height);
+        break;
+    case BOTTOM:
+        new_pos.y = (screen_size.height + img_size.height) - (index % (screen_size.height + img_size.height)) - 1;
+        break;
+    case TOP_LEFT:
+        new_pos.x = (index + 1) % (screen_size.width + img_size.width);
+        new_pos.y = (index + 1) % (screen_size.height + img_size.height);
+        break;
+    case TOP_RIGHT:
+        new_pos.x = (screen_size.width + img_size.width) - (index % (screen_size.width + img_size.width)) - 1;
+        new_pos.y = (index + 1) % (screen_size.height + img_size.height);
+        break;
+    case BOTTOM_LEFT:
+        new_pos.x = (index + 1) % (screen_size.width + img_size.width);
+        new_pos.y = (screen_size.height + img_size.height) - (index % (screen_size.height + img_size.height)) - 1;
+        break;
+    case BOTTOM_RIGHT:
+        new_pos.x = (screen_size.width + img_size.width) - (index % (screen_size.width + img_size.width)) - 1;
+        new_pos.y = (screen_size.height + img_size.height) - (index % (screen_size.height + img_size.height)) - 1;
+        break;
+    }
+    return new_pos;
+}
+
+void move_image(const unsigned long* bitmap, sizing img_size, sizing screen_size, int speed, direction direction, int is_infinite) {
     // speed: number > 0
-    // direction: 0: left to right - 1: right to left
+    // direction: 'l': left to right, 'r': right to left, 't': top to bottom, 'b': bottom to top
     // is_infinite: the moving image loops or not? 1: true - 0: false
-    int prev_x = 0;
-    int x = 0;
+
+    position prev = { 0, 0 };
+    position current = { 0, 0 };
     int index = 0;
     int max_index = VIDEO_DURATION * FRAME_DURATION_MOVING;
     if (speed <= 0) speed = 1;
-    if (direction != 0) direction = 1;
 
     while (1) {
-        if (x != prev_x) {
-            if (x > prev_x + img_width || prev_x > x + img_width) {
-                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
+        if (current.x != prev.x || current.y != prev.y) {
+            if (current.x > prev.x + img_size.width || prev.x > current.x + img_size.width
+                || current.y > prev.y + img_size.height || prev.y > current.y + img_size.height) {
+                clearImage(prev.x, prev.y, prev.x + img_size.width, prev.y + img_size.height);
             }
             else {
-                drawImage(bitmap, img_width, img_height, x, 0, -1);
+                drawImage(bitmap, img_size.width, img_size.height, current.x, current.y, -1);
             }
-            prev_x = x;
+            prev = current;
+
         }
 
-        delay(FRAME_DURATION_MOVING);
-        // set_wait_timer(1, FRAME_DURATION_MOVING);  // Delay for the next frame
+        // delay(FRAME_DURATION_MOVING);
+        set_wait_timer(1, FRAME_DURATION_MOVING);  // Delay for the next frame
 
-        // x = (index + 1) % (width + img_width);
-        if (direction == 0) {
-            // moving from left to right
-            // width + img_width: total space
-            // index % (width + img_width): avoid outbound - [0, width + img_width)
-            // if x reach (width + img_width - 1) % (width + img_width) = width + img_width - 1 => x returns 0
-            x = (index + 1) % (width + img_width);
-        }
-        else {
-            // moving from right to left
-            // width + img_width: total space
-            // index % (width + img_width): avoid outbound - [0, width + img_width)
-            // minus 1 -> to give new position in the left
-            x = (width + img_width) - (index % (width + img_width)) - 1;
-        }
+        current = identify_next_position(direction, current, img_size, screen_size, index);
         index += speed;
         if (index >= max_index) {
             if (is_infinite == 0) break;

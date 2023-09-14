@@ -9,6 +9,8 @@
 #include "firstVideo6.h"
 #include "firstVideo7.h"
 #include "firstVideo8.h"
+#include "obstacleTube.h"
+#include "obstacleBalloon.h"
 
 // first video
 // extern const int first_video_array_LEN;
@@ -179,3 +181,25 @@ const int bird_allArray_LEN = 1;
 const unsigned long* bird_allArray[1] = {
 	bird_player
 };
+
+// obstacles
+// tube
+const unsigned long obstacle_tube[];
+const image_info tube_info = { 167, 571, 0x00ea1863 };
+// balloon
+// Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 13376)
+const int obstacle_balloon_allArray_LEN = 6;
+const unsigned long* obstacle_balloon_list[6] = {
+	obstacle_balloon_1,
+	obstacle_balloon_2,
+	obstacle_balloon_3,
+	obstacle_balloon_4,
+	obstacle_balloon_5,
+	obstacle_balloon_6,
+};
+const image_info balloon_info_1 = { 269, 835, 0x00e91e63 };
+const image_info balloon_info_2 = { 365, 677, 0x00cddc39 };
+const image_info balloon_info_3 = { 410, 467, 0x0000bdd5 };
+const image_info balloon_info_4 = { 177, 895, 0x00cedd36 };
+const image_info balloon_info_5 = { 153, 269, 0x00ff9900 };
+const image_info balloon_info_6 = { 394, 624, 0x008cc449 };

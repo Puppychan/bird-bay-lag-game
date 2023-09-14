@@ -3,6 +3,20 @@
 #ifndef DATA_H
 #define DATA_H
 
+typedef struct {
+    int x;
+    int y;
+} position;
+
+typedef struct {
+    unsigned int width;
+    unsigned int height;
+} sizing;
+
+typedef enum {
+    LEFT, RIGHT, TOP, BOTTOM, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+} direction;
+
 // Define structure to hold the information of a mailbox tag
 typedef struct {
     unsigned int width;
@@ -24,6 +38,19 @@ const unsigned long* bird_allArray[];
 // birds
 extern const image_info bird_player_info;
 extern const unsigned long bird_player[];
+// obstacles
+// tube
+extern const unsigned long obstacle_tube[];
+extern const image_info tube_info;
+// balloon
+extern const int obstacle_balloon_allArray_LEN;
+extern const unsigned long* obstacle_balloon_list[];
+extern const image_info balloon_info_1;
+extern const image_info balloon_info_2;
+extern const image_info balloon_info_3;
+extern const image_info balloon_info_4;
+extern const image_info balloon_info_5;
+extern const image_info balloon_info_6;
 
 
 #endif // DATA_H

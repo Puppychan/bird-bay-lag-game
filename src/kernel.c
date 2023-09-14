@@ -1,25 +1,15 @@
-#include "../data/data.h"
 #include "uart.h"
 #include "mbox.h"
 #include "framebf.h"
+#include "bird.h"
 #include "mylib.h"
 // #include "./data/test.h"
 
 const int screenHeight = 675;
 const int screenWidth = 1080;
-static float bird_position_x;
-static float bird_position_y;
-
-void initialize_positions() {
-    bird_position_x = (float)screenWidth / 3;
-    bird_position_y = (float)screenHeight / 2;
-}
 
 void display_image() {
 	drawImage(background_sky, screenWidth, screenHeight, 0, 0, -1);
-	int newWidth = bird_player_info.width / 6;  // Half of the original width for example.
-	int newHeight = bird_player_info.height / 6; // Half of the original height for example.
-	drawScaledImage(bird_allArray[0], bird_player_info.width, bird_player_info.height, newWidth, newHeight, bird_position_x, bird_position_y, bird_player_info.exclude_color);
 }
 void display_video() {
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
@@ -27,9 +17,11 @@ void display_video() {
 }
 void display_moving_background() {
 	// infinite
-	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, 1);
+	sizing size_display = {screenWidth, screenHeight};
 	// no infinite
-	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 1);
+	// move_image(background_sky, size_display, size_display, -1, LEFT, 0);
+	// infinite
+	move_image(background_sky, size_display, size_display, -1, LEFT, 1);
 }
 /* CLI read and handle actions */
 void cli() {
@@ -43,8 +35,9 @@ void cli() {
 	}
 	else if (c == 'd') { // slide to next image
 	}
-	else if (c == '\n') {
-
+	else if (c == ' ') {
+		game_loop(screenHeight);
+		// uart_puts("hello");
 	}
 }
 
@@ -124,13 +117,15 @@ void main() {
 	// Initialize frame buffer
 	framebf_init();
 
-    initialize_positions();
+	// display_image();
+	display_moving_background();
+    initialize_positions((float)screenWidth / 3, (float)screenHeight / 2);
+	choose_bird(0, 0);
+	draw_bird();
+	// clear_bird();
 
 	// Display group name
-
-	// display_image();
-	display_video();
-	// display_moving_background();
+	// display_video();
 
 
 	// echo everything back

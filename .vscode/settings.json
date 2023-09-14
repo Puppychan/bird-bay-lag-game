@@ -5,6 +5,7 @@
         "mylib.h": "c",
         "fontautolova.h": "c",
         "firstvideo.h": "c",
-        "uart.h": "c"
+        "uart.h": "c",
+        "bird.h": "c"
     }
 }
