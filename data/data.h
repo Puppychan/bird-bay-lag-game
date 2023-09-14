@@ -33,11 +33,11 @@ extern const int epd_bitmap_allArray_LEN;
 extern const unsigned long* epd_bitmap_allArray[];
 
 // players
-extern const int bird_allArray_LEN;
-const unsigned long* bird_allArray[];
 // birds
+extern const int bird_allArray_LEN;
+extern const unsigned long* bird_allArray[];
 extern const image_info bird_player_info;
-extern const unsigned long bird_player[];
+extern const image_info bird_player_info_2;
 // obstacles
 // tube
 extern const unsigned long obstacle_tube[];
