@@ -167,10 +167,11 @@ const unsigned long* first_video_array[148] = {
 };
 
 // background
-const int background_LEN = 2;
-const unsigned long* background_allArray[2] = {
+const int background_LEN = 3;
+const unsigned long* background_allArray[3] = {
 	background_sky,
-	background_sun
+	background_sun,
+	background_cloud
 };
 
 // player

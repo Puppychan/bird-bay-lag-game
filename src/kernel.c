@@ -54,10 +54,6 @@ void display_moving_background() {
 void cli() {
 	char c = uart_getc(); // read each char
 
-	// uart_sendc(c);
-	// uart_puts(&c);
-	uart_dec(c);
-
 	if (c == 'w') { // 'w' pressed: scroll up image
 	}
 	else if (c == 's') { // 's' pressed: scroll down image
@@ -65,13 +61,11 @@ void cli() {
 	else if (c == 'a') { // slide to previous image
 		if (current_bg == 0) current_bg = background_LEN-1;
 		else current_bg--;
-		uart_dec(current_bg);
 		display_image();
 	}
 	else if (c == 'd') { // slide to next image
-		current_bg++;
-		uart_dec(current_bg);
-		if (current_bg >= background_LEN) current_bg = 0;
+		if (current_bg == background_LEN-1) current_bg = 0;
+		else current_bg++;
 		display_image();
 	}
 	else if (c == '\n') {
