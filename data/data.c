@@ -1,14 +1,14 @@
 #include "data.h"
-#include "background.h"
 #include "player.h"
+#include "background.h"
 #include "firstVideo.h"
 #include "firstVideo2.h"
 #include "firstVideo3.h"
 #include "firstVideo4.h"
-#include "firstVideo5.h"
-#include "firstVideo6.h"
-#include "firstVideo7.h"
-#include "firstVideo8.h"
+// #include "firstVideo5.h"
+// #include "firstVideo6.h"
+// #include "firstVideo7.h"
+// #include "firstVideo8.h"
 
 // first video
 // extern const int first_video_array_LEN;
@@ -95,81 +95,83 @@ const unsigned long* first_video_array[148] = {
 	first_video_flappy_frames_0077,
 	first_video_flappy_frames_0078,
 	first_video_flappy_frames_0079,
-	first_video_flappy_frames_0080,
-	first_video_flappy_frames_0081,
-	first_video_flappy_frames_0082,
-	first_video_flappy_frames_0083,
-	first_video_flappy_frames_0084,
-	first_video_flappy_frames_0085,
-	first_video_flappy_frames_0086,
-	first_video_flappy_frames_0087,
-	first_video_flappy_frames_0088,
-	first_video_flappy_frames_0089,
-	first_video_flappy_frames_0090,
-	first_video_flappy_frames_0091,
-	first_video_flappy_frames_0092,
-	first_video_flappy_frames_0093,
-	first_video_flappy_frames_0094,
-	first_video_flappy_frames_0095,
-	first_video_flappy_frames_0096,
-	first_video_flappy_frames_0097,
-	first_video_flappy_frames_0098,
-	first_video_flappy_frames_0099,
-	first_video_flappy_frames_0100,
-	first_video_flappy_frames_0101,
-	first_video_flappy_frames_0102,
-	first_video_flappy_frames_0103,
-	first_video_flappy_frames_0104,
-	first_video_flappy_frames_0105,
-	first_video_flappy_frames_0106,
-	first_video_flappy_frames_0107,
-	first_video_flappy_frames_0108,
-	first_video_flappy_frames_0109,
-	first_video_flappy_frames_0110,
-	first_video_flappy_frames_0111,
-	first_video_flappy_frames_0112,
-	first_video_flappy_frames_0113,
-	first_video_flappy_frames_0114,
-	first_video_flappy_frames_0115,
-	first_video_flappy_frames_0116,
-	first_video_flappy_frames_0117,
-	first_video_flappy_frames_0118,
-	first_video_flappy_frames_0119,
-	first_video_flappy_frames_0120,
-	first_video_flappy_frames_0121,
-	first_video_flappy_frames_0122,
-	first_video_flappy_frames_0123,
-	first_video_flappy_frames_0124,
-	first_video_flappy_frames_0125,
-	first_video_flappy_frames_0126,
-	first_video_flappy_frames_0127,
-	first_video_flappy_frames_0128,
-	first_video_flappy_frames_0129,
-	first_video_flappy_frames_0130,
-	first_video_flappy_frames_0131,
-	first_video_flappy_frames_0132,
-	first_video_flappy_frames_0133,
-	first_video_flappy_frames_0134,
-	first_video_flappy_frames_0135,
-	first_video_flappy_frames_0136,
-	first_video_flappy_frames_0137,
-	first_video_flappy_frames_0138,
-	first_video_flappy_frames_0139,
-	first_video_flappy_frames_0140,
-	first_video_flappy_frames_0141,
-	first_video_flappy_frames_0142,
-	first_video_flappy_frames_0143,
-	first_video_flappy_frames_0144,
-	first_video_flappy_frames_0145,
-	first_video_flappy_frames_0146,
-	first_video_flappy_frames_0147,
-	first_video_flappy_frames_0148
+	first_video_flappy_frames_0080
+	// first_video_flappy_frames_0081,
+	// first_video_flappy_frames_0082,
+	// first_video_flappy_frames_0083,
+	// first_video_flappy_frames_0084,
+	// first_video_flappy_frames_0085,
+	// first_video_flappy_frames_0086,
+	// first_video_flappy_frames_0087,
+	// first_video_flappy_frames_0088,
+	// first_video_flappy_frames_0089,
+	// first_video_flappy_frames_0090,
+	// first_video_flappy_frames_0091,
+	// first_video_flappy_frames_0092,
+	// first_video_flappy_frames_0093,
+	// first_video_flappy_frames_0094,
+	// first_video_flappy_frames_0095,
+	// first_video_flappy_frames_0096,
+	// first_video_flappy_frames_0097,
+	// first_video_flappy_frames_0098,
+	// first_video_flappy_frames_0099,
+	// first_video_flappy_frames_0100,
+	// first_video_flappy_frames_0101,
+	// first_video_flappy_frames_0102,
+	// first_video_flappy_frames_0103,
+	// first_video_flappy_frames_0104,
+	// first_video_flappy_frames_0105,
+	// first_video_flappy_frames_0106,
+	// first_video_flappy_frames_0107,
+	// first_video_flappy_frames_0108,
+	// first_video_flappy_frames_0109,
+	// first_video_flappy_frames_0110,
+	// first_video_flappy_frames_0111,
+	// first_video_flappy_frames_0112,
+	// first_video_flappy_frames_0113,
+	// first_video_flappy_frames_0114,
+	// first_video_flappy_frames_0115,
+	// first_video_flappy_frames_0116,
+	// first_video_flappy_frames_0117,
+	// first_video_flappy_frames_0118,
+	// first_video_flappy_frames_0119,
+	// first_video_flappy_frames_0120,
+	// first_video_flappy_frames_0121,
+	// first_video_flappy_frames_0122,
+	// first_video_flappy_frames_0123,
+	// first_video_flappy_frames_0124,
+	// first_video_flappy_frames_0125,
+	// first_video_flappy_frames_0126,
+	// first_video_flappy_frames_0127,
+	// first_video_flappy_frames_0128,
+	// first_video_flappy_frames_0129,
+	// first_video_flappy_frames_0130,
+	// first_video_flappy_frames_0131,
+	// first_video_flappy_frames_0132,
+	// first_video_flappy_frames_0133,
+	// first_video_flappy_frames_0134,
+	// first_video_flappy_frames_0135,
+	// first_video_flappy_frames_0136,
+	// first_video_flappy_frames_0137,
+	// first_video_flappy_frames_0138,
+	// first_video_flappy_frames_0139,
+	// first_video_flappy_frames_0140,
+	// first_video_flappy_frames_0141,
+	// first_video_flappy_frames_0142,
+	// first_video_flappy_frames_0143,
+	// first_video_flappy_frames_0144,
+	// first_video_flappy_frames_0145,
+	// first_video_flappy_frames_0146,
+	// first_video_flappy_frames_0147,
+	// first_video_flappy_frames_0148
 };
 
-// image
-extern const unsigned long background_sky[];
-extern const int epd_bitmap_allArray_LEN;
-extern const unsigned long* epd_bitmap_allArray[];
+// background
+const int background_LEN = 2;
+const unsigned long* background_allArray[2] = {
+	background_sky,
+	background_sun
+};
 
 // player
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 4176)

@@ -65,10 +65,9 @@ char uart_getc()
 	char c;
 
 	/* wait until data is ready (one symbol) */
-	do
-	{
+	do {
 		asm volatile("nop");
-	} while (!(*AUX_MU_LSR & 0x01));
+	} while ( !(*AUX_MU_LSR & 0x01) );
 
 	/* read it and return */
 	c = (char)(*AUX_MU_IO);
@@ -119,25 +118,23 @@ void uart_dec(int num)
 	char str[33] = "";
 	int i, rem, len = 0, n;
 
-	n = num;
-	while (n != 0)
-	{
-		len++;
-		n /= 10;
-	}
+    n = num;
+    while (n != 0){
+        len++;
+        n /= 10;
+    }
 
-	if (num == 0)
-		len = 1;
+    if (num == 0)
+    	len = 1;
 
-	for (i = 0; i < len; i++)
-	{
-		rem = num % 10;
-		num = num / 10;
-		str[len - (i + 1)] = rem + '0';
-	}
-	str[len] = '\0';
+    for (i = 0; i < len; i++){
+        rem = num % 10;
+        num = num / 10;
+        str[len - (i + 1)] = rem + '0';
+    }
+    str[len] = '\0';
 
-	uart_puts(str);
+    uart_puts(str);
 }
 
 

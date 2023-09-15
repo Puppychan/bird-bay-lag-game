@@ -4,22 +4,40 @@
 #include "framebf.h"
 #include "mylib.h"
 // #include "./data/test.h"
+#define DEFAULT_BACKGROUND 0
+#define SHRINK_BIRD_RATIO 6
 
 const int screenHeight = 675;
 const int screenWidth = 1080;
+static unsigned short current_bg = DEFAULT_BACKGROUND;
 static float bird_position_x;
 static float bird_position_y;
 
+float center_object_x(float object_width) {
+	return (float) (screenWidth-object_width)/2;
+}
+
+float center_object_y(float object_height) {
+	return (float) (screenHeight-object_height)/2;
+}
+
 void initialize_positions() {
-    bird_position_x = (float)screenWidth / 3;
-    bird_position_y = (float)screenHeight / 2;
+	bird_position_x = center_object_x(bird_player_info.width/SHRINK_BIRD_RATIO);
+	bird_position_y =  center_object_y(bird_player_info.height/SHRINK_BIRD_RATIO);
+}
+
+void dispaly_background() {
+	drawImage(background_allArray[current_bg], screenWidth, screenHeight, 0, 0, -1);
 }
 
 void display_image() {
-	drawImage(background_sky, screenWidth, screenHeight, 0, 0, -1);
-	int newWidth = bird_player_info.width / 6;  // Half of the original width for example.
-	int newHeight = bird_player_info.height / 6; // Half of the original height for example.
-	drawScaledImage(bird_allArray[0], bird_player_info.width, bird_player_info.height, newWidth, newHeight, bird_position_x, bird_position_y, bird_player_info.exclude_color);
+	dispaly_background();
+
+	// int newWidth = bird_player_info.width / 6;  // Half of the original width for example.
+	// int newHeight = bird_player_info.height / 6; // Half of the original height for example.
+	// drawScaledImage(bird_allArray[0], bird_player_info.width, bird_player_info.height, newWidth, newHeight, bird_position_x, bird_position_y, bird_player_info.exclude_color);
+
+	drawScaledImage2(bird_allArray[0], bird_player_info.width, bird_player_info.height, (double) 1/SHRINK_BIRD_RATIO, (double) 1/SHRINK_BIRD_RATIO, (int) bird_position_x, (int) bird_position_y, bird_player_info.exclude_color);
 }
 void display_video() {
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
@@ -29,19 +47,32 @@ void display_moving_background() {
 	// infinite
 	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, 1);
 	// no infinite
-	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 1);
+	move_image(background_allArray[current_bg], screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 1);
 }
+
 /* CLI read and handle actions */
 void cli() {
 	char c = uart_getc(); // read each char
+
+	// uart_sendc(c);
+	// uart_puts(&c);
+	uart_dec(c);
 
 	if (c == 'w') { // 'w' pressed: scroll up image
 	}
 	else if (c == 's') { // 's' pressed: scroll down image
 	}
 	else if (c == 'a') { // slide to previous image
+		if (current_bg == 0) current_bg = background_LEN-1;
+		else current_bg--;
+		uart_dec(current_bg);
+		display_image();
 	}
 	else if (c == 'd') { // slide to next image
+		current_bg++;
+		uart_dec(current_bg);
+		if (current_bg >= background_LEN) current_bg = 0;
+		display_image();
 	}
 	else if (c == '\n') {
 
@@ -124,12 +155,11 @@ void main() {
 	// Initialize frame buffer
 	framebf_init();
 
-    initialize_positions();
+	initialize_positions();
 
 	// Display group name
-
-	// display_image();
-	display_video();
+	display_image();
+	// display_video();
 	// display_moving_background();
 
 

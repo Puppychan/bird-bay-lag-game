@@ -176,6 +176,32 @@ void drawScaledImage(const unsigned long* bitmap, int orig_width, int orig_heigh
     }
 }
 
+
+void drawScaledImage2(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y, unsigned int exclude_color) {
+    
+    int new_width = orig_width*x_scale;
+    int new_height = orig_height*y_scale;
+
+    int orig_i, orig_j;
+
+    for (int i = 0; i < new_height; i++) {
+        orig_i = (int)(i / y_scale);
+
+        for (int j = 0; j < new_width; j++) {
+            // Find the corresponding pixel in the original image
+            orig_j = (int)(j / x_scale);
+
+            // Get the color of the original pixel
+            unsigned long color = bitmap[orig_i * orig_width + orig_j];
+
+            // Draw this pixel in the new image
+            if (color != exclude_color) {
+                drawPixelARGB32(j + x, i + y, color);
+            }
+        }
+    }
+}
+
 void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height, int is_infinite) {
     // is_infinite: if users want to loop the video - 1, if users dont want - 0
     // define index for looping frames
