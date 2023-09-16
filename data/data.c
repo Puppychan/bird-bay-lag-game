@@ -185,8 +185,10 @@ const unsigned long* bird_allArray[2] = {
 
 // obstacles
 // tube
-const unsigned long obstacle_tube[];
+extern const unsigned long obstacle_tube[];
+extern const unsigned long obstacle_tube_up[];
 const image_info tube_info = { 167, 571, 0x00ea1863 };
+const image_info tube_up_info = { 167, 571, 0x00ea1863 };
 // balloon
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 13376)
 const int obstacle_balloon_allArray_LEN = 6;

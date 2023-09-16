@@ -41,7 +41,9 @@ extern const image_info bird_player_info_2;
 // obstacles
 // tube
 extern const unsigned long obstacle_tube[];
+extern const unsigned long obstacle_tube_up[];
 extern const image_info tube_info;
+extern const image_info tube_up_info;
 // balloon
 extern const int obstacle_balloon_allArray_LEN;
 extern const unsigned long* obstacle_balloon_list[];

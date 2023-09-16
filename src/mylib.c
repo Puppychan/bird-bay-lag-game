@@ -1,5 +1,8 @@
 #include "mylib.h"
 
+// for random number generator
+static uint32_t current_seed = 123456789;  // A seed to start
+
 /* Function to wait for some msec: the program will stop there */
 void wait_msec(unsigned int n) {
     register unsigned long f, t, r, expiredTime;
@@ -39,3 +42,37 @@ void set_wait_timer(int set, unsigned int msVal) {
         } while (r < expiredTime);
     }
 }
+
+int get_current_time() {
+    register unsigned long r;
+    asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
+    return r;
+}
+
+// https://stackoverflow.com/questions/6417113/c-custom-random-function
+// https://cplusplus.com/reference/cstdlib/srand/
+// Initialize the random number generator with a seed
+void srand_custom(uint32_t seed) {
+    current_seed = seed;
+}
+
+// Get a pseudo-random number
+uint32_t rand(void) {
+    current_seed = (A * current_seed + C) % M;
+    return current_seed;
+}
+
+uint32_t rand_range(uint32_t min_num, uint32_t max_num) {
+    if (min_num > max_num) {
+        // Swap them if out of order
+        uint32_t temp = min_num;
+        min_num = max_num;
+        max_num = temp;
+    }
+
+    uint32_t range = max_num - min_num + 1;
+
+    return min_num + (rand() % range);
+}
+
+
