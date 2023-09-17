@@ -23,7 +23,7 @@ typedef struct {
 #define PIPE_GAP_MIN 100
 #define PIPE_GAP_MAX 150
 
-#define PIPE_MOVE_SPEED 5 // pixels per frame
+#define PIPE_MOVE_SPEED 3 // pixels per frame
 
 // Constants for the bird
 #define BIRD_WIDTH 60 // make it modifiable later
@@ -52,6 +52,8 @@ void init_bird(unsigned int max_width, unsigned int max_height);
 void init_pipes(unsigned int max_width, unsigned int max_height);
 // void move_pipes();
 void move_pipes(unsigned int max_width, unsigned int max_height);
-void update_bird();
+bool validate_bird_overflow(unsigned int max_width, unsigned int max_height);
+bool validate_bird_obstacle_collision(unsigned int max_width, unsigned int max_height);
+void update_bird(unsigned int max_width, unsigned int max_height);
 void flap_bird();
-void game_loop(unsigned int max_width, unsigned int max_height);
+void game_run(unsigned int max_width, unsigned int max_height);

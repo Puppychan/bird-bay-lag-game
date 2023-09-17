@@ -133,17 +133,17 @@ void init_pipes(unsigned int max_width, unsigned int max_height) {
 
 
 void move_pipes(unsigned int max_width, unsigned int max_height) {
+    set_wait_timer(1, 1000 / 60);
     for (int index = 0; index < PIPES_SIZE; index++) {
-        if (pipes[index].top.x + PIPE_WIDTH <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it if in the screen, draw it
-        if (pipes[index].top.x + PIPE_WIDTH <= max_width) {
+        if (pipes[index].top.x + PIPE_WIDTH <= max_width && pipes[index].top.x > 0) {
             clear_pipe(pipes[index], max_width, max_height);
         }
 
-        // Update the position of the pipe.
         pipes[index].top.x -= PIPE_MOVE_SPEED;
         pipes[index].bottom.x -= PIPE_MOVE_SPEED;
 
         if (pipes[index].top.x + PIPE_WIDTH <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
+
 
         // if in the screen, draw it
         if (pipes[index].top.x + PIPE_WIDTH <= max_width) {
@@ -153,27 +153,49 @@ void move_pipes(unsigned int max_width, unsigned int max_height) {
         }
 
     }
-
-    wait_msec(30);  // Roughly 60 frames per second
+    set_wait_timer(0, 1000 / 60);
 }
 
+bool validate_bird_overflow(unsigned int max_width, unsigned int max_height) {
+    if (bird.y + BIRD_HEIGHT > max_height || bird.y < 0) {
+        return true;
+    }
+    return false;
+}
 
-void update_bird() {
+bool validate_bird_obstacle_collision(unsigned int max_width, unsigned int max_height) {
+    for (int index = 0; index < PIPES_SIZE; index++) {
+        // Check if the bird's right side is beyond the left edge of the pipe
+        // and if the bird's left side is before the right edge of the pipe
+        if (bird.x + BIRD_WIDTH >= pipes[index].top.x && bird.x <= pipes[index].top.x + PIPE_WIDTH) {
+            // Check for collisions with the top pipe
+            if (bird.y < pipes[index].top.y) {
+                return true; // collision with top pipe
+            }
+
+            // Check for collisions with the bottom pipe
+            if (bird.y + BIRD_HEIGHT > pipes[index].bottom.y) {
+                return true; // collision with bottom pipe
+            }
+        }
+    }
+    return false;
+}
+
+void update_bird(unsigned int max_width, unsigned int max_height) {
     clear_bird();
 
     bird.vertical_velocity += GRAVITY;       // Gravity pulls the bird down
     bird.y += bird.vertical_velocity;
 
-    // Check for ground collision (assuming ground is at y=480)
-    if (bird.y + BIRD_HEIGHT > 480) {
-        bird.y = 480 - BIRD_HEIGHT; // Prevent bird from moving below ground
+    // Check for ceiling collision
+    if (validate_bird_overflow(max_width, max_height) || validate_bird_obstacle_collision(max_width, max_height)) {
+        bird.y = (bird.y < 0) ? 0 : max_height;  // Reset position if overflow detected
+        bird.vertical_velocity = 0;  // Reset velocity
+        printf("Bird overflow detected");
+        end_game();
     }
 
-    // Check for ceiling collision
-    if (bird.y < 0) {
-        // bird death
-        bird.y = 0;
-    }
     draw_bird(bird);
 }
 
@@ -181,19 +203,13 @@ void flap_bird() {
     bird.vertical_velocity = FLAP_STRENGTH;
 }
 
-void game_loop(unsigned int max_width, unsigned int max_height) {
+void game_run(unsigned int max_width, unsigned int max_height) {
     // printf("Before init\n");
     // unsigned long pipeBackupBuffer3D[PIPES_SIZE][max_height * max_width];
     // printf("Called game loop \n");
 
-    while (1) {
-        // for (size_t i = 0; i < 3; i++) {
+    if (is_start_game()) {
+        update_bird(max_width, max_height);
         move_pipes(max_width, max_height);
-
-        // Redraw the bird and pipes here
-        // draw_bird(bird_position);
-        // draw_pipes();
-
-
     }
 }

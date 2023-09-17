@@ -59,8 +59,8 @@ void cli() {
 
 		// }
 		// init_pipes();
-		printf("Input space\n");
-		
+		// printf("Input space\n");
+
 		flap_bird();
 	}
 }
@@ -170,11 +170,13 @@ void main() {
 
 	// echo everything back
 	while (1) {
+		// game_run(screenWidth, screenHeight);
+
 		if (is_start_game()) {
-			move_pipes(screenWidth, screenHeight);  // Move pipes continuously
-			update_bird();
+			update_bird(screenWidth, screenHeight);
+			move_pipes(screenWidth, screenHeight);
 		}
-		
+
 		cli();
 	}
 }
