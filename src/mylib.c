@@ -1,5 +1,4 @@
 #include "mylib.h"
-#include "../gcclib/stddef.h"
 
 /* Function to wait for some msec: the program will stop there */
 void wait_msec(unsigned int n) {
@@ -193,4 +192,3 @@ void to_upper(char *str) {
         }
     }
 }
-
