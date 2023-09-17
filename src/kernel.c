@@ -3,6 +3,7 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "mylib.h"
+#include "game.h"
 #include "../gcclib/stddef.h"
 #define MAX_CMD_SIZE 100
 #define MAX_HISTORY 10
@@ -146,7 +147,7 @@ void display_image() {
 void display_video() {
 	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	drawVideo(first_video_array, 89, 480, 636);
+	drawVideo(first_video_array, 89, 480, 636, 0);
 }
 
 void printName() {
@@ -340,7 +341,7 @@ void cli() {
 		}
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
-            
+            playGame();
 		}
 		//Error handling
 		else {
@@ -352,15 +353,6 @@ void cli() {
 		displayPrompt();
 	}
 	
-	
-	// if (c == 'w') { // 'w' pressed: scroll up image
-	// }	
-	// else if (c == 's') { // 's' pressed: scroll down image
-	// }
-	// else if (c == 'a') { // slide to previous image
-	// }
-	// else if (c == 'd') { // slide to next image
-	// }
 }
 
 void main()

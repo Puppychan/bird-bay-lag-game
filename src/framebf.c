@@ -178,19 +178,41 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
 // }
 
 
-void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height) {
-    // for (int i = 0; i < num_frames; i++) {
-    //     drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
-    //     delay(FRAME_DURATION);  // Delay for the next frame
-    // }
+// void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height) {
+//     // for (int i = 0; i < num_frames; i++) {
+//     //     drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+//     //     delay(FRAME_DURATION);  // Delay for the next frame
+//     // }
+//     int i = 0;
+//     while (1) {
+//         if (i == num_frames) {
+//             i = 0;
+//         }
+//         drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
+//         delay(FRAME_DURATION);  // Delay for the next frame
+//         i ++;
+//     }
+// }
+
+void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height, int is_infinite) {
+    // is_infinite: if users want to loop the video - 1, if users dont want - 0
+    // define index for looping frames
     int i = 0;
     while (1) {
+        // if reaching final frame
         if (i == num_frames) {
-            i = 0;
+            if (is_infinite == 1) {
+                i = 0;
+            }
+            else {
+                return;
+            }
         }
+        // draw image
         drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
-        delay(FRAME_DURATION);  // Delay for the next frame
-        i ++;
+        // delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
+        wait_msec(1000 / FRAME_DURATION);
+        i++;
     }
 }
 
