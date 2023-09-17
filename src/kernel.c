@@ -33,7 +33,9 @@ void display_moving_background() {
 }
 /* CLI read and handle actions */
 void cli() {
-	char c = uart_getc(); // read each char
+	// char c = uart_getc(); // read each char
+	char c = getUart(); // read each char
+	// move_pipes(screenWidth, screenHeight);
 
 	if (c == 'w') { // 'w' pressed: scroll up image
 	}
@@ -48,6 +50,8 @@ void cli() {
 		// 	// start game here
 		// 	is_start_game = 1;
 		// }
+		start_game();
+		// game_loop(screenWidth, screenHeight);
 	}
 	else if (c == ' ') {
 		// if start game
@@ -55,7 +59,9 @@ void cli() {
 
 		// }
 		// init_pipes();
-		game_loop(screenWidth, screenHeight);
+		printf("Input space\n");
+		
+		flap_bird();
 	}
 }
 
@@ -140,10 +146,11 @@ void main() {
 	// Initialize frame buffer
 	framebf_init();
 
-	display_image();
+	// display_image();
 	init_pipes(screenWidth, screenHeight);
+	init_bird(screenWidth, screenHeight);
 
-	wait_msec(500);
+	// wait_msec(500);
 
 	// draw_pipes(screenWidth, screenHeight);
 
@@ -163,6 +170,11 @@ void main() {
 
 	// echo everything back
 	while (1) {
+		if (is_start_game()) {
+			move_pipes(screenWidth, screenHeight);  // Move pipes continuously
+			update_bird();
+		}
+		
 		cli();
 	}
 }
