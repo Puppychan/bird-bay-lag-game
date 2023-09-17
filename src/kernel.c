@@ -3,51 +3,151 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "mylib.h"
+#include "../gcclib/stddef.h"
+#define MAX_CMD_SIZE 100
+#define MAX_HISTORY 10
+#define NULL ((void *)0)
 // #include "./data/test.h"
 
-const int screenHeight = 675;
-const int screenWidth = 1080;
-static float bird_position_x;
-static float bird_position_y;
+//Set screen height and width
+static int screenHeight = 675;
+static int screenWidth = 1080;
 
-void initialize_positions() {
-    bird_position_x = (float)screenWidth / 3;
-    bird_position_y = (float)screenHeight / 2;
+//History Terminal CMD
+char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
+int history_cmd = 0;
+int current_cmd = 0;
+
+//Command list
+char *commands[] = {
+    "help",
+    "clear",
+    "setcolor",
+	"displayName",
+	"displayImage",
+    "displayVideo",
+    "playGame"
+};
+
+char *commandsInfo[] = {
+    "clear 					Clears the cmd screen\n",
+    "setcolor -t <color> 			Sets text color\n",
+	"setcolor -b <color> 			Sets background color\n",
+	"setcolor -t <color> -b <color> 		Sets text and background color\n",
+    "displayName				Display name of all members\n",
+	"displayImage 				Displays image slideshow\n",
+    "displayVideo 				Displays a video\n",
+    "playGame 				Play flappy bird game\n"
+};
+
+char *commandsDetail[] = {
+	"help		Show brief information of all commands\n",
+    "clear		Clear screen (in our terminal it will scroll down to current position of the cursor).\n",
+	"setcolor	Set text color, and/or background color of the console to one of the following colors: BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE\n",
+    "displayName 	Display name of all members in the group\n",
+	"displayImage	Display image slideshow. Press w and s keys to scroll up and down. Press a and d keys to switch between images\n",
+    "displayVideo	Displays an awesome video\n",
+    "playGame	Interract with a fun build-in flappy bird game.\n"
+};
+
+//Text and Background terminal preset color
+char *colors[] = {
+    "BLACK",
+    "RED",
+    "GREEN",
+    "YELLOW",
+    "BLUE",
+    "PURPLE",
+    "CYAN",
+    "WHITE"
+};
+
+char *ansiTextColors[] = {
+    "\033[30m", // BLACK
+    "\033[31m", // RED
+    "\033[32m", // GREEN
+    "\033[33m", // YELLOW
+    "\033[34m", // BLUE
+    "\033[35m", // PURPLE
+    "\033[36m", // CYAN
+    "\033[37m", // WHITE
+};
+
+char *ansiBackgroundColors[] = {
+    "\033[40m", // BLACK
+    "\033[41m", // RED
+    "\033[42m", // GREEN
+    "\033[43m", // YELLOW
+    "\033[44m", // BLUE
+    "\033[45m", // PURPLE
+    "\033[46m", // CYAN
+    "\033[47m", // WHITE
+};
+
+char *get_history_command(int direction) {
+    if (direction == 1 && current_cmd != history_cmd) {
+        // DOWN: Navigate to the newer command
+        current_cmd = (current_cmd + 1) % MAX_HISTORY;
+    } 
+    else if (direction == -1 && (current_cmd + MAX_HISTORY - 1) % MAX_HISTORY != history_cmd) {
+        // UP: Navigate to the older command
+        current_cmd = (current_cmd + MAX_HISTORY - 1) % MAX_HISTORY;
+    }
+    return cmd_history[current_cmd];
+}
+
+void handle_history_key(char c, char *cli_buffer, int *index) {
+    int direction = (c == '+') ? 1 : -1;
+    char *historic_command = get_history_command(direction);
+
+    if (historic_command && historic_command[0] != '\0') {
+        // Clear the line and reset the cursor
+        uart_puts("\rMyOS>                                                                                              ");
+        uart_puts("\rMyOS> ");
+        
+        // Print the historic command
+        uart_puts(historic_command);
+        
+        // Update the command buffer
+        strncpy(cli_buffer, historic_command, MAX_CMD_SIZE);
+        *index = strlen(cli_buffer);
+    }
+    return;
+}
+
+void set_color(const char *option, const char *color) {
+	if (!option || !color) {
+        return;
+    }
+    int color_index = -1;
+    for (int i = 0; i < 8; i++) {
+        if (strcmp(color, colors[i]) == 0) {
+            color_index = i;
+            break;
+        }
+    }
+    
+	if (color_index == -1) {
+        uart_puts("Invalid color\n");
+        return;
+    }
+
+    if (strcmp(option, "-t") == 0) {
+        uart_puts(ansiTextColors[color_index]);
+    } else if (strcmp(option, "-b") == 0) {
+        uart_puts(ansiBackgroundColors[color_index]);
+    }
 }
 
 void display_image() {
-	drawImage(background_sky, screenWidth, screenHeight, 0, 0, -1);
-	int newWidth = bird_player_info.width / 6;  // Half of the original width for example.
-	int newHeight = bird_player_info.height / 6; // Half of the original height for example.
-	drawScaledImage(bird_allArray[0], bird_player_info.width, bird_player_info.height, newWidth, newHeight, bird_position_x, bird_position_y, bird_player_info.exclude_color);
+	drawImage(background_sky, screenWidth, screenHeight, 0, 0);
 }
+
 void display_video() {
+	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 1);
+	drawVideo(first_video_array, 89, 480, 636);
 }
-void display_moving_background() {
-	// infinite
-	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, 1);
-	// no infinite
-	move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight, -1, 1, 1);
-}
-/* CLI read and handle actions */
-void cli() {
-	char c = uart_getc(); // read each char
-
-	if (c == 'w') { // 'w' pressed: scroll up image
-	}
-	else if (c == 's') { // 's' pressed: scroll down image
-	}
-	else if (c == 'a') { // slide to previous image
-	}
-	else if (c == 'd') { // slide to next image
-	}
-	else if (c == '\n') {
-
-	}
-}
-
 
 void printName() {
 	// Background color
@@ -114,27 +214,166 @@ void printName() {
 	drawLetter('h', 720, 200, 0x00FF7F00);
 }
 
-void main() {
-	// set up serial console
+/* CLI read and handle actions */
+void cli() {
+
+	static char cli_buffer[MAX_CMD_SIZE];
+	static int index = 0;
+
+	// read and send back each char
+	char c = uart_getc();
+	uart_sendc(c);
+	// Autocomplete
+	if (c == '\t') {
+		for (int i = 0; i <  sizeof(commands) / sizeof(commands[0]); i++)
+		{
+			if (strncmp(cli_buffer, commands[i], strlen(cli_buffer)) == 0)
+			{
+				// Complete the command
+				strcpy(cli_buffer, commands[i]);
+				index = strlen(cli_buffer);    // Update the index
+				//Clear and reprint the prompt with the new command
+				uart_puts("\rMyOS>                                  ");
+				uart_puts("\rMyOS> ");
+				uart_puts(cli_buffer);
+				break;
+			}
+		}
+	} else if (c == '+' || c == '_') { //DOWN Key + and UP Key _
+		handle_history_key(c, cli_buffer, &index);
+	} else if (c == '\b' || c == 0x7F) { //Backspace and Delete character
+		if (index > 0) {
+			index--;
+            cli_buffer[index] = '\0';
+			uart_puts("\b \b");
+			uart_puts("\rMyOS>                                  ");
+            uart_puts("\rMyOS> ");
+            uart_puts(cli_buffer);
+		}
+		//Error handling when delete pass the prompt
+		else {
+			uart_puts("\rMyOS> ");
+		}
+	} else if (c != '\n') { //put into a buffer until got new line character
+		cli_buffer[index] = c; //Store into the buffer
+		index++;
+	} else if (c == '\n') {
+		cli_buffer[index] = '\0';
+
+		strncpy(cmd_history[history_cmd], cli_buffer, MAX_CMD_SIZE);
+    	history_cmd = (history_cmd + 1) % MAX_HISTORY;
+    	current_cmd = history_cmd;
+
+		/* Compare with supported commands and execute
+		* ........................................... */
+		// Help Command
+		if (strcmp(cli_buffer, commands[0]) == 0) {
+			uart_puts("For more information on a specific command, type help <command-name> \n");
+			uart_puts(commandsInfo[0]);
+			uart_puts(commandsInfo[1]);
+			uart_puts(commandsInfo[2]);
+			uart_puts(commandsInfo[3]);
+			uart_puts(commandsInfo[4]);
+			uart_puts(commandsInfo[5]);
+			uart_puts(commandsInfo[6]);
+			uart_puts(commandsInfo[7]);
+			uart_puts("\n");
+		}
+		else if (strcmp(cli_buffer, "help help") == 0) {
+			uart_puts(commandsDetail[0]);
+		}
+		else if (strcmp(cli_buffer, "help clear") == 0) {
+			uart_puts(commandsDetail[1]);
+		}
+		else if (strcmp(cli_buffer, "help setcolor") == 0) {
+			uart_puts(commandsDetail[2]);
+		}
+		else if (strcmp(cli_buffer, "help displayName") == 0) {
+			uart_puts(commandsDetail[3]);
+		}
+		else if (strcmp(cli_buffer, "help displayImage") == 0) {
+			uart_puts(commandsDetail[4]);
+		}
+		else if (strcmp(cli_buffer, "help displayVideo") == 0) {
+			uart_puts(commandsDetail[5]);
+		}
+		else if (strcmp(cli_buffer, "help playGame") == 0) {
+			uart_puts(commandsDetail[6]);
+		}
+		//Clear Command
+		else if (strcmp(cli_buffer, commands[1]) == 0) {
+			clear();
+		}
+		//Setcolor Command
+		else if (strncmp(cli_buffer, commands[2], 8) == 0) {
+			// Tokenize the copied buffer to get the command arguments
+			char *token = strtok(cli_buffer, " ");
+			char *option = NULL;
+			char *color = NULL;
+
+			while ((token = strtok(NULL, " ")) != NULL) {
+				if (token[0] == '-') { // This is an option
+					option = token;
+				} else { // This is a color
+					color = token;
+					if (option == NULL) {
+						break;
+					} else {
+						to_upper(color);
+						set_color(option, color);
+						option = NULL; // Reset for the next pair, if any
+					}
+				}
+			}
+		}
+		//displayName Command
+		else if (strcmp(cli_buffer, commands[3]) == 0) {
+			printName();
+		}
+		//displayImage Command
+		else if (strcmp(cli_buffer, commands[4]) == 0) {
+			display_image();
+		}
+		//displayVideo Command
+		else if (strcmp(cli_buffer, commands[5]) == 0) {
+			display_video();
+		}
+		//playGame Command
+		else if (strcmp(cli_buffer, commands[6]) == 0) {
+            
+		}
+		//Error handling
+		else {
+			uart_puts("Unrecognized as an internal command!\n");
+		}
+
+		//Return to command line
+		index = 0;
+		displayPrompt();
+	}
+	
+	
+	// if (c == 'w') { // 'w' pressed: scroll up image
+	// }	
+	// else if (c == 's') { // 's' pressed: scroll down image
+	// }
+	// else if (c == 'a') { // slide to previous image
+	// }
+	// else if (c == 'd') { // slide to next image
+	// }
+}
+
+void main()
+{
+    // set up serial console
 	uart_init();
-
-	// say hello
-	uart_puts("\n\nHello World!\n");
-
+	
 	// Initialize frame buffer
 	framebf_init();
 
-    initialize_positions();
-
-	// Display group name
-
-	// display_image();
-	display_video();
-	// display_moving_background();
-
-
-	// echo everything back
-	while (1) {
+	//WelcomeMessage
+	welcomeMessage();
+	while(1) {
 		cli();
 	}
 }
