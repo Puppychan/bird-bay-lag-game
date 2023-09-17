@@ -23,6 +23,8 @@ void wait_msec(unsigned int n) {
 
 /* Function to start a timer (set = 1) or wait for it to expire (set = 0) */
 void set_wait_timer(int set, unsigned int msVal) {
+    // set = 1: Sets the timer, calculates when the delay should expire, but then returns immediately without waiting.
+    // set = 0: Waits (or blocks) until the previously set time has expired.
     static unsigned long expiredTime = 0; //declare static to keep value
     register unsigned long r, f, t;
 
@@ -74,5 +76,4 @@ uint32_t rand_range(uint32_t min_num, uint32_t max_num) {
 
     return min_num + (rand() % range);
 }
-
 

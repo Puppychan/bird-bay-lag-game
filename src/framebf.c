@@ -3,6 +3,7 @@
 #include "mbox.h"
 #include "uart.h"
 #include "fontAutolova.h"
+#include "printf.h"
 #include "mylib.h"
 
 //Use RGBA32 (32 bits for each pixel)
@@ -11,9 +12,9 @@
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
 #define PIXEL_ORDER 0
 
-#define MAX_WIDTH 1920   // maximum expected width
-#define MAX_HEIGHT 1080  // maximum expected height
-unsigned long backupBuffer[MAX_WIDTH * MAX_HEIGHT];
+#define MAX_WIDTH 1080   // maximum expected width
+#define MAX_HEIGHT 675  // maximum expected height
+uint32_t backupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
 
 //Screen info
@@ -36,8 +37,10 @@ void framebf_init() {
     mBuf[4] = 0; // REQUEST CODE = 0
 
     // ratio: 16/10
-    mBuf[5] = 1024; // Value(width)
-    mBuf[6] = 640; // Value(height)
+    // mBuf[5] = 1024; // Value(width)
+    // mBuf[6] = 640; // Value(height)
+    mBuf[5] = 1080;
+    mBuf[6] = 675;
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
@@ -102,6 +105,7 @@ void framebf_init() {
         width = mBuf[5];     	// Actual physical width
         height = mBuf[6];     	// Actual physical height
         pitch = mBuf[33];       // Number of bytes per line
+        printf("Pitch: %d\n", pitch);
 
     }
     else {
@@ -158,29 +162,37 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y,
 }
 
 void backupRegion(int x, int y, int width, int height) {
-    int index = 0;
+    int backupIndex = 0;
+    // printf("Pitch backup region: %d\n", pitch);
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
-            backupBuffer[index++] = *((unsigned int*)(fb + (h * pitch) + (COLOR_DEPTH / 8 * w)));
-        }
-    }
-}
+            backupIndex = h * MAX_WIDTH + w;
 
-void clearImage(int x, int y, int width, int height) {
-    // clear image
-    for (int h = y; h < y + height; h++) {
-        for (int w = x; w < x + width; w++) {
-            drawPixelARGB32(w, h, 0x00000000);
+            int offs = (h * pitch) + (COLOR_DEPTH / 8 * w);
+            uint32_t pixel_value = *((unsigned int*)(fb + offs));
+            backupBuffer[backupIndex] = pixel_value;
+            // printf("Backup: offs (%d, %d): %d, pixel: %x, current buffer: %x \n", w, h, offs, pixel_value, backupBuffer[index]);
         }
     }
 }
 
 void clearImageOverlay(int x, int y, int width, int height) {
-    int index = 0;
+    // int index = 0;
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
-            unsigned int originalColor = backupBuffer[index++];
+            // unsigned int originalColor = backupBuffer[index++];
+
+            unsigned int originalColor = backupBuffer[h * MAX_WIDTH + w];
             drawPixelARGB32(w, h, originalColor);
+            // printf("Clear image overlay: %x\n", originalColor);
+        }
+    }
+}
+void clearImage(int x, int y, int width, int height) {
+    // clear image
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            drawPixelARGB32(w, h, 0x00000000);
         }
     }
 }

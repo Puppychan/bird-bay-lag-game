@@ -6,6 +6,9 @@
         "fontautolova.h": "c",
         "firstvideo.h": "c",
         "uart.h": "c",
-        "bird.h": "c"
+        "bird.h": "c",
+        "printf.h": "c",
+        "stdint.h": "c",
+        "game.h": "c"
     }
 }

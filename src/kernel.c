@@ -1,15 +1,23 @@
 #include "uart.h"
 #include "mbox.h"
-#include "framebf.h"
-#include "bird.h"
-#include "mylib.h"
+// #include "framebf.h"
+#include "printf.h"
+// #include "bird.h"
+#include "game.h"
 // #include "./data/test.h"
 
+// const int screenHeight = 640;
+// const int screenWidth = 1024;
+// const int virtualScreenHeight = 675;
+// const int virtualScreenWidth = 1080;
 const int screenHeight = 675;
 const int screenWidth = 1080;
 
 void display_image() {
+	// drawImage(background_sky, virtualScreenWidth, virtualScreenHeight, 0, 0, -1);
+	// backupRegion(0, 0, virtualScreenWidth, virtualScreenHeight);
 	drawImage(background_sky, screenWidth, screenHeight, 0, 0, -1);
+	backupRegion(0, 0, screenWidth, screenHeight);
 }
 void display_video() {
 	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
@@ -17,7 +25,7 @@ void display_video() {
 }
 void display_moving_background() {
 	// infinite
-	sizing size_display = {screenWidth, screenHeight};
+	sizing size_display = { screenWidth, screenHeight };
 	// no infinite
 	// move_image(background_sky, size_display, size_display, -1, LEFT, 0);
 	// infinite
@@ -29,15 +37,25 @@ void cli() {
 
 	if (c == 'w') { // 'w' pressed: scroll up image
 	}
-	else if (c == 's') { // 's' pressed: scroll down image
+	else if (c == 's') { // 's' pressed: scroll down image  
 	}
 	else if (c == 'a') { // slide to previous image
 	}
 	else if (c == 'd') { // slide to next image
 	}
+	else if (c == 'p') { // start game
+		// if (is_game_window) { // only start when the user is opening the game window
+		// 	// start game here
+		// 	is_start_game = 1;
+		// }
+	}
 	else if (c == ' ') {
-		game_loop(screenHeight);
-		// uart_puts("hello");
+		// if start game
+		// if (is_game_window) {
+
+		// }
+		// init_pipes();
+		game_loop(screenWidth, screenHeight);
 	}
 }
 
@@ -108,6 +126,11 @@ void printName() {
 }
 
 void main() {
+	// current time
+	int time = get_current_time(); // get time to have different seed for testing purpose
+	printf("time: %d", time);
+	srand_custom(6361625);
+	// srand_custom(time);
 	// set up serial console
 	uart_init();
 
@@ -117,11 +140,21 @@ void main() {
 	// Initialize frame buffer
 	framebf_init();
 
-	// display_image();
-	display_moving_background();
-    initialize_positions((float)screenWidth / 3, (float)screenHeight / 2);
-	choose_bird(0, 0);
-	draw_bird();
+	display_image();
+	init_pipes(screenWidth, screenHeight);
+
+	wait_msec(500);
+
+	// draw_pipes(screenWidth, screenHeight);
+
+	// drawScaledImage(bird_allArray[0], bird_player_info.width, bird_player_info.height, bird_player_info.width / 6, bird_player_info.height / 6, 0, 0, bird_player_info.exclude_color);
+	// drawScaledImage(bird_allArray[1], bird_player_info_2.width, bird_player_info_2.height, bird_player_info_2.width / 6, bird_player_info_2.height / 6, screenWidth - bird_player_info_2.width / 6, screenHeight - bird_player_info_2.height / 6, bird_player_info_2.exclude_color);
+	// drawScaledImage(bird_allArray[1], bird_player_info_2.width, bird_player_info_2.height, bird_player_info_2.width / 6, bird_player_info_2.height / 6, 0, 0, bird_player_info_2.exclude_color);
+
+	// display_moving_background();
+	// initialize_positions((float)screenWidth / 3, (float)screenHeight / 2);
+	// choose_bird(0, 0);
+	// draw_bird();
 	// clear_bird();
 
 	// Display group name

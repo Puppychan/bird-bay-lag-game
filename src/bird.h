@@ -5,4 +5,4 @@ int check_collision_with_ground(int screenHeight);
 void bird_flap();
 void clear_bird();
 void update_bird_position();
-void game_loop(int screenHeight);
+void game_loop_bird(int screenHeight);
