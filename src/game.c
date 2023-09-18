@@ -6,6 +6,7 @@ unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
 unsigned int gameoverColorCode = 0x000000;
+int gameOver = 0;
 
 
 
@@ -108,8 +109,6 @@ void gameMenu() {
                 break;
         }
     }
-    
-
 }
 
 void backgroundDisplay() {
@@ -140,6 +139,40 @@ void deleteArrow(int x, int y) {
     }
 }
 
-void playGame() {
+void gameoverDisplay() {
+    backgroundDisplay();
+    drawWord("GameOver!", 350, 80, gameoverColorCode);
+    //Test Score Data
+    int score = 10;
+    
+    char cScore[10];
+    citoa(score, cScore, 10);
+    drawWord("Highest", 150, 150, gameoverColorCode);
+    drawWord("Score:", 500, 150, gameoverColorCode);
+    drawWord(cScore, 800, 150, gameoverColorCode);
 
+    drawWord("Press", 250, 320, gameoverColorCode);
+    drawWord("any", 490, 320, gameoverColorCode);
+    drawWord("key", 650, 320, gameoverColorCode);
+    drawWord("to", 290, 390, gameoverColorCode);
+    drawWord("continue", 410, 390, gameoverColorCode);
+
+    char c = 0;
+    do {
+    c = getUart();
+    } while (c == 0);
+    
+    return;
+}
+
+void playGame() {
+    while(1) {
+        //Testing Debug
+        // gameOver = 1;
+        if (gameOver) {
+            gameoverDisplay();
+            gameOver = 0;
+            break;
+        }
+    }
 }

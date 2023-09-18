@@ -1,7 +1,7 @@
 #include "uart.h"
 #include "../data/data.h"
 #include "framebf.h"
-// #include "../data/arrow.h"
+#include "mylib.h"
 
 #define mainMenu 1
 #define helpMenu 2
@@ -14,4 +14,5 @@ void gameMenu();
 void backgroundDisplay();
 void displayArrow(const unsigned long *arr, int x, int y);
 void deleteArrow(int x, int y);
+void gameoverDisplay();
 void playGame();
