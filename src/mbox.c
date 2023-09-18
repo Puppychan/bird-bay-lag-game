@@ -69,9 +69,9 @@ void mailbox_send(uint32_t msg, unsigned char channel)
 int mbox_call(unsigned int buffer_addr, unsigned char channel)
 {
 	//Check Buffer Address
-	uart_puts("Buffer Address: ");
-	uart_hex(buffer_addr);
-	uart_sendc('\n');
+	// uart_puts("Buffer Address: ");
+	// uart_hex(buffer_addr);
+	// uart_sendc('\n');
 	
 	//Prepare Data (address of Message Buffer)
 	unsigned int msg = (buffer_addr & ~0xF) | (channel & 0xF);
@@ -82,7 +82,7 @@ int mbox_call(unsigned int buffer_addr, unsigned char channel)
 	if (msg == mailbox_read(channel)) {
 		/* is it a valid successful response (Response Code) ? */
 		if (mBuf[1] == MBOX_RESPONSE)
-			uart_puts("Got successful response \n");
+			// uart_puts("Got successful response \n");
 	
 		return (mBuf[1] == MBOX_RESPONSE);
 	}
