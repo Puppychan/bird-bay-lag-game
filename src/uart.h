@@ -24,3 +24,10 @@ void uart_dec(int num);
 void uart_hex(unsigned int d);
 unsigned int uart_isReadByteReady();
 unsigned char getUart();
+
+
+#define ARM_TIMER_BASE 0x7E00b000 // This is for Raspberry Pi 4 (p. 159 BCM2711 ARM Peripherals Ras 4 pdf)
+#define SYSTEM_TIMER_COUNTER_LOW (*(volatile unsigned int *)(ARM_TIMER_BASE + 0x04))
+void wait_msec(unsigned int n);
+void set_wait_timer(int set, unsigned int msVal);
+void delay(unsigned int milliseconds);

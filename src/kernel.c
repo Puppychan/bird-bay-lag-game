@@ -52,7 +52,7 @@ void display_moving_background() {
 
 /* CLI read and handle actions */
 void cli() {
-	char c = uart_getc(); // read each char
+	char c = getUart(); // read each char
 
 	if (c == 'w') { // 'w' pressed: scroll up image
 	}
