@@ -1,5 +1,6 @@
 #include "data.h"
 #include "background.h"
+#include "arrow.h"
 #include "firstVideo.h"
 #include "firstVideo2.h"
 #include "firstVideo3.h"
@@ -107,3 +108,4 @@ const unsigned long* first_video_array[89] = {
 extern const unsigned long background_sky[];
 extern const int epd_bitmap_allArray_LEN;
 extern const unsigned long* epd_bitmap_allArray[];
+extern const unsigned long arrow [];

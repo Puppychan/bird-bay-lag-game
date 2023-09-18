@@ -10,5 +10,6 @@ extern const unsigned long* first_video_array[];
 extern const unsigned long background_sky[];
 extern const int epd_bitmap_allArray_LEN;
 extern const unsigned long* epd_bitmap_allArray[];
+extern const unsigned long arrow [];
 
 #endif // DATA_H

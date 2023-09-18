@@ -2,7 +2,7 @@
 #include "framebf.h"
 #include "mbox.h"
 #include "uart.h"
-#include "fontAutolova.h"
+#include "../data/fontAutolova.h"
 #include "mylib.h"
 
 //Use RGBA32 (32 bits for each pixel)
@@ -140,6 +140,15 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
         }
     }
 }
+
+void drawWord(const char* word, int x, int y, unsigned int colorCode) {
+    int offset = 0;
+    for (int i = 0; word[i] != '\0'; i++) {
+        drawLetter(word[i], x + offset, y, colorCode);
+        offset += 40; // assuming each letter is 40 pixels wide
+    }
+}
+
 
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
     int index = 0;

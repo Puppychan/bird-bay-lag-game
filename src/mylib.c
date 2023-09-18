@@ -66,8 +66,13 @@ void welcomeMessage()
 	uart_puts("\033[34m88~~~b. 88~~~88 88`8b   88~~~~~   88    88   `Y8b.                \n");
 	uart_puts("\033[34m88   8D 88   88 88 `88. 88.       `8b  d8' db   8D                \n");
 	uart_puts("\033[34mY8888P' YP   YP 88   YD Y88888P    `Y88P'  `8888Y'           \n");
-    uart_puts("\n");     
-    uart_puts("\033[37m     Developed by Group 13\n\n\n\n");
+    uart_puts("\n");
+    uart_puts("\033[37m     Developed by Group 13\n");
+    uart_puts("\033[37m     Tran Mai Nhung          - s3879954\n");
+    uart_puts("\033[37m     Phan Nhat Minh          - s3904422\n");
+    uart_puts("\033[37m     Tran Nguyen Ha Khanh    - s3877707\n");
+    uart_puts("\033[37m     Nguyen Ngoc Minh        - s3907086\n\n\n\n");
+    
 	uart_puts("\033[0m"); //Reset to default color
 	displayPrompt();
 }

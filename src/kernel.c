@@ -341,7 +341,7 @@ void cli() {
 		}
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
-            playGame();
+            gameMenu();
 		}
 		//Error handling
 		else {

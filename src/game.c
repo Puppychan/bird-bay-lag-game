@@ -1,192 +1,145 @@
-#include "uart.h"
-#include "../data/data.h"
-#include "framebf.h"
+#include "game.h"
 
 static int screenHeight = 675;
 static int screenWidth = 1080;
-unsigned int startColorCode = 0xD80032;
-unsigned int instrucColorCode = 0xD80032;
-unsigned int gameoverColorCode = 0xD80032;
-// 1 = gameover
-int isGameover = 0;
+unsigned int arrowColorCode = 0x000000;
+unsigned int startColorCode = 0x000000;
+unsigned int helpColorCode = 0x000000;
+unsigned int gameoverColorCode = 0x000000;
 
-int addscore(int* score) {
-    (*score)++;
-    return *score;
-}
 
-void startDisplay() {
-    drawImage(background_sky, screenWidth, screenHeight, 0, 0);
-    int startY = 170;
-    int startX = 80;
-    drawLetter('W', startX, startY, startColorCode);
-    drawLetter('E', startX+=40, startY, startColorCode);
-    drawLetter('L', startX+=40, startY, startColorCode);
-    drawLetter('C', startX+=40, startY, startColorCode);
-    drawLetter('O', startX+=40, startY, startColorCode);
-    drawLetter('M', startX+=40, startY, startColorCode);
-    drawLetter('E', startX+=40, startY, startColorCode);
-    drawLetter('T', startX+=80, startY, startColorCode);
-    drawLetter('O', startX+=40, startY, startColorCode);
-    drawLetter('F', startX+=80, startY, startColorCode);
-    drawLetter('L', startX+=40, startY, startColorCode);
-    drawLetter('A', startX+=40, startY, startColorCode);
-    drawLetter('P', startX+=40, startY, startColorCode);
-    drawLetter('P', startX+=40, startY, startColorCode);
-    drawLetter('Y', startX+=40, startY, startColorCode);
-    drawLetter('B', startX+=80, startY, startColorCode);
-    drawLetter('I', startX+=40, startY, startColorCode);
-    drawLetter('R', startX+=40, startY, startColorCode);
-    drawLetter('D', startX+=40, startY, startColorCode);
 
-    startY = 317;
-    startX = 80;
-    drawLetter('P', startX, startY, startColorCode);
-    drawLetter('R', startX+=40, startY, startColorCode);
-    drawLetter('E', startX+=40, startY, startColorCode);
-    drawLetter('S', startX+=40, startY, startColorCode);
-    drawLetter('S', startX+=40, startY, startColorCode);
-    drawLetter('A', startX+=80, startY, startColorCode);
-    drawLetter('N', startX+=40, startY, startColorCode);
-    drawLetter('Y', startX+=40, startY, startColorCode);
-    drawLetter('K', startX+=80, startY, startColorCode);
-    drawLetter('E', startX+=40, startY, startColorCode);
-    drawLetter('Y', startX+=40, startY, startColorCode);
-    drawLetter('T', startX+=80, startY, startColorCode);
-    drawLetter('O', startX+=40, startY, startColorCode);
-    drawLetter('S', startX+=80, startY, startColorCode);
-    drawLetter('T', startX+=40, startY, startColorCode);
-    drawLetter('A', startX+=40, startY, startColorCode);
-    drawLetter('R', startX+=40, startY, startColorCode);
-    drawLetter('T', startX+=40, startY, startColorCode);
+void gameMenu() {
+    int arrowPos = mainMenu;
+    int currState = mainMenu;
+    int nextState = mainMenu;
+    char c;
+    while (1)
+    {
+        switch (nextState)
+        {
+            case mainMenu:
+                backgroundDisplay();
+                drawWord("Welcome", 80, 170, startColorCode);
+                drawWord("To", 400, 170, startColorCode);
+                drawWord("Flappy", 520, 170, startColorCode);
+                drawWord("Bird", 800, 170, startColorCode);
 
-}
+                drawWord("Start", 400, 350, startColorCode);
+                drawWord("Help", 400, 400, startColorCode);
+                drawWord("Exit", 400, 450, startColorCode);
+                arrowPos = playOption;
+                nextState = 0;
+                currState = mainMenu;
+                break;
+            case helpMenu:
+                backgroundDisplay();
+                drawWord("Instruction", 300, 100, helpColorCode);
 
-void instructDisplay() {
-    drawImage(background_sky, screenWidth, screenHeight, 0, 0);
+                drawWord("Press", 140, 200, helpColorCode);
+                drawWord("Space", 380, 200, helpColorCode);
+                drawWord("To", 620, 200, helpColorCode);
+                drawWord("Play", 740, 200, helpColorCode);
 
-    int startX = 300;
-    int startY = 100;
-    drawLetter('I', startX, startY, instrucColorCode);
-    drawLetter('N', startX+=40, startY, instrucColorCode);
-    drawLetter('S', startX+=40, startY, instrucColorCode);
-    drawLetter('T', startX+=40, startY, instrucColorCode);
-    drawLetter('R', startX+=40, startY, instrucColorCode);
-    drawLetter('U', startX+=40, startY, instrucColorCode);
-    drawLetter('C', startX+=40, startY, instrucColorCode);
-    drawLetter('T', startX+=40, startY, instrucColorCode);
-    drawLetter('I', startX+=40, startY, instrucColorCode);
-    drawLetter('O', startX+=40, startY, instrucColorCode);
-    drawLetter('N', startX+=40, startY, instrucColorCode);
+                drawWord("Dodge", 140, 300, helpColorCode);
+                drawWord("Obstacles", 380, 300, helpColorCode);
+                drawWord("To", 780, 300, helpColorCode);
+                drawWord("Gain", 340, 350, helpColorCode);
+                drawWord("Point", 540, 350, helpColorCode);
 
-    startX = 140;
-    startY = 317;
-    drawLetter('P', startX, startY, instrucColorCode);
-    drawLetter('R', startX+=40, startY, instrucColorCode);
-    drawLetter('E', startX+=40, startY, instrucColorCode);
-    drawLetter('S', startX+=40, startY, instrucColorCode);
-    drawLetter('S', startX+=40, startY, instrucColorCode);
-    drawLetter('S', startX+=80, startY, instrucColorCode);
-    drawLetter('P', startX+=40, startY, instrucColorCode);
-    drawLetter('A', startX+=40, startY, instrucColorCode);
-    drawLetter('C', startX+=40, startY, instrucColorCode);
-    drawLetter('E', startX+=40, startY, instrucColorCode);
-    drawLetter('T', startX+=80, startY, instrucColorCode);
-    drawLetter('O', startX+=40, startY, instrucColorCode);
-    drawLetter('P', startX+=80, startY, instrucColorCode);
-    drawLetter('L', startX+=40, startY, instrucColorCode);
-    drawLetter('A', startX+=40, startY, instrucColorCode);
-    drawLetter('Y', startX+=40, startY, instrucColorCode);
+                drawWord("Back", 420, 430, helpColorCode);
+                nextState = 0;
+                currState = helpMenu;
+                break;
+            default:
+                break;
+        }
 
-    startX = 140;
-    startY = 370;
-    drawLetter('D', startX, startY, instrucColorCode);
-    drawLetter('O', startX+=40, startY, instrucColorCode);
-    drawLetter('D', startX+=40, startY, instrucColorCode);
-    drawLetter('G', startX+=40, startY, instrucColorCode);
-    drawLetter('E', startX+=40, startY, instrucColorCode);
-    drawLetter('O', startX+=80, startY, instrucColorCode);
-    drawLetter('B', startX+=40, startY, instrucColorCode);
-    drawLetter('S', startX+=40, startY, instrucColorCode);
-    drawLetter('T', startX+=40, startY, instrucColorCode);
-    drawLetter('A', startX+=40, startY, instrucColorCode);
-    drawLetter('C', startX+=40, startY, instrucColorCode);
-    drawLetter('L', startX+=40, startY, instrucColorCode);
-    drawLetter('E', startX+=40, startY, instrucColorCode);
-    drawLetter('S', startX+=40, startY, instrucColorCode);
+        switch (currState)
+        {
+            case mainMenu:
+                c = getUart();
+                //Enter to choose option
+                if (c == '\n') {
+                    if (arrowPos == helpOption) {
+                        nextState = helpMenu;
+                    } else if (arrowPos == playOption) {
+                        //Play Game Here
+                        playGame();
+                        nextState = mainMenu;
+                    } else if (arrowPos == exitOption){
+                        //Clear screen
+                        drawRectARGB32(0, 0, screenWidth, screenHeight, 0x00000000, 1);
+                        return;
+                    }
+                }
+                //Delete Arrow Position
+                if (c == 's') {
+                    if(arrowPos != exitOption) {
+                        deleteArrow(300, 300 + arrowPos * 50);
+                        arrowPos++;
+                    }
+                } else if (c == 'w') {
+                    if(arrowPos != playOption) {
+                        deleteArrow(300, 300 + arrowPos * 50);
+                        arrowPos--;
+                    }
+                }
+                //Display Arrow Position
+                if (arrowPos == playOption) {
+                    displayArrow(arrow, 300, 300 + arrowPos*50);
+                } else if (arrowPos == helpOption) {
+                    displayArrow(arrow, 300,  300 + arrowPos*50);
+                } else if (arrowPos == exitOption) {
+                    displayArrow(arrow, 300,  300 + arrowPos*50);
+                }
 
-    startX = 140;
-    startY = 430;
-    drawLetter('T', startX+=160, startY, instrucColorCode);
-    drawLetter('O', startX+=40, startY, instrucColorCode);
-    drawLetter('G', startX+=80, startY, instrucColorCode);
-    drawLetter('A', startX+=40, startY, instrucColorCode);
-    drawLetter('I', startX+=40, startY, instrucColorCode);
-    drawLetter('N', startX+=40, startY, instrucColorCode);
-    drawLetter('P', startX+=80, startY, instrucColorCode);
-    drawLetter('O', startX+=40, startY, instrucColorCode);
-    drawLetter('I', startX+=40, startY, instrucColorCode);
-    drawLetter('N', startX+=40, startY, instrucColorCode);
-    drawLetter('T', startX+=40, startY, instrucColorCode);
-}
+                break;
 
-void gameoverDisplay() {
-    drawImage(background_sky, screenWidth, screenHeight, 0, 0);
-    int startX = 140;
-    int startY = 100;
-    // Display "GAME OVER"
-    char* text = "GAME OVER";
-    for (int i = 0; text[i] != '\0'; i++) {
-        drawLetter(text[i], startX, startY, gameoverColorCode);
-        startX += 40; // move position for next letter
-    }
-    // Display Score
-    startX = 140;
-    startY += 80;  // position below "GAME OVER"
-    text = "SCORE: ";
-    for (int i = 0; text[i] != '\0'; i++) {
-        drawLetter(text[i], startX, startY, startColorCode);
-        startX += 40; // move position for next letter
+            case helpMenu:
+                c = getUart();
+                if (c == '\n') {
+                    nextState = mainMenu;
+                }
+                displayArrow(arrow, 300, 330 + arrowPos*50);
+                break;
+
+            default:
+                break;
+        }
     }
     
+
+}
+
+void backgroundDisplay() {
+    drawImage(background_sky, screenWidth, screenHeight, 0, 0);
+}
+
+// 'arrow', 80x40px
+void displayArrow(const unsigned long *arr, int x, int y) { //
+    for (int i = 0; i < 40; i++) {
+        for (int j = 0; j < 80; j++) {
+            if (*arr != 0x00FFFFFF) {
+                drawPixelARGB32(x+j, y+i, arrowColorCode);
+            }
+            arr++;
+        }
+    }
+}
+
+//Delete the arrow in the menu screen
+void deleteArrow(int x, int y) {
+    int index = x + y * screenWidth;
+    for (int i = 0; i < 40; i++) {
+        for (int j = 0; j < 80; j++) {
+            drawPixelARGB32(x + j, y + i, background_sky[index]);
+            index++;
+        }
+        index += screenWidth - 80;
+    }
 }
 
 void playGame() {
-    int score = 0;
-    //Display welcome screen
-    startDisplay();
-    //Wait receive any key
-    while (!getUart());
-    //Display instruction screen
-    instructDisplay();
-    char key = 0;
-    //Press q to quit
-    while (key != 'q') {
-        //Space character ASCII Table
-        if (key == 32) {
 
-            //Game Code Here
-            drawRectARGB32(0, 0, screenWidth, screenHeight, 0xFFFFFFFF, 1);
-
-
-
-
-            //Add score here
-            score = addscore(&score);
-
-
-
-            //Gameover display
-            if(isGameover) {
-                gameoverDisplay();
-            }
-
-            key = uart_getc();
-        }
-        else {
-            key = uart_getc();
-        }
-    }
-    //Clear screen
-    drawRectARGB32(0, 0, screenWidth, screenHeight, 0x00000000, 1);
 }
