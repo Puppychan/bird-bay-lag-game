@@ -38,7 +38,7 @@ void clear()
 
 void displayPrompt()
 {
-    uart_puts("MyOS> ");
+    uart_puts("\nMyOS> ");
 }
 
 int strcmp(const char *str1, const char *str2)

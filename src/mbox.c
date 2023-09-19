@@ -22,6 +22,87 @@
 volatile unsigned int  __attribute__((aligned(16))) mBuf[36];
 
 
+int max(int x, int y) {
+	return (x > y ? x : y);
+}
+
+void mbox_buffer_setup(unsigned int buffer_addr, unsigned int tag_identifier, unsigned int **res_data, unsigned int res_length, unsigned int req_length,...) {
+	// get optinal argument list
+	va_list ap;
+	va_start(ap, req_length); 
+
+	// cast the buffer address to a pointer in order to access the value at that address
+	unsigned int *mailbox = (unsigned int *) ((unsigned long) buffer_addr);
+
+	switch (tag_identifier) {
+
+		case MBOX_TAG_SETPHYWH: {
+			// get  
+			int width = va_arg(ap, unsigned int); 
+			int height = va_arg(ap, unsigned int);
+			mailbox[0] = 8*4; 		 // Length of message in bytes
+			mailbox[1] = MBOX_REQUEST;
+			mailbox[2] = MBOX_TAG_SETPHYWH; //Set physical width-height
+			mailbox[3] = max(res_length, req_length); // Value buffer size in bytes (max of request and response lengths)
+    	mailbox[4] = 0;			 // REQUEST CODE = 0
+			mailbox[5] = width;   // Value(width)
+			mailbox[6] = height;  // Value(height)
+    	mailbox[7] = MBOX_TAG_LAST;
+			*res_data = (unsigned int *) &mailbox[5];
+			break;
+		}
+
+		case MBOX_TAG_SETVIRTWH: {
+			int width = va_arg(ap, unsigned int);
+			int height = va_arg(ap, unsigned int);
+			mailbox[0] = 8*4; 		 // Length of message in bytes
+			mailbox[1] = MBOX_REQUEST;
+			mailbox[2] = MBOX_TAG_SETPHYWH; //Set physical width-height
+			mailbox[3] = max(res_length, req_length); // Value buffer size in bytes (max of request and response lengths)
+    	mailbox[4] = 0;			 // REQUEST CODE = 0
+			mailbox[5] = width;   // Value(width)
+			mailbox[6] = height;  // Value(height)
+    	mailbox[7] = MBOX_TAG_LAST;
+			*res_data = (unsigned int *) &mailbox[5];
+			break;
+		}
+
+		case MBOX_TAG_SETVIRTOFF: {
+			int x = va_arg(ap, int);
+			int y = va_arg(ap, int);
+			mailbox[0] = 8*4; // Length of message in bytes
+			mailbox[1] = MBOX_REQUEST;
+			mailbox[2] = MBOX_TAG_SETVIRTOFF; //Set physical width-height
+			mailbox[3] = max(res_length, req_length); // Value buffer size in bytes (max of request and response lengths)
+    	mailbox[4] = 0;	// REQUEST CODE = 0
+			mailbox[5] = x;  // x offset
+			mailbox[6] = y;  // y offset
+    	mailbox[7] = MBOX_TAG_LAST;
+			*res_data = (unsigned int *) &mailbox[5];
+			break;
+		}
+
+		case MBOX_TAG_SETDEPTH: {
+			int dept = va_arg(ap, unsigned int);
+			mailbox[0] = 7*4; // Length of message in bytes
+			mailbox[1] = MBOX_REQUEST;
+			mailbox[2] = MBOX_TAG_SETDEPTH; //Set depth
+			mailbox[3] = max(res_length, req_length); // Value buffer size in bytes (max of request and response lengths)
+    	mailbox[4] = 0;		// REQUEST CODE = 0
+			mailbox[5] = dept; // Value(width)
+    	mailbox[6] = MBOX_TAG_LAST;
+			*res_data = (unsigned int *) &mailbox[5];
+			break;
+		}
+		
+		default:
+			break;
+	}
+
+	va_end(ap); // end the using the variable argument list
+}
+
+
 /**
  * Read from the mailbox
  */

@@ -10,10 +10,16 @@
 #define NULL ((void *)0)
 // #include "./data/test.h"
 
-//Set screen height and width
+//Virtual screen height and width (from frambuffer setup)
 static int screenHeight = 675;
 static int screenWidth = 1080;
-static int is_slide_image = 0;
+
+//Physical width/height (from frambuffer setup)
+static int phScreenHeight = 640;
+static int phScreenWidth = 1024;
+static int y_offset = 0;
+
+static int is_diplay_image = 0;
 
 //History Terminal CMD
 char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
@@ -141,6 +147,29 @@ void set_color(const char *option, const char *color) {
     }
 }
 
+
+void scroll_up_image() {
+	if (y_offset + phScreenHeight < screenHeight) y_offset++;
+  unsigned int  *res_data = 0;
+  mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
+  if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
+  }
+  else {
+    uart_puts("mbox_call failed\n");
+  }
+}
+
+void scroll_down_image() {
+	if (y_offset > 0)  y_offset--;
+  unsigned int  *res_data = 0;
+  mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
+  if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
+  }
+  else {
+    uart_puts("mbox_call failed\n");
+  }
+}
+
 void display_image() {
 	drawImage(background_allArray[current_bg], screenWidth, screenHeight, 0, 0);
 }
@@ -224,7 +253,7 @@ void cli() {
 
 	// read and send back each char
 	char c = uart_getc();
-	uart_sendc(c);
+
 	
 	// Autocomplete
 	if (c == '\t') {
@@ -246,15 +275,21 @@ void cli() {
 	else if (c == '+' || c == '_') { //DOWN Key + and UP Key _
 		handle_history_key(c, cli_buffer, &index);
 	}
-	else if (c == 'a' && is_slide_image) { // slide to previous image
+	else if (c == 'a' && is_diplay_image) { // slide to previous image
 			if (current_bg == 0) current_bg = background_LEN-1;
 			else current_bg--;
 			display_image();
 	}
-	else if (c == 'd' && is_slide_image) { // slide to next image
+	else if (c == 'd' && is_diplay_image) { // slide to next image
 			if (current_bg == background_LEN-1) current_bg = 0;
 			else current_bg++;
 			display_image();
+	}
+	else if (c == 'w' && is_diplay_image) { // slide to previous image
+		scroll_up_image();
+	}
+	else if (c == 's' && is_diplay_image) { // slide to next image
+		scroll_down_image();
 	}
 	else if (c == '\b' || c == 0x7F) { //Backspace and Delete character
 		if (index > 0) {
@@ -271,11 +306,13 @@ void cli() {
 		}
 	} 
 	else if (c != '\n') { //put into a buffer until got new line character
+		uart_sendc(c);
 		cli_buffer[index] = c; //Store into the buffer
 		index++;
 	} 
 	else if (c == '\n') {
-		is_slide_image = 0;
+		uart_puts("\n");
+		is_diplay_image = 0;
 		cli_buffer[index] = '\0';
 
 		strncpy(cmd_history[history_cmd], cli_buffer, MAX_CMD_SIZE);
@@ -350,7 +387,7 @@ void cli() {
 		}
 		//displayImage Command
 		else if (strcmp(cli_buffer, commands[4]) == 0) {
-			is_slide_image = 1;
+			is_diplay_image = 1;
 			display_image();
 		}
 		//displayVideo Command
