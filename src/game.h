@@ -11,9 +11,8 @@
 #define setBackground 3
 
 #define playOption 1
-#define setBgOption 2
-#define helpOption 3
-#define exitOption 4
+#define helpOption 2
+#define exitOption 3
 
 extern unsigned short current_bg;
 extern unsigned short is_set_bg;

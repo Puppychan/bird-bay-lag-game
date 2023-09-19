@@ -30,6 +30,7 @@ void gameMenu() {
                 drawWord("Start", 400, 350, startColorCode);
                 drawWord("Help", 400, 400, startColorCode);
                 drawWord("Exit", 400, 450, startColorCode);
+                // drawWord("Exit", 400, 450, startColorCode);
                 arrowPos = playOption;
                 nextState = 0;
                 currState = mainMenu;
@@ -56,10 +57,7 @@ void gameMenu() {
                 break;
 
             case setBackground:
-                backgroundDisplay();
-                drawWord("Instruction", 300, 100, helpColorCode);
-                drawWord("Press key 'a' or 'd'", 140, 200, helpColorCode);
-                drawWord("to slide and choose background", 140, 300, gameoverColorCode);
+                setBackgroundDisplay();
                 nextState = 0;
                 currState = setBackground;
                 break;
@@ -77,15 +75,14 @@ void gameMenu() {
                     if (arrowPos == helpOption) {
                         nextState = helpMenu;
                     } else if (arrowPos == playOption) {
-                        //Play Game Here
-                        playGame();
-                        nextState = mainMenu;
+                        // //Play Game Here
+                        // playGame();
+                        // nextState = mainMenu;
+                        nextState = setBackground;
                     } else if (arrowPos == exitOption){
                         //Clear screen
                         drawRectARGB32(0, 0, screenWidth, screenHeight, 0x00000000, 1);
                         return;
-                    } else if (arrowPos == setBgOption) {
-                        nextState = setBackground;
                     } 
                 }
                 //Delete Arrow Position
@@ -107,8 +104,6 @@ void gameMenu() {
                     displayArrow(arrow, 300,  300 + arrowPos*50);
                 } else if (arrowPos == exitOption) {
                     displayArrow(arrow, 300,  300 + arrowPos*50);
-                } else if (arrowPos == setBgOption) {
-                    displayArrow(arrow, 300,  300 + arrowPos*50);
                 }
 
                 break;
@@ -124,17 +119,18 @@ void gameMenu() {
             case setBackground:
                 c = getUart();
                 if (c == '\n') {
-                    nextState = mainMenu;
+                   playGame();
+                   nextState = mainMenu;
                 }
                 else if (c == 'a') { // slide to previous image
                     if (current_bg == 0) current_bg = background_LEN-1;
                     else current_bg--;
-                    backgroundDisplay();
+                    setBackgroundDisplay();
                 }
                 else if (c == 'd') { // slide to next image
                     if (current_bg == background_LEN-1) current_bg = 0;
                     else current_bg++;
-                    backgroundDisplay();
+                    setBackgroundDisplay();
                 }
                 break;
 
@@ -202,11 +198,26 @@ void gameoverDisplay() {
 void playGame() {
     while(1) {
         //Testing Debug
-        // gameOver = 1;
+        gameOver = 1;
         if (gameOver) {
             gameoverDisplay();
             gameOver = 0;
             break;
         }
     }
+}
+
+void setBackgroundDisplay() {
+    backgroundDisplay();
+    drawWord("Instruction", 300, 100, helpColorCode);
+    drawWord("Press", 20, 200, helpColorCode);
+    drawWord("'a'", 260, 200, helpColorCode);
+    drawWord("or", 420, 200, helpColorCode);
+    drawWord("'d'", 540, 200, helpColorCode);
+    drawWord("to", 660, 200, helpColorCode);
+    drawWord("silde", 780, 200, helpColorCode);
+    drawWord("Enter", 30, 300, helpColorCode);
+    drawWord("to", 270, 300, helpColorCode);
+    drawWord("set", 390, 300, helpColorCode);
+    drawWord("background", 550, 300, helpColorCode);     
 }
