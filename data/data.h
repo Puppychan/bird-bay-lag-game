@@ -11,12 +11,13 @@ extern const unsigned long* first_video_array[];
 extern const int background_LEN;
 extern const unsigned long* background_allArray[];
 
-// players
+// bird skins
 extern const int bird_allArray_LEN;
 extern const unsigned long* bird_allArray[];
-// birds
-// extern const image_info bird_player_info;
-extern const unsigned long bird_player[];
+extern const unsigned int birdWidth;
+extern const unsigned int birdHeight;
+
+// arrow
 extern const unsigned long arrow [];
 
 #endif // DATA_H

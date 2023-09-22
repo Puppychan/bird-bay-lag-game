@@ -204,7 +204,7 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
 // }
 
 
-void drawScaledImage2(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y, unsigned int exclude_color) {
+void drawScaledImage2(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y) {
     
     int new_width = orig_width*x_scale;
     int new_height = orig_height*y_scale;
@@ -221,10 +221,8 @@ void drawScaledImage2(const unsigned long* bitmap, int orig_width, int orig_heig
             // Get the color of the original pixel
             unsigned long color = bitmap[orig_i * orig_width + orig_j];
 
-            // Draw this pixel in the new image
-            if (color != exclude_color) {
-                drawPixelARGB32(j + x, i + y, color);
-            }
+            // draw
+            drawPixelARGB32(j + x, i + y, color);
         }
     }
 }

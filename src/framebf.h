@@ -9,7 +9,7 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode);
 void drawWord(const char* word, int x, int y, unsigned int colorCode);
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y);
 void drawScaledImage(const unsigned long* bitmap, int orig_width, int orig_height, int new_width, int new_height, int x, int y, unsigned int exclude_color);
-void drawScaledImage2(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y, unsigned int exclude_color);
+void drawScaledImage2(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y);
 
 // void drawVideo(const unsigned long* frames, int num_frames, int img_width, int img_height, int width, int height);
 void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height, int is_infinite);
