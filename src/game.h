@@ -3,8 +3,6 @@
 #include "framebf.h"
 #include "mylib.h"
 #define DEFAULT_BACKGROUND 0
-#define DEFAULT_BIRD 0
-#define DEFAULT_BIRD_SCALE 6;
 #define false 0
 #define true 1
 
@@ -19,9 +17,6 @@
 
 extern unsigned short current_bg;
 extern unsigned short is_set_bg;
-extern unsigned short current_bird;
-extern unsigned short is_set_bird;
-extern unsigned int bird_scale;
 
 void gameMenu();
 void backgroundDisplay();
@@ -32,3 +27,5 @@ void gameoverDisplay();
 void playGame();
 void selectBackground();
 void selectBird();
+void setBirdStateDisplay();
+void setBackgroundStateDisplay();

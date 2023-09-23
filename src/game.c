@@ -1,4 +1,6 @@
 #include "game.h"
+#define DEFAULT_BIRD_SHRINK_RATIO 6;
+#define DEFAULT_BIRD 0
 
 
 static int screenHeight = 675;
@@ -7,13 +9,13 @@ unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
 unsigned int gameoverColorCode = 0x000000;
-int gameOver = 0;
+static int gameOver = 0;
+
 unsigned short current_bg = DEFAULT_BACKGROUND;
 unsigned short is_set_bg = false;
-unsigned short current_bird = DEFAULT_BIRD;
-unsigned short is_set_bird = false;
-unsigned int bird_scale = DEFAULT_BIRD_SCALE;
-
+static unsigned short current_bird = DEFAULT_BIRD;
+static unsigned short is_set_bird = false;
+static double bird_scale = (double) 1/DEFAULT_BIRD_SHRINK_RATIO;
 
 
 void gameMenu() {
@@ -62,14 +64,14 @@ void gameMenu() {
                 break;
 
             case setBackground:
-                setBackgroundDisplay();
+                setBackgroundStateDisplay();
                 nextState = 0;
                 currState = setBackground;
                 is_set_bg = true;
                 break;
             
             case setBird:
-                setBirdDisplay();
+                setBirdStateDisplay();
                 nextState = 0;
                 currState = setBird;
                 is_set_bird = true;
@@ -138,12 +140,12 @@ void gameMenu() {
                 else if (c == 'a' && is_set_bg) { // slide to previous image
                     if (current_bg == 0) current_bg = background_LEN-1;
                     else current_bg--;
-                    setBackgroundDisplay();
+                    setBackgroundStateDisplay();
                 }
                 else if (c == 'd' && is_set_bg) { // slide to next image
                     if (current_bg == background_LEN-1) current_bg = 0;
                     else current_bg++;
-                    setBackgroundDisplay();
+                    setBackgroundStateDisplay();
                 }
                 break;
 
@@ -157,12 +159,12 @@ void gameMenu() {
                 else if (c == 'a' && is_set_bird) { // slide to previous image
                     if (current_bird == 0) current_bird = bird_allArray_LEN-1;
                     else current_bird--;
-                    setBirdDisplay();
+                    setBirdStateDisplay();
                 }
                 else if (c == 'd' && is_set_bird) { // slide to next image
                     if (current_bird == bird_allArray_LEN-1) current_bird = 0;
                     else current_bird++;
-                    setBirdDisplay();
+                    setBirdStateDisplay();
                 }
                 break;
 
@@ -179,7 +181,7 @@ void backgroundDisplay() {
 
 
 void birdDisplay(double scale, int x, int y) {
-    drawScaledImage2(bird_allArray[current_bird], birdWidth, birdHeight, (double) 1/scale, (double) 1/scale, x, y);
+    drawScaledImage2(bird_allArray[current_bird], birdWidth, birdHeight, scale, scale, x, y);
 }
 
 // 'arrow', 80x40px
@@ -244,7 +246,7 @@ void playGame() {
     }
 }
 
-void setBackgroundDisplay() {
+void setBackgroundStateDisplay() {
     backgroundDisplay();
     drawWord("Instruction", 300, 100, helpColorCode);
     drawWord("Press", 20, 200, helpColorCode);
@@ -260,7 +262,7 @@ void setBackgroundDisplay() {
 }
 
 
-void setBirdDisplay() {
+void setBirdStateDisplay() {
     backgroundDisplay();
     drawWord("Instruction", 300, 100, helpColorCode);
     drawWord("Press", 20, 200, helpColorCode);
@@ -273,5 +275,5 @@ void setBirdDisplay() {
     drawWord("to", 400, 300, helpColorCode);
     drawWord("set", 520, 300, helpColorCode);
     drawWord("bird", 680, 300, helpColorCode);     
-    birdDisplay(3, screenWidth/2 - 70, 450);
+    birdDisplay((double)1/3, screenWidth/2 - 70, 450);
 }
