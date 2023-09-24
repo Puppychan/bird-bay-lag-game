@@ -215,8 +215,8 @@ void game_run() {
         update_bird();
         move_pipes();
         if (gameOver) {
-            // gameoverDisplay();
-            // gameOver = 0;
+            gameoverDisplay();
+            gameOver = 0;
             break;
         }
     }
