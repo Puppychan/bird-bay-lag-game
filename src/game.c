@@ -96,7 +96,7 @@ void draw_bird_ratio(Bird bird, double scale) {
 // Bird
 void set_bird_location(float x, float y) {
     bird.x = x;
-    bird.y = y;=
+    bird.y = y;
 }
 
 // Pipe
