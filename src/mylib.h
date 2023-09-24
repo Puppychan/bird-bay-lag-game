@@ -1,6 +1,15 @@
 #include "uart.h"
 #include "../gcclib/stddef.h"
 
+// LCG Parameters
+#define A 1664525
+#define C 1013904223
+#define M 0xFFFFFFFF 
+
+void srand_custom(uint32_t s);
+uint32_t rand(void);
+uint32_t rand_range(uint32_t min_num, uint32_t max_num);
+
 void welcomeMessage();
 void clear();
 void displayPrompt();

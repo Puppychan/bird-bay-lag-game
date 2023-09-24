@@ -10,13 +10,6 @@
 #define NULL ((void *)0)
 // #include "./data/test.h"
 
-//Virtual screen height and width (from frambuffer setup)
-static int screenHeight = 675;
-static int screenWidth = 1080;
-
-//Physical width/height (from frambuffer setup)
-static int phScreenHeight = 640;
-static int phScreenWidth = 1024;
 static int y_offset = 0;
 
 static int is_diplay_image = 0;
@@ -149,7 +142,7 @@ void set_color(const char *option, const char *color) {
 
 
 void scroll_up_image() {
-	if (y_offset + phScreenHeight < screenHeight) y_offset++;
+	if (y_offset + screenHeight < virScreenHeight) y_offset++;
   unsigned int  *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
   if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
@@ -171,13 +164,21 @@ void scroll_down_image() {
 }
 
 void display_image() {
-	drawImage(background_allArray[current_bg], screenWidth, screenHeight, 0, 0);
+	drawImage(background_allArray[current_bg], virScreenWidth, virScreenHeight, 0, 0);
 }
 
 void display_video() {
-	// move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	// infinite_move_image(background_sky, screenWidth, screenHeight, screenWidth, screenHeight);
-	drawVideo(first_video_array, 89, 480, 636, 0);
+	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
+}
+
+
+void display_moving_background() {
+	// infinite
+	sizing size_display = { screenWidth, screenHeight };
+	// no infinite
+	// move_image(background_sky, size_display, size_display, -1, LEFT, 0);
+	// infinite
+	move_image(background_allArray[current_bg], size_display, size_display, -1, LEFT, 1);
 }
 
 void printName() {
@@ -275,22 +276,6 @@ void cli() {
 	else if (c == '+' || c == '_') { //DOWN Key + and UP Key _
 		handle_history_key(c, cli_buffer, &index);
 	}
-	else if (c == 'a' && is_diplay_image) { // slide to previous image
-			if (current_bg == 0) current_bg = background_LEN-1;
-			else current_bg--;
-			display_image();
-	}
-	else if (c == 'd' && is_diplay_image) { // slide to next image
-			if (current_bg == background_LEN-1) current_bg = 0;
-			else current_bg++;
-			display_image();
-	}
-	else if (c == 'w' && is_diplay_image) { // slide to previous image
-		scroll_up_image();
-	}
-	else if (c == 's' && is_diplay_image) { // slide to next image
-		scroll_down_image();
-	}
 	else if (c == '\b' || c == 0x7F) { //Backspace and Delete character
 		if (index > 0) {
 			index--;
@@ -312,7 +297,6 @@ void cli() {
 	} 
 	else if (c == '\n') {
 		uart_puts("\n");
-		is_diplay_image = 0;
 		cli_buffer[index] = '\0';
 
 		strncpy(cmd_history[history_cmd], cli_buffer, MAX_CMD_SIZE);
@@ -389,6 +373,27 @@ void cli() {
 		else if (strcmp(cli_buffer, commands[4]) == 0) {
 			is_diplay_image = 1;
 			display_image();
+			while (1) {
+				char c = uart_getc();
+				if (c == '\n') break;
+				else if (c == 'a') { // slide to previous image
+					if (current_bg == 0) current_bg = background_LEN-1;
+					else current_bg--;
+					display_image();
+				}
+				else if (c == 'd') { // slide to next image
+						if (current_bg == background_LEN-1) current_bg = 0;
+						else current_bg++;
+						display_image();
+				}
+				else if (c == 'w') { // slide to previous image
+					scroll_up_image();
+				}
+				else if (c == 's') { // slide to next image
+					scroll_down_image();
+				}
+			}
+			clear_screen();
 		}
 		//displayVideo Command
 		else if (strcmp(cli_buffer, commands[5]) == 0) {
