@@ -10,9 +10,7 @@ unsigned int gameoverColorCode = 0x000000;
 
 int gameOver = 0;
 int current_bg = DEFAULT_BACKGROUND;
-int is_set_bg = false;
 int current_bird = DEFAULT_BIRD;
-int is_set_bird = false;
 int BIRD_WIDTH = 60;
 int BIRD_HEIGHT = 60;
 
@@ -28,25 +26,8 @@ int pipe_gap = PIPE_GAP_MIN;
 // backup_buffer pipeBackupBuffers[PIPES_SIZE];
 // unsigned long pipeBackupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
-// handle game window
-void open_game() {
-    _is_game_window = 1;
-}
-void close_game() {
-    _is_game_window = 0;
-}
-bool is_game_window() {
-    return _is_game_window;
-}
-// handle game state
-void start_game() {
-    _is_start_game = 1;
-}
 void end_game() {
-    _is_start_game = 0;
-}
-bool is_start_game() {
-    return _is_start_game;
+    gameOver = 1;
 }
 
 void draw_pipes() {
@@ -85,7 +66,6 @@ void backup_pipe(pipe p) {
 }
 
 void draw_bird(Bird bird, int width, int height) {
-    // Draw the bird
     drawScaledImage(bird_allArray[current_bird], bird_info_allArray[current_bird]->width, bird_info_allArray[current_bird]->height, width, height, bird.x, bird.y, bird_info_allArray[current_bird]->exclude_color);
 }
 
@@ -94,7 +74,7 @@ void draw_bird_ratio(Bird bird, double scale) {
 }
 
 // Bird
-void set_bird_location(float x, float y) {
+void set_bird_position(float x, float y) {
     bird.x = x;
     bird.y = y;
 }
@@ -193,7 +173,7 @@ bool validate_bird_obstacle_collision() {
 }
 
 void update_bird() {
-    clear_bird();
+    // clear_bird();
 
     bird.vertical_velocity += GRAVITY;       // Gravity pulls the bird down
     bird.y += bird.vertical_velocity;
@@ -213,14 +193,27 @@ void flap_bird() {
     bird.vertical_velocity = FLAP_STRENGTH;
 }
 
-void game_run() {
-    // printf("Before init\n");
-    // unsigned long pipeBackupBuffer3D[PIPES_SIZE][max_height * max_width];
-    // printf("Called game loop \n");
+// void game_run() {
+//     // printf("Before init\n");
+//     // unsigned long pipeBackupBuffer3D[PIPES_SIZE][max_height * max_width];
+//     // printf("Called game loop \n");
 
-    if (is_start_game()) {
+//     if (is_start_game()) {
+//         update_bird();
+//         move_pipes();
+//     }
+// }
+
+void game_run() {
+    while(1) {
+        backgroundDisplay();
         update_bird();
         move_pipes();
+        if (gameOver) {
+            // gameoverDisplay();
+            // gameOver = 0;
+            break;
+        }
     }
 }
 
@@ -273,15 +266,21 @@ void gameMenu() {
                 setBackgroundStateDisplay();
                 nextState = 0;
                 currState = setBackground;
-                is_set_bg = true;
                 break;
             
             case setBird:
-                set_bird_location(500, 430);
+                set_bird_position(500, 430);
                 setBirdStateDisplay();
                 nextState = 0;
                 currState = setBird;
-                is_set_bird = true;
+                break;
+            
+            case playGame:
+                clear_screen();
+                set_bird_position(200, 400);
+                init_pipes();
+                nextState = 0;
+                currState = playGame;
                 break;
 
             default:
@@ -341,15 +340,14 @@ void gameMenu() {
             case setBackground:
                 c = getUart();
                 if (c == '\n') {
-                    is_set_bg = false;
                     nextState = setBird;
                 }
-                else if (c == 'a' && is_set_bg) { // slide to previous image
+                else if (c == 'a') { // slide to previous image
                     if (current_bg == 0) current_bg = background_LEN-1;
                     else current_bg--;
                     setBackgroundStateDisplay();
                 }
-                else if (c == 'd' && is_set_bg) { // slide to next image
+                else if (c == 'd') { // slide to next image
                     if (current_bg == background_LEN-1) current_bg = 0;
                     else current_bg++;
                     setBackgroundStateDisplay();
@@ -359,22 +357,24 @@ void gameMenu() {
             case setBird:
                 c = getUart();
                 if (c == '\n') {
-                    is_set_bird = false;
-                    playGame();
-                    nextState = mainMenu;
+                    nextState = playGame;
                 }
-                else if (c == 'a' && is_set_bird) { // slide to previous image
+                else if (c == 'a') { // slide to previous image
                     if (current_bird == 0) current_bird = bird_allArray_LEN-1;
                     else current_bird--;
                     setBirdStateDisplay();
                 }
-                else if (c == 'd' && is_set_bird) { // slide to next image
+                else if (c == 'd') { // slide to next image
                     if (current_bird == bird_allArray_LEN-1) current_bird = 0;
                     else current_bird++;
                     setBirdStateDisplay();
                 }
                 break;
 
+            case playGame:
+                game_run();
+                nextState = mainMenu;
+                break;
 
             default:
                 break;
@@ -434,18 +434,6 @@ void gameoverDisplay() {
     } while (c == 0);
     
     return;
-}
-
-void playGame() {
-    while(1) {
-        //Testing Debug
-        gameOver = 1;
-        if (gameOver) {
-            gameoverDisplay();
-            gameOver = 0;
-            break;
-        }
-    }
 }
 
 void setBackgroundStateDisplay() {

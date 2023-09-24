@@ -11,6 +11,8 @@
 #define helpMenu 2
 #define setBackground 3
 #define setBird 4
+#define playGame 5
+
 
 #define playOption 1
 #define helpOption 2
@@ -40,12 +42,8 @@
 
 #define MOVE_SPEED 5 // pixels per frame
 
-void open_game();
-void close_game();
-bool is_game_window();
-void start_game();
+
 void end_game();
-bool is_start_game();
 
 void clear_pipe(pipe p);
 void clear_bird();
@@ -73,7 +71,6 @@ void birdDisplay();
 void displayArrow(const unsigned long *arr, int x, int y);
 void deleteArrow(int x, int y);
 void gameoverDisplay();
-void playGame();
 void selectBackground();
 void selectBird();
 void setBirdStateDisplay();
