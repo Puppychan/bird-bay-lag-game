@@ -175,13 +175,13 @@ bool validate_bird_obstacle_collision() {
 void update_bird() {
     // clear_bird();
 
-    bird.vertical_velocity += GRAVITY;       // Gravity pulls the bird down
-    bird.y += bird.vertical_velocity;
+    // bird.vertical_velocity += GRAVITY;       // Gravity pulls the bird down
+    bird.y += GRAVITY;
 
     // Check for ceiling collision
     if (validate_bird_overflow() || validate_bird_obstacle_collision()) {
         bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
-        bird.vertical_velocity = 0;  // Reset velocity
+        // bird.vertical_velocity = 0;  // Reset velocity
         printf("Bird overflow detected");
         end_game();
     }
@@ -206,6 +206,11 @@ void flap_bird() {
 
 void game_run() {
     while(1) {
+        char c = getUart();
+        if (c == ' ') {
+            // bird.vertical_velocity -= 3;       // Gravity pulls the bird down
+            bird.y -= FLAP_STRENGTH;
+        }
         backgroundDisplay();
         update_bird();
         move_pipes();
@@ -278,6 +283,7 @@ void gameMenu() {
             case playGame:
                 clear_screen();
                 set_bird_position(200, 400);
+                bird.vertical_velocity = 3;
                 init_pipes();
                 nextState = 0;
                 currState = playGame;

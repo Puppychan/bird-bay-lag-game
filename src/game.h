@@ -20,6 +20,14 @@
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
+// Constants for the bird
+#define GRAVITY 10
+#define FLAP_STRENGTH 15
+#define MOVE_SPEED 10 // pixels per frame
+#define PIPE_MOVE_SPEED 10 // pixels per frame
+
+
+
 // Constants for the game mechanics
 #define PIPES_SIZE 10
 #define PIPE_DISTANCE 100 // make it modifiable later
@@ -33,14 +41,6 @@
 // #define PIPE_GAP_MIN 100 // change later for expert round - increase in bird size
 #define PIPE_GAP_MIN 100
 #define PIPE_GAP_MAX 150
-
-#define PIPE_MOVE_SPEED 3 // pixels per frame
-
-// Constants for the bird
-#define GRAVITY 1
-#define FLAP_STRENGTH -10
-
-#define MOVE_SPEED 5 // pixels per frame
 
 
 void end_game();
