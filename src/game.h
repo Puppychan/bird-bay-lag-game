@@ -1,16 +1,27 @@
+#include "uart.h"
 #include "../gcclib/stdbool.h"
+#include "../data/data.h"
 #include "framebf.h"
 #include "mylib.h"
+#define DEFAULT_BACKGROUND 0
+#define false 0
+#define true 1
+
+#define mainMenu 1
+#define helpMenu 2
+#define setBackground 3
+#define setBird 4
+#define playGame 5
 
 
-typedef struct {
-    float x, y;   // Position
-    float vertical_velocity;     // Vertical velocity
-} Bird;
+#define playOption 1
+#define helpOption 2
+#define exitOption 3
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
 // Constants for the game mechanics
+#define PIPES_SIZE 10
 #define PIPE_DISTANCE 100 // make it modifiable later
 #define PIPE_GAP 50 // make it modifiable later
 #define PIPE_WIDTH 50 
@@ -26,34 +37,40 @@ typedef struct {
 #define PIPE_MOVE_SPEED 3 // pixels per frame
 
 // Constants for the bird
-#define BIRD_WIDTH 60 // make it modifiable later
-#define BIRD_HEIGHT 50 // make it modifiable later
 #define GRAVITY 1
 #define FLAP_STRENGTH -10
 
-
 #define MOVE_SPEED 5 // pixels per frame
 
-void open_game();
-void close_game();
-bool is_game_window();
-void start_game();
 void end_game();
-bool is_start_game();
 
-void clear_pipe(pipe p, unsigned int max_width, unsigned int max_height);
+void clear_pipe(pipe p);
 void clear_bird();
-void backup_pipe(pipe p, unsigned int max_width, unsigned int max_height);
+void backup_pipe(pipe p);
 
-void draw_pipes(unsigned int max_width, unsigned int max_height);
-void draw_pipe(pipe p, unsigned int max_width, unsigned int max_height);
+void draw_pipes();
+void draw_pipe(pipe p);
 int validate_tube_height(pipe prev_pipe, pipe current_pipe, int current_gap);
-void init_bird(unsigned int max_width, unsigned int max_height);
-void init_pipes(unsigned int max_width, unsigned int max_height);
+void init_bird();
+void init_pipes();
 // void move_pipes();
-void move_pipes(unsigned int max_width, unsigned int max_height);
-bool validate_bird_overflow(unsigned int max_width, unsigned int max_height);
-bool validate_bird_obstacle_collision(unsigned int max_width, unsigned int max_height);
-void update_bird(unsigned int max_width, unsigned int max_height);
+void move_pipes();
+bool validate_bird_overflow();
+bool validate_bird_obstacle_collision();
+void update_bird();
 void flap_bird();
-void game_run(unsigned int max_width, unsigned int max_height);
+void game_run();
+
+extern int current_bg;
+extern int is_set_bg;
+
+void gameMenu();
+void backgroundDisplay();
+void birdDisplay();
+void displayArrow(const unsigned long *arr, int x, int y);
+void deleteArrow(int x, int y);
+void gameoverDisplay();
+void selectBackground();
+void selectBird();
+void setBirdStateDisplay();
+void setBackgroundStateDisplay();

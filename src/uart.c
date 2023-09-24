@@ -65,10 +65,9 @@ char uart_getc()
 	char c;
 
 	/* wait until data is ready (one symbol) */
-	do
-	{
+	do {
 		asm volatile("nop");
-	} while (!(*AUX_MU_LSR & 0x01));
+	} while ( !(*AUX_MU_LSR & 0x01) );
 
 	/* read it and return */
 	c = (char)(*AUX_MU_IO);
@@ -119,27 +118,24 @@ void uart_dec(int num)
 	char str[33] = "";
 	int i, rem, len = 0, n;
 
-	n = num;
-	while (n != 0)
-	{
-		len++;
-		n /= 10;
-	}
+    n = num;
+    while (n != 0){
+        len++;
+        n /= 10;
+    }
 
-	if (num == 0)
-		len = 1;
+    if (num == 0)
+    	len = 1;
 
-	for (i = 0; i < len; i++)
-	{
-		rem = num % 10;
-		num = num / 10;
-		str[len - (i + 1)] = rem + '0';
-	}
-	str[len] = '\0';
+    for (i = 0; i < len; i++){
+        rem = num % 10;
+        num = num / 10;
+        str[len - (i + 1)] = rem + '0';
+    }
+    str[len] = '\0';
 
-	uart_puts(str);
+    uart_puts(str);
 }
-
 
 //Check if the user has just inputted a new key
 unsigned int uart_isReadByteReady(){
@@ -153,4 +149,55 @@ unsigned char getUart(){
     if (uart_isReadByteReady())
     	ch = uart_getc();
     return ch;
+}
+
+
+/* Function to wait for some msec: the program will stop there */
+void wait_msec(unsigned int n) {
+	// 100000: 0.1s = 100ms
+	// 
+	register unsigned long f, t, r, expiredTime;
+
+	// Get the current counter frequency (Hz)
+	asm volatile ("mrs %0, cntfrq_el0" : "=r"(f));
+
+	// Read the current counter value
+	asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
+
+	// Calculate expire value for counter
+	expiredTime = t + ((f / 1000) * n) / 1000;
+	do {
+		asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
+	} while (r < expiredTime);
+}
+
+
+/* Function to start a timer (set = 1) or wait for it to expire (set = 0) */
+void set_wait_timer(int set, unsigned int msVal) {
+	static unsigned long expiredTime = 0; //declare static to keep value
+	register unsigned long r, f, t;
+
+	if (set) { /* SET TIMER */
+	// Get the current counter frequency (Hz)
+		asm volatile ("mrs %0, cntfrq_el0" : "=r"(f));
+
+		// Read the current counter
+		asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
+
+		// Calculate expired time:
+		expiredTime = t + ((f / 1000) * msVal) / 1000;
+	}
+	else { /* WAIT FOR TIMER TO EXPIRE */
+		do {
+				asm volatile ("mrs %0, cntpct_el0" : "=r"(r));
+		} while (r < expiredTime);
+	}
+}
+
+void delay(unsigned int milliseconds) {
+	volatile unsigned int start_time = SYSTEM_TIMER_COUNTER_LOW;
+	// Timer frequency is 1MHz, so wait for the count to go up by 1000 * milliseconds
+	while (SYSTEM_TIMER_COUNTER_LOW - start_time < 1000 * milliseconds) {
+		// Just wait
+	}
 }
