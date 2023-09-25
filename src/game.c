@@ -56,8 +56,6 @@ void end_game_win_action() {
     gameWin = false;
 }
 
-
-
 // Bird
 void set_bird_position(float x, float y) {
     bird.x = x;
