@@ -28,8 +28,11 @@ void draw_pipes();
 void draw_pipe(pipe p);
 void clear_pipe(pipe p);
 void clear_bird();
+
 void backup_pipe(pipe p);
 void backup_bird();
+void backup_game_scores();
+
 void draw_bird(Bird bird, int width, int height);
 void draw_bird_ratio(Bird bird, double scale);
 

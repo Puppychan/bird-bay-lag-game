@@ -107,15 +107,6 @@ void init_pipes() {
     }
 }
 
-void init_bird() {
-    bird_width = 60;
-    bird_height = 60;
-    // TODO: add round - change bird
-    set_bird_position(200, 400);
-    bird.vertical_velocity = 0;
-    draw_bird(bird, bird_width, bird_height);
-}
-
 void move_pipes() {
     for (int index = 0; index < PIPES_SIZE; index++) {
         if (pipes[index].top.x + PIPE_WIDTH <= screenWidth && pipes[index].top.x > 0) {
@@ -137,6 +128,15 @@ void move_pipes() {
 
     }
 
+}
+
+void init_bird() {
+    bird_width = 60;
+    bird_height = 60;
+    // TODO: add round - change bird
+    set_bird_position(200, 400);
+    bird.vertical_velocity = 0;
+    draw_bird(bird, bird_width, bird_height);
 }
 
 bool validate_bird_overflow() {
@@ -192,8 +192,8 @@ void update_bird() {
         current_pipe_index++;
         game_scores ++;
         convert_scores_to_str();
-        clearGameScoresDisplay();
         // display changed scores
+        clearGameScoresDisplay();
         gamingScoresDisplay();
     }
 
@@ -204,6 +204,33 @@ void update_bird() {
 void flap_bird() {
     bird.vertical_velocity = FLAP_STRENGTH;
 }
+
+// Round
+void reset_round() {
+    current_round = 1;
+}
+void next_round() {
+    current_round++;
+}
+void check_last_round() {
+    return current_round == 3;
+}
+void init_round_game() {
+    // function to init game for each round
+    switch (current_round)
+    {
+    case 1:
+        /* code */
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    default:
+        break;
+    }
+}
+
 
 void game_run() {
 
@@ -218,6 +245,7 @@ void game_run() {
     // if resume, then start game
     while (1) {
         // set_wait_timer(1, 100);
+        // 10: easy - 15: normal - 20: extreme
         set_wait_timer(1, 1000 / 11);
         char play_char = getUart();
         if (play_char == ' ') {
@@ -227,6 +255,9 @@ void game_run() {
         }
         move_pipes();
         update_bird();
+
+        gamingScoresDisplay();
+        
         if (gameOver) {
             end_game_over_action();
             break;
@@ -269,7 +300,7 @@ void gameMenu() {
             break;
 
         case setBird:
-            set_bird_position(500, 430);
+            set_bird_position(screenWidth / 2, 430);
             setBirdStateDisplay();
             nextState = 0;
             currState = setBird;
@@ -292,7 +323,7 @@ void gameMenu() {
             // scores
             convert_scores_to_str();
             gamingScoresDisplay();
-            
+
             init_bird();
             init_pipes();
             nextState = 0;

@@ -406,17 +406,7 @@ void cli() {
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
 			gameMenu();
-			// printf("Game is running\n");
-
-			// setBackgroundStateDisplay();
-			// set_bird_position(500, 430);
-            // setBirdStateDisplay();
-			// clear_screen();
-            // init_bird();
 			
-            // init_pipes();
-
-			// game_run();
 		}
 		//Error handling
 		else {

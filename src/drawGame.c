@@ -53,6 +53,9 @@ void backup_pipe(pipe p) {
 void backup_bird() {
     backupRegion(bird.x, bird.y, bird_width, bird_height);
 }
+void backup_game_scores() {
+    backupRegion(screenWidth - 100, 50, 100, 40);
+}
 
 void draw_bird(Bird bird, int width, int height) {
     drawScaledImage(bird_allArray[current_bird], bird_info_allArray[current_bird]->width, bird_info_allArray[current_bird]->height, width, height, bird.x, bird.y, bird_info_allArray[current_bird]->exclude_color);

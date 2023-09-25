@@ -61,5 +61,10 @@ void birdDisplay();
 void set_bird_position(float x, float y);
 void init_bird();
 
+void reset_round();
+void next_round();
+void check_last_round();
+void init_round_game();
+
 void selectBackground();
 void selectBird();

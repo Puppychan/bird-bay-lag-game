@@ -69,6 +69,7 @@ void welcomeMessage()
     uart_puts("\033[37m     Nguyen Ngoc Minh        - s3907086\n\n\n\n");
     
 	uart_puts("\033[0m"); //Reset to default color
+    uart_puts("\0");
 	displayPrompt();
 }
 
