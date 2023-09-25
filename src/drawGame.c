@@ -85,20 +85,11 @@ void deleteArrow(int x, int y) {
 
 void helpMenuDisplay() {
     backgroundDisplay();
-    drawWord("Instruction", 300, 100, helpColorCode);
-
-    drawWord("Press", 140, 200, helpColorCode);
-    drawWord("Space", 380, 200, helpColorCode);
-    drawWord("To", 620, 200, helpColorCode);
-    drawWord("Play", 740, 200, helpColorCode);
-
-    drawWord("Dodge", 140, 300, helpColorCode);
-    drawWord("Obstacles", 380, 300, helpColorCode);
-    drawWord("To", 780, 300, helpColorCode);
-    drawWord("Gain", 340, 350, helpColorCode);
-    drawWord("Point", 540, 350, helpColorCode);
-
-    drawWord("Back", 420, 430, helpColorCode);
+    drawSentence("Instruction", 300, 100, helpColorCode);
+    drawSentence("Press Space To Play", 140, 200, helpColorCode);
+    drawSentence("Dodge Obstacles To", 140, 300, helpColorCode);
+    drawSentence("Gain Point", 340, 350, helpColorCode);
+    drawSentence("Back", 420, 430, helpColorCode);
 }
 
 void mainMenuDisplay() {
@@ -116,21 +107,17 @@ void mainMenuDisplay() {
 
 void gameoverDisplay() {
     backgroundDisplay();
-    drawWord("GameOver!", 350, 80, gameoverColorCode);
+    drawSentence("GameOver!", 350, 80, gameoverColorCode);
     //Test Score Data
     int score = 10;
 
     char cScore[10];
     citoa(score, cScore, 10);
-    drawWord("Highest", 150, 150, gameoverColorCode);
-    drawWord("Score:", 500, 150, gameoverColorCode);
-    drawWord(cScore, 800, 150, gameoverColorCode);
+    drawSentence("Highest Score", 150, 150, helpColorCode);
+    drawSentence(cScore, 800, 150, gameoverColorCode);
 
-    drawWord("Press", 250, 320, gameoverColorCode);
-    drawWord("any", 490, 320, gameoverColorCode);
-    drawWord("key", 650, 320, gameoverColorCode);
-    drawWord("to", 290, 390, gameoverColorCode);
-    drawWord("continue", 410, 390, gameoverColorCode);
+    drawSentence("Press any key", 250, 320, helpColorCode);
+    drawSentence("to continue", 290, 390, helpColorCode);
 
     char c = 0;
     do {
@@ -142,33 +129,17 @@ void gameoverDisplay() {
 
 void setBackgroundStateDisplay() {
     backgroundDisplay();
-    drawWord("Instruction", 300, 100, helpColorCode);
-    drawWord("Press", 20, 200, helpColorCode);
-    drawWord("'a'", 260, 200, helpColorCode);
-    drawWord("or", 420, 200, helpColorCode);
-    drawWord("'d'", 540, 200, helpColorCode);
-    drawWord("to", 660, 200, helpColorCode);
-    drawWord("silde", 780, 200, helpColorCode);
-    drawWord("Enter", 30, 300, helpColorCode);
-    drawWord("to", 270, 300, helpColorCode);
-    drawWord("set", 390, 300, helpColorCode);
-    drawWord("background", 550, 300, helpColorCode);
+    drawSentence("Instruction", 300, 100, helpColorCode);
+    drawSentence("Press 'a' or 'd' to slide", 20, 200, helpColorCode);
+    drawSentence("Enter to set background", 30, 300, helpColorCode);
 }
 
 
 void setBirdStateDisplay() {
     backgroundDisplay();
-    drawWord("Instruction", 300, 100, helpColorCode);
-    drawWord("Press", 20, 200, helpColorCode);
-    drawWord("'a'", 260, 200, helpColorCode);
-    drawWord("or", 420, 200, helpColorCode);
-    drawWord("'d'", 540, 200, helpColorCode);
-    drawWord("to", 660, 200, helpColorCode);
-    drawWord("silde", 780, 200, helpColorCode);
-    drawWord("Enter", 160, 300, helpColorCode);
-    drawWord("to", 400, 300, helpColorCode);
-    drawWord("set", 520, 300, helpColorCode);
-    drawWord("bird", 680, 300, helpColorCode);
+    drawSentence("Instruction", 300, 100, helpColorCode);
+    drawSentence("Press 'a' or 'd' to slide", 20, 200, helpColorCode);
+    drawSentence("Enter to set bird", 160, 300, helpColorCode);
     draw_bird(bird, 120, 100);
 }
 
