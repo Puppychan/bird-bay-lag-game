@@ -11,7 +11,8 @@
 
 #define DEFAULT_BIRD_SHRINK_RATIO 2;
 
-int gameOver = 0;
+bool gameOver = 0;
+bool gameWin = 0;
 int current_round = 1;
 extern int current_bg;
 extern int current_bird;
@@ -36,10 +37,22 @@ int pipe_gap = PIPE_GAP_MIN;
 // backup_buffer pipeBackupBuffers[PIPES_SIZE];
 // unsigned long pipeBackupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
-void end_game() {
-    gameOver = 1;
+void end_game_over() {
+    gameOver = true;
+    bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
+    bird.vertical_velocity = 0;  // Reset velocity
 }
-
+void end_game_over_action() {
+    gameoverDisplay();
+    gameOver = false;
+}
+void end_game_win() {
+    gameWin = true;
+}
+void end_game_win_action() {
+    // gameoverDisplay();
+    gameWin = false;
+}
 
 
 // Bird
@@ -63,7 +76,7 @@ void init_pipes() {
     for (int i = 0; i < PIPES_SIZE; i++) {
         // init pipes x and y
         // init x position
-        int pipe_distance = rand_range(PIPE_DISTANCE_MIN, screenWidth / 6); // easy
+        int pipe_distance = rand_range(PIPE_DISTANCE_MIN, screenWidth / 3); // easy
         // TODO: add hard-core
         // int pipe_distance = rand_range(PIPE_DISTANCE_MIN, PIPE_DISTANCE_MAX); // hard
         // pipes[i].top.x = 200 + i * PIPE_DISTANCE;
@@ -113,7 +126,7 @@ void move_pipes() {
 
         // if in the screen, draw it
         if (pipes[index].top.x + PIPE_WIDTH <= screenWidth) {
-            // backup_pipe(pipes[index]);
+            backup_pipe(pipes[index]);
             // Display the pipe on the screen at its new position.
             draw_pipe(pipes[index]);
         }
@@ -156,14 +169,11 @@ void update_bird() {
 
     // Check for ceiling collision
     if (validate_bird_overflow() || validate_bird_obstacle_collision()) {
-        // bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
-        // bird.vertical_velocity = 0;  // Reset velocity
-        // // printf("Bird overflow detected");
-        // end_game();
+        // end_game_over();
 
         printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
     }
-
+    // backup_bird();
     draw_bird(bird, bird_width, bird_height);
 }
 
@@ -172,39 +182,33 @@ void flap_bird() {
 }
 
 void game_run() {
-    
+
     while (_is_resumed == false) {
         char c = uart_getc();
         if (c == ' ' && _is_resumed == false) { // if space is pressed and game is not resumed
             _is_resumed = true;
-            printf("Called after converting resume\n");
             wait_msec(1000 / 20);
-            printf("Called after waiting resume\n");
             break;
         }
     }
     // if resume, then start game
     while (1) {
         // set_wait_timer(1, 100);
-        set_wait_timer(1, 1000 / 15);
-        printf("Called after true resume\n");
+        set_wait_timer(1, 1000 / 11);
         char play_char = getUart();
         if (play_char == ' ') {
             // bird.vertical_velocity -= 3;       // Gravity pulls the bird down
             // bird.y -= FLAP_STRENGTH;
             flap_bird();
         }
-
-        backgroundDisplay();
         update_bird();
         move_pipes();
         if (gameOver) {
-            gameoverDisplay();
-            gameOver = 0;
+            end_game_over_action();
             break;
         }
         // set_wait_timer(0, 100);
-        set_wait_timer(0, 1000 / 15);
+        set_wait_timer(0, 1000 / 11);
         // wait_msec(400);
     }
 
@@ -247,6 +251,8 @@ void gameMenu() {
             clear_screen();
             // set_bird_position(200, 400);
             // bird.vertical_velocity = 3;
+            backgroundDisplay();
+            backupRegion(0, 0, screenWidth, screenHeight);
             init_bird();
             init_pipes();
             nextState = 0;
