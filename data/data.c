@@ -180,7 +180,7 @@ const unsigned long* background_allArray[3] = {
 // player
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 4176)
 
-const int bird_allArray_LEN = 5;
+const int bird_allArray_LEN = 6;
 const image_info bird_player_info = {169, 127, 0x00000000};
 const image_info bird_player_info_2 = {391, 354, 0x009d22b2};
 const image_info nhung_player_info = {169, 127, 0x00000000};
