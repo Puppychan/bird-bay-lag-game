@@ -13,7 +13,7 @@
 
 bool gameOver = 0;
 bool gameWin = 0;
-int current_round = 1;
+extern int current_round;
 extern int current_bg;
 extern int current_bird;
 extern int game_scores;
@@ -56,6 +56,12 @@ void end_game_win() {
 void end_game_win_action() {
     gameoverDisplay();
     gameWin = false;
+}
+void resume_game() {
+    _is_resumed = true;
+}
+void pause_game() {
+    _is_resumed = false;
 }
 
 // Bird
@@ -115,7 +121,7 @@ void move_pipes() {
 
         pipes[index].top.x -= PIPE_MOVE_SPEED;
         pipes[index].bottom.x -= PIPE_MOVE_SPEED;
-
+        // Skip drawing if the pipe is off the screen
         if (pipes[index].top.x + PIPE_WIDTH <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
 
 
@@ -162,17 +168,25 @@ bool validate_bird_obstacle_collision() {
 }
 
 bool validate_bird_passing_pipe() {
-    if (bird.x >= pipes[current_pipe_index].top.x + PIPE_WIDTH && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH + PIPE_MOVE_SPEED) 
+    if (bird.x >= pipes[current_pipe_index].top.x + PIPE_WIDTH && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH + PIPE_MOVE_SPEED)
         return true;
     return false;
 }
 void update_bird() {
     clear_bird();
-    
+
     // Win game
     if (current_pipe_index == PIPES_SIZE) {
-        end_game_win();
-        printf("Win\n");
+        if (check_last_round()) {
+            end_game_win();
+            printf("Win\n");
+        }
+        else {
+            current_round++;
+            pause_game();
+            changeRoundDisplay();
+            init_round_game();
+        }
     }
 
     bird.vertical_velocity += GRAVITY;  // Gravity pulls the bird down
@@ -190,7 +204,7 @@ void update_bird() {
         num_passed_pipes++;
         printf("Passed pipes: %d\n", num_passed_pipes);
         current_pipe_index++;
-        game_scores ++;
+        game_scores++;
         convert_scores_to_str();
         // display changed scores
         clearGameScoresDisplay();
@@ -212,19 +226,36 @@ void reset_round() {
 void next_round() {
     current_round++;
 }
-void check_last_round() {
+bool check_last_round() {
     return current_round == 3;
 }
 void init_round_game() {
     // function to init game for each round
-    switch (current_round)
-    {
+    switch (current_round) {
     case 1:
-        /* code */
+        // scores
+        convert_scores_to_str();
+        gamingScoresDisplay();
+
+        init_bird();
+        init_pipes();
         break;
     case 2:
+        // scores
+        convert_scores_to_str();
+        gamingScoresDisplay();
+
+        init_bird();
+        init_pipes();
+        game_run();
         break;
     case 3:
+        // scores
+        convert_scores_to_str();
+        gamingScoresDisplay();
+
+        init_bird();
+        init_pipes();
         break;
     default:
         break;
@@ -237,7 +268,10 @@ void game_run() {
     while (_is_resumed == false) {
         char c = uart_getc();
         if (c == ' ' && _is_resumed == false) { // if space is pressed and game is not resumed
-            _is_resumed = true;
+            if (current_round != 1) {
+                changeRoundRemove();
+            }
+            resume_game();
             wait_msec(1000 / 20);
             break;
         }
@@ -257,7 +291,7 @@ void game_run() {
         update_bird();
 
         gamingScoresDisplay();
-        
+
         if (gameOver) {
             end_game_over_action();
             break;
@@ -320,12 +354,8 @@ void gameMenu() {
             backgroundDisplay();
             backupRegion(0, 0, screenWidth, screenHeight);
 
-            // scores
-            convert_scores_to_str();
-            gamingScoresDisplay();
-
-            init_bird();
-            init_pipes();
+            reset_round();
+            init_round_game();
             nextState = 0;
             currState = playGame;
             break;

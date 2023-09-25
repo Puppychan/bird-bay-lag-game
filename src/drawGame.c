@@ -8,12 +8,14 @@ int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
 int game_scores;
 char game_scores_str[10];
+int current_round = 1;
 
 unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
 unsigned int gameoverColorCode = 0x000000;
 unsigned int gamingScoresColorCode = 0x000000;
+unsigned int changeRoundColorCode = 0x000000;
 
 void draw_pipes() {
     // Draw the pipes
@@ -44,7 +46,7 @@ void clear_pipe(pipe p) {
 
 void clear_bird() {
     // clearImage(bird.x, bird.y, bird_width, bird_height);
-    clearImageOverlay(bird.x, bird.y, bird_width, bird_height); 
+    clearImageOverlay(bird.x, bird.y, bird_width, bird_height);
 }
 void backup_pipe(pipe p) {
     backupRegion(p.top.x, 0, PIPE_WIDTH, p.top.y);
@@ -109,6 +111,25 @@ void mainMenuDisplay() {
     drawWord("Exit", 400, 450, startColorCode);
 }
 
+void changeRoundDisplay() {
+    backgroundDisplay();
+    backupRegion(0, 0, screenWidth, screenHeight);
+    
+    // convert round to string
+    char round_str[2];
+    citoa(current_round, round_str, 10);
+
+    // display round
+    drawSentence("Round", 350, 80, changeRoundColorCode);
+    drawSentence(round_str, 600, 80, changeRoundColorCode);
+
+    wait_msec(500);
+
+}
+void changeRoundRemove() {
+    clearImageOverlay(350, 80, 200, 40);
+    clearImageOverlay(600, 80, 100, 40);
+}
 void gameoverDisplay() {
     backgroundDisplay();
     drawSentence("GameOver!", 350, 80, gameoverColorCode);
@@ -145,7 +166,6 @@ void setBirdStateDisplay() {
     draw_bird(bird, 120, 100);
 }
 void convert_scores_to_str() {
-    
     citoa(game_scores, game_scores_str, 10);
 }
 void clearGameScoresDisplay() {

@@ -26,7 +26,7 @@
 #define GRAVITY 8
 #define FLAP_STRENGTH -30
 #define MOVE_SPEED 10 // pixels per frame
-#define PIPE_MOVE_SPEED 10 // pixels per frame
+#define PIPE_MOVE_SPEED 15 // pixels per frame
 
 
 void end_game();
@@ -56,15 +56,12 @@ extern int is_set_bg;
 
 void gameMenu();
 void backgroundDisplay();
-void birdDisplay();
 
 void set_bird_position(float x, float y);
 void init_bird();
 
 void reset_round();
 void next_round();
-void check_last_round();
+bool check_last_round();
 void init_round_game();
 
-void selectBackground();
-void selectBird();

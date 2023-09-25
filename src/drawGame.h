@@ -7,8 +7,8 @@
 #define DEFAULT_BIRD 0
 
 // Constants for the game mechanics
-#define PIPES_SIZE 10
-// #define PIPES_SIZE 3
+// #define PIPES_SIZE 10
+#define PIPES_SIZE 3
 #define PIPE_DISTANCE 100 // make it modifiable later
 #define PIPE_GAP 50 // make it modifiable later
 #define PIPE_WIDTH 50 
@@ -44,6 +44,8 @@ void gameoverDisplay();
 void setBackgroundStateDisplay();
 void setBirdStateDisplay();
 void difficultSelectDisplay();
+void changeRoundDisplay();
+void changeRoundRemove();
 
 void convert_scores_to_str();
 void clearGameScoresDisplay();
