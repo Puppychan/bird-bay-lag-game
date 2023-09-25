@@ -23,6 +23,7 @@ extern unsigned int startColorCode;
 extern unsigned int helpColorCode;
 extern unsigned int gameoverColorCode;
 
+
 bool _is_resumed = 0;
 int num_passed_pipes = 0;
 int current_pipe_index = 0;
@@ -32,6 +33,7 @@ extern Bird bird;
 extern pipe pipes[PIPES_SIZE];
 extern int bird_width;
 extern int bird_height;
+extern int difficulty = 0;
 
 int pipe_gap = PIPE_GAP_MIN;
 // backup_buffer pipeBackupBuffers[PIPES_SIZE];
@@ -273,6 +275,12 @@ void gameMenu() {
             currState = setBird;
             break;
 
+        case setDifficult:
+            difficultSelectDisplay();
+            nextState = 0;
+            currState = setDifficult;
+            break;
+
         case playGame:
             clear_screen();
 
@@ -338,7 +346,6 @@ void gameMenu() {
             else if (arrowPos == exitOption) {
                 displayArrow(arrow, 300, 300 + arrowPos * 50);
             }
-
             break;
 
         case helpMenu:
@@ -369,7 +376,7 @@ void gameMenu() {
         case setBird:
             c = getUart();
             if (c == '\n') {
-                nextState = playGame;
+                nextState = setDifficult;
             }
             else if (c == 'a') { // slide to previous image
                 if (current_bird == 0) current_bird = bird_allArray_LEN - 1;
@@ -380,6 +387,48 @@ void gameMenu() {
                 if (current_bird == bird_allArray_LEN - 1) current_bird = 0;
                 else current_bird++;
                 setBirdStateDisplay();
+            }
+            break;
+
+        case setDifficult:
+            c = getUart();
+            //Enter to choose option
+            if (c == '\n') {
+                if (arrowPos == easy) {
+                    difficulty = 1;
+                    nextState = playGame;
+                }
+                else if (arrowPos == normal) {
+                    difficulty = 2;
+                    nextState = playGame;
+                }
+                else if (arrowPos == extreme) {
+                    difficulty = 3;
+                    nextState = playGame;
+                }
+            }
+            //Delete Arrow Position
+            if (c == 's') {
+                if (arrowPos != extreme) {
+                    deleteArrow(200, 300 + arrowPos * 50);
+                    arrowPos++;
+                }
+            }
+            else if (c == 'w') {
+                if (arrowPos != easy) {
+                    deleteArrow(200, 300 + arrowPos * 50);
+                    arrowPos--;
+                }
+            }
+            //Display Arrow Position
+            if (arrowPos == easy) {
+                displayArrow(arrow, 200, 300 + arrowPos * 50);
+            }
+            else if (arrowPos == normal) {
+                displayArrow(arrow, 200, 300 + arrowPos * 50);
+            }
+            else if (arrowPos == extreme) {
+                displayArrow(arrow, 200, 300 + arrowPos * 50);
             }
             break;
 

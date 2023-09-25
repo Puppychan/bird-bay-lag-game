@@ -150,6 +150,14 @@ void clearGameScoresDisplay() {
     clearImageOverlay(screenWidth - 100, 50, 100, 40);
 }
 
+void difficultSelectDisplay() {
+    backgroundDisplay();
+    drawSentence("LAG Selection", 200, 100, helpColorCode);
+    drawSentence("Less Lag", 300, 350, helpColorCode);
+    drawSentence("Normal Lag", 300, 400, helpColorCode);
+    drawSentence("Extreme Lag", 300, 450, helpColorCode);
+}
+
 void gamingScoresDisplay() {
     drawSentenceOffset(game_scores_str, screenWidth - 100, 50, gamingScoresColorCode, 20);
 }
