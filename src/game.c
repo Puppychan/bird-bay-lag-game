@@ -410,25 +410,25 @@ void gameMenu() {
             //Delete Arrow Position
             if (c == 's') {
                 if (arrowPos != extreme) {
-                    deleteArrow(200, 300 + arrowPos * 50);
+                    deleteArrow(280, 300 + arrowPos * 50);
                     arrowPos++;
                 }
             }
             else if (c == 'w') {
                 if (arrowPos != easy) {
-                    deleteArrow(200, 300 + arrowPos * 50);
+                    deleteArrow(280, 300 + arrowPos * 50);
                     arrowPos--;
                 }
             }
             //Display Arrow Position
             if (arrowPos == easy) {
-                displayArrow(arrow, 200, 300 + arrowPos * 50);
+                displayArrow(arrow, 280, 300 + arrowPos * 50);
             }
             else if (arrowPos == normal) {
-                displayArrow(arrow, 200, 300 + arrowPos * 50);
+                displayArrow(arrow, 280, 300 + arrowPos * 50);
             }
             else if (arrowPos == extreme) {
-                displayArrow(arrow, 200, 300 + arrowPos * 50);
+                displayArrow(arrow, 280, 300 + arrowPos * 50);
             }
             break;
 

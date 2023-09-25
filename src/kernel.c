@@ -172,6 +172,7 @@ void display_image() {
 
 void display_video() {
 	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
+	wait_msec(100);
 }
 
 
@@ -421,6 +422,7 @@ void cli() {
 		else {
 			uart_puts("Unrecognized as an internal command!\n");
 		}
+		wait_msec(100);
 
 		//Return to command line
 		index = 0;
