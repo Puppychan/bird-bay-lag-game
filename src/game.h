@@ -8,12 +8,17 @@
 #define helpMenu 2
 #define setBackground 3
 #define setBird 4
-#define playGame 5
+#define setDifficult 5
+#define playGame 6
 
 
 #define playOption 1
 #define helpOption 2
 #define exitOption 3
+
+#define easy 1
+#define normal 2
+#define extreme 3
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 

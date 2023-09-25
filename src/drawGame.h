@@ -35,3 +35,4 @@ void mainMenuDisplay();
 void gameoverDisplay();
 void setBackgroundStateDisplay();
 void setBirdStateDisplay();
+void difficultSelectDisplay();
