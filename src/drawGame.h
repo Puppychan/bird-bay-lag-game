@@ -38,3 +38,7 @@ void mainMenuDisplay();
 void gameoverDisplay();
 void setBackgroundStateDisplay();
 void setBirdStateDisplay();
+
+void convert_scores_to_str();
+void clearGameScoresDisplay();
+void gamingScoresDisplay();

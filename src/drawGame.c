@@ -7,11 +7,13 @@ int bird_height;
 int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
 int game_scores;
+char game_scores_str[10];
 
 unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
 unsigned int gameoverColorCode = 0x000000;
+unsigned int gamingScoresColorCode = 0x000000;
 
 void draw_pipes() {
     // Draw the pipes
@@ -145,4 +147,15 @@ void setBirdStateDisplay() {
     drawSentence("Enter to set bird", 160, 300, helpColorCode);
     draw_bird(bird, 120, 100);
 }
+void convert_scores_to_str() {
+    
+    citoa(game_scores, game_scores_str, 10);
+}
+void clearGameScoresDisplay() {
+    // assume max width
+    clearImageOverlay(screenWidth - 100, 50, 100, 40);
+}
 
+void gamingScoresDisplay() {
+    drawSentenceOffset(game_scores_str, screenWidth - 100, 50, gamingScoresColorCode, 20);
+}

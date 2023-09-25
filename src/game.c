@@ -184,10 +184,15 @@ void update_bird() {
         printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
     }
     else if (validate_bird_passing_pipe()) {
+        // if pass pipe, then increase score
         num_passed_pipes++;
         printf("Passed pipes: %d\n", num_passed_pipes);
         current_pipe_index++;
         game_scores ++;
+        convert_scores_to_str();
+        clearGameScoresDisplay();
+        // display changed scores
+        gamingScoresDisplay();
     }
 
     // backup_bird();
@@ -218,8 +223,8 @@ void game_run() {
             // bird.y -= FLAP_STRENGTH;
             flap_bird();
         }
-        update_bird();
         move_pipes();
+        update_bird();
         if (gameOver) {
             end_game_over_action();
             break;
@@ -270,10 +275,15 @@ void gameMenu() {
 
         case playGame:
             clear_screen();
-            // set_bird_position(200, 400);
-            // bird.vertical_velocity = 3;
+
+            // init
             game_scores = 0;
             backgroundDisplay();
+
+            // scores
+            convert_scores_to_str();
+            gamingScoresDisplay();
+            
             backupRegion(0, 0, screenWidth, screenHeight);
             init_bird();
             init_pipes();

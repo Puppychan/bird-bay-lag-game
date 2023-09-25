@@ -176,6 +176,13 @@ void drawSentence(const char* word, int x, int y, unsigned int colorCode) {
         offset += 40; // assuming each letter is 40 pixels wide
     }
 }
+void drawSentenceOffset(char* word, int x, int y, unsigned int colorCode, int space) {
+    int offset = 0;
+    for (int i = 0; word[i] != '\0'; i++) {
+        if (word[i] != ' ') drawLetter(word[i], x + offset, y, colorCode);
+        offset += space; // add space
+    }
+}
 
 
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
