@@ -443,6 +443,7 @@ void main() {
 
 	//WelcomeMessage
 	welcomeMessage();
+	displayPrompt();
 	while (1) {
 		cli();
 	}
