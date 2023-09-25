@@ -43,34 +43,56 @@ void set_wait_timer(int set, unsigned int msVal) {
         } while (r < expiredTime);
     }
 }
+
 void welcomeMessage()
 {
+    uart_puts("\0");
     uart_puts("\n\n\n"); 
 	//Basic font of ascii art
-    uart_puts("\033[33md88888b d88888b d88888b d888888b .d888b.   j88D  .d888b.  .d88b.  \n");
-	uart_puts("\033[33m88'     88'     88'     `~~88~~' VP  `8D  j8~88  88' `8D .8P  88. \n");
-	uart_puts("\033[33m88ooooo 88ooooo 88ooooo    88       odD' j8' 88  `V8o88' 88  d'88 \n");
-	uart_puts("\033[33m88~~~~~ 88~~~~~ 88~~~~~    88     .88'   V88888D    d8'  88 d' 88 \n");
-	uart_puts("\033[33m88.     88.     88.        88    j88.        88    d8'   `88  d8' \n");
-	uart_puts("\033[33mY88888P Y88888P Y88888P    YP    888888D     VP   d8'     `Y88P'  \n");
-    uart_puts("\n");                                                                     
-    uart_puts("\n");   
-    uart_puts("\033[34md8888b.  .d8b.  d8888b. d88888b    .d88b.  .d8888.                \n");
-	uart_puts("\033[34m88  `8D d8' `8b 88  `8D 88'       .8P  Y8. 88'  YP                \n");
-	uart_puts("\033[34m88oooY' 88ooo88 88oobY' 88ooooo   88    88 `8bo.                  \n");
-	uart_puts("\033[34m88~~~b. 88~~~88 88`8b   88~~~~~   88    88   `Y8b.                \n");
-	uart_puts("\033[34m88   8D 88   88 88 `88. 88.       `8b  d8' db   8D                \n");
-	uart_puts("\033[34mY8888P' YP   YP 88   YD Y88888P    `Y88P'  `8888Y'           \n");
-    uart_puts("\n");
-    uart_puts("\033[37m     Developed by Group 13\n");
-    uart_puts("\033[37m     Tran Mai Nhung          - s3879954\n");
-    uart_puts("\033[37m     Phan Nhat Minh          - s3904422\n");
-    uart_puts("\033[37m     Tran Nguyen Ha Khanh    - s3877707\n");
-    uart_puts("\033[37m     Nguyen Ngoc Minh        - s3907086\n\n\n\n");
-    
-	uart_puts("\033[0m"); //Reset to default color
     uart_puts("\0");
-	displayPrompt();
+    uart_puts("\033[33md88888b d88888b d88888b d888888b .d888b.   j88D  .d888b.  .d88b.  \n");
+	uart_puts("\0");
+    uart_puts("\033[33m88'     88'     88'     `~~88~~' VP  `8D  j8~88  88' `8D .8P  88. \n");
+	uart_puts("\0");
+    uart_puts("\033[33m88ooooo 88ooooo 88ooooo    88       odD' j8' 88  `V8o88' 88  d'88 \n");
+	uart_puts("\0");
+    uart_puts("\033[33m88~~~~~ 88~~~~~ 88~~~~~    88     .88'   V88888D    d8'  88 d' 88 \n");
+	uart_puts("\0");
+    uart_puts("\033[33m88.     88.     88.        88    j88.        88    d8'   `88  d8' \n");
+	uart_puts("\0");
+    uart_puts("\033[33mY88888P Y88888P Y88888P    YP    888888D     VP   d8'     `Y88P'  \n");
+    uart_puts("\0");
+    uart_puts("\n");                                                                     
+    uart_puts("\0");
+    uart_puts("\n");   
+    uart_puts("\0");
+    uart_puts("\033[34md8888b.  .d8b.  d8888b. d88888b    .d88b.  .d8888.                \n");
+	uart_puts("\0");
+    uart_puts("\033[34m88  `8D d8' `8b 88  `8D 88'       .8P  Y8. 88'  YP                \n");
+	uart_puts("\0");
+    uart_puts("\033[34m88oooY' 88ooo88 88oobY' 88ooooo   88    88 `8bo.                  \n");
+	uart_puts("\0");
+    uart_puts("\033[34m88~~~b. 88~~~88 88`8b   88~~~~~   88    88   `Y8b.                \n");
+	uart_puts("\0");
+    uart_puts("\033[34m88   8D 88   88 88 `88. 88.       `8b  d8' db   8D                \n");
+	uart_puts("\0");
+    uart_puts("\033[34mY8888P' YP   YP 88   YD Y88888P    `Y88P'  `8888Y'           \n");
+    uart_puts("\0");
+    uart_puts("\n");
+    uart_puts("\0");
+    uart_puts("\033[37m     Developed by Group 13\n");
+    uart_puts("\0");
+    uart_puts("\033[37m     Tran Mai Nhung          - s3879954\n");
+    uart_puts("\0");
+    uart_puts("\033[37m     Phan Nhat Minh          - s3904422\n");
+    uart_puts("\0");
+    uart_puts("\033[37m     Tran Nguyen Ha Khanh    - s3877707\n");
+    uart_puts("\0");
+    uart_puts("\033[37m     Nguyen Ngoc Minh        - s3907086\n\n\n\n");
+	uart_puts("\0");
+    uart_puts("\033[0m"); //Reset to default color
+    uart_puts("\0");
+
 }
 
 void clear()

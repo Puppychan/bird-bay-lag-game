@@ -13,6 +13,7 @@ int current_round = 1;
 unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
+unsigned int endgameColor = 0xFF00000;
 unsigned int gameoverColorCode = 0x000000;
 unsigned int gamingScoresColorCode = 0x000000;
 unsigned int changeRoundColorCode = 0x000000;
@@ -67,6 +68,7 @@ void draw_bird_ratio(Bird bird, double scale) {
     drawScaledImage_byRatio(bird_allArray[current_bird], bird_info_allArray[current_bird]->width, bird_info_allArray[current_bird]->height, scale, scale, bird.x, bird.y, bird_info_allArray[current_bird]->exclude_color);
 }
 
+//Function display background image
 void backgroundDisplay() {
     drawImage(background_allArray[current_bg], virScreenWidth, virScreenHeight, 0, 0);
 }
@@ -88,6 +90,7 @@ void deleteArrow(int x, int y) {
     clearImageOverlay(x, y, 80, 40);
 }
 
+//Display help menu
 void helpMenuDisplay() {
     backgroundDisplay();
     drawSentence("Instruction", 300, 100, helpColorCode);
@@ -97,6 +100,7 @@ void helpMenuDisplay() {
     drawSentence("Back", 420, 430, helpColorCode);
 }
 
+//Display main menu
 void mainMenuDisplay() {
     backgroundDisplay();
     backupRegion(0, 0, screenWidth, screenHeight);
@@ -130,26 +134,30 @@ void changeRoundRemove() {
     clearImageOverlay(350, 80, 200, 40);
     clearImageOverlay(600, 80, 100, 40);
 }
+//Display game over summary
 void gameoverDisplay() {
     backgroundDisplay();
     drawSentence("GameOver!", 350, 80, gameoverColorCode);
 
     char cScore[10];
     citoa(game_scores, cScore, 10);
-    drawSentence("Highest Score", 150, 150, helpColorCode);
+    drawSentence("Highest Score:", 150, 150, helpColorCode);
     drawSentence(cScore, 800, 150, gameoverColorCode);
 
     drawSentence("Press any key", 250, 320, helpColorCode);
     drawSentence("to continue", 290, 390, helpColorCode);
 
+    //Wait until any key is pressed
     char c = 0;
     do {
         c = getUart();
     } while (c == 0);
-
+    //Draw end game animation;
+    endgameAnimation();
     return;
 }
 
+//Display instruction to select background
 void setBackgroundStateDisplay() {
     backgroundDisplay();
     drawSentence("Instruction", 300, 100, helpColorCode);
@@ -157,7 +165,7 @@ void setBackgroundStateDisplay() {
     drawSentence("Enter to set background", 30, 300, helpColorCode);
 }
 
-
+//Display instruction to select bird costume
 void setBirdStateDisplay() {
     backgroundDisplay();
     drawSentence("Instruction", 300, 100, helpColorCode);
@@ -165,9 +173,11 @@ void setBirdStateDisplay() {
     drawSentence("Enter to set bird", 160, 300, helpColorCode);
     draw_bird(bird, 120, 100);
 }
+
 void convert_scores_to_str() {
     citoa(game_scores, game_scores_str, 10);
 }
+
 void clearGameScoresDisplay() {
     // assume max width
     clearImageOverlay(screenWidth - 100, 50, 100, 40);
@@ -184,4 +194,28 @@ void difficultSelectDisplay() {
 
 void gamingScoresDisplay() {
     drawSentenceOffset(game_scores_str, screenWidth - 100, 50, gamingScoresColorCode, 20);
+}
+
+//Display end game animation to
+void endgameAnimation() {
+    unsigned int currentColor;
+    for(int y = 0; y < screenHeight; y += 40) {
+        for(int x = 0; x < screenWidth; x += 40) {
+            currentColor = generateColor(x, y);
+            drawRectARGB32(x, y, x + 40, y + 40, currentColor, 1);
+            //Monitor speed of screen cleaning
+            set_wait_timer(1, 5);
+            set_wait_timer(0, 5);
+        }
+    }
+}
+
+//Produce color base on position x and y
+unsigned int generateColor(int x, int y) {
+    unsigned char r = (x + y) % 255;
+    unsigned char g = x % 255;
+    unsigned char b = y % 255;
+    unsigned char a = 255; // Full alpha for visibility
+
+    return (a << 24) | (r << 16) | (g << 8) | b; // Return as ARGB32
 }
