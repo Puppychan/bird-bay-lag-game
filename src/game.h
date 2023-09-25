@@ -42,8 +42,11 @@ void init_bird();
 void init_pipes();
 // void move_pipes();
 void move_pipes();
+
 bool validate_bird_overflow();
 bool validate_bird_obstacle_collision();
+bool validate_bird_passing_pipe();
+
 void update_bird();
 void flap_bird();
 void game_run();

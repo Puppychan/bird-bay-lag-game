@@ -20,6 +20,7 @@ void clear_screen();
 void drawLetter(char ch, int x, int y, unsigned int colorCode);
 void drawWord(const char* word, int x, int y, unsigned int colorCode);
 void drawSentence(const char* word, int x, int y, unsigned int colorCode);
+void drawSentenceOffset(char* word, int x, int y, unsigned int colorCode, int space);
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y);
 void drawScaledImage(const unsigned long* bitmap, int orig_width, int orig_height, int new_width, int new_height, int x, int y, unsigned int exclude_color);
 void drawScaledImage_byRatio(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y, unsigned int exclude_color);

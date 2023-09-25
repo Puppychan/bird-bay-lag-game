@@ -6,11 +6,14 @@ int bird_width;
 int bird_height;
 int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
+int game_scores;
+char game_scores_str[10];
 
 unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
 unsigned int gameoverColorCode = 0x000000;
+unsigned int gamingScoresColorCode = 0x000000;
 
 void draw_pipes() {
     // Draw the pipes
@@ -33,18 +36,22 @@ void draw_pipe(pipe p) {
 }
 
 void clear_pipe(pipe p) {
-    // clearImageOverlay(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    // clearImageOverlay(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
-    clearImage(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    clearImage(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+    clearImageOverlay(p.top.x, 0, PIPE_WIDTH, p.top.y);
+    clearImageOverlay(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+    // clearImage(p.top.x, 0, PIPE_WIDTH, p.top.y);
+    // clearImage(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
 }
 
 void clear_bird() {
-    clearImage(bird.x, bird.y, bird_width, bird_height);
+    // clearImage(bird.x, bird.y, bird_width, bird_height);
+    clearImageOverlay(bird.x, bird.y, bird_width, bird_height); 
 }
 void backup_pipe(pipe p) {
     backupRegion(p.top.x, 0, PIPE_WIDTH, p.top.y);
     backupRegion(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+}
+void backup_bird() {
+    backupRegion(bird.x, bird.y, bird_width, bird_height);
 }
 
 void draw_bird(Bird bird, int width, int height) {
@@ -108,11 +115,9 @@ void mainMenuDisplay() {
 void gameoverDisplay() {
     backgroundDisplay();
     drawSentence("GameOver!", 350, 80, gameoverColorCode);
-    //Test Score Data
-    int score = 10;
 
     char cScore[10];
-    citoa(score, cScore, 10);
+    citoa(game_scores, cScore, 10);
     drawSentence("Highest Score", 150, 150, helpColorCode);
     drawSentence(cScore, 800, 150, gameoverColorCode);
 
@@ -142,6 +147,14 @@ void setBirdStateDisplay() {
     drawSentence("Enter to set bird", 160, 300, helpColorCode);
     draw_bird(bird, 120, 100);
 }
+void convert_scores_to_str() {
+    
+    citoa(game_scores, game_scores_str, 10);
+}
+void clearGameScoresDisplay() {
+    // assume max width
+    clearImageOverlay(screenWidth - 100, 50, 100, 40);
+}
 
 void difficultSelectDisplay() {
     backgroundDisplay();
@@ -149,4 +162,8 @@ void difficultSelectDisplay() {
     drawSentence("Less Lag", 300, 350, helpColorCode);
     drawSentence("Normal Lag", 300, 400, helpColorCode);
     drawSentence("Extreme Lag", 300, 450, helpColorCode);
+}
+
+void gamingScoresDisplay() {
+    drawSentenceOffset(game_scores_str, screenWidth - 100, 50, gamingScoresColorCode, 20);
 }

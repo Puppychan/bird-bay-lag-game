@@ -7,7 +7,8 @@
 #define DEFAULT_BIRD 0
 
 // Constants for the game mechanics
-#define PIPES_SIZE 10
+// #define PIPES_SIZE 10
+#define PIPES_SIZE 3
 #define PIPE_DISTANCE 100 // make it modifiable later
 #define PIPE_GAP 50 // make it modifiable later
 #define PIPE_WIDTH 50 
@@ -26,8 +27,10 @@ void draw_pipe(pipe p);
 void clear_pipe(pipe p);
 void clear_bird();
 void backup_pipe(pipe p);
+void backup_bird();
 void draw_bird(Bird bird, int width, int height);
 void draw_bird_ratio(Bird bird, double scale);
+
 void displayArrow(const unsigned long* arr, int x, int y);
 void deleteArrow(int x, int y);
 void helpMenuDisplay();
@@ -36,3 +39,7 @@ void gameoverDisplay();
 void setBackgroundStateDisplay();
 void setBirdStateDisplay();
 void difficultSelectDisplay();
+
+void convert_scores_to_str();
+void clearGameScoresDisplay();
+void gamingScoresDisplay();
