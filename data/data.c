@@ -8,12 +8,10 @@
 #include "firstVideo2.h"
 #include "firstVideo3.h"
 #include "firstVideo4.h"
-#include "firstVideo5.h"
-#include "firstVideo6.h"
-#include "firstVideo7.h"
-#include "firstVideo8.h"
-#include "obstacleTube.h"
-#include "obstacleBalloon.h"
+// #include "firstVideo5.h"
+// #include "firstVideo6.h"
+// #include "firstVideo7.h"
+// #include "firstVideo8.h"
 
 // first video
 // extern const int first_video_array_LEN;
@@ -183,27 +181,24 @@ const unsigned long* background_allArray[3] = {
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 4176)
 
 const int bird_allArray_LEN = 5;
-const image_info bird_player_info [] = {169, 127, 0x00000000};
-// const image_info bird_player_info = {338, 254, 0x008cc449};
-const image_info bird_player_info_2 [] = {391, 354, 0x009d22b2};
-const image_info nhung_player_info [] = {169, 127, 0x00000000};
-const image_info khanh_player_info [] = {169, 127, 0x00000000};
-const image_info minhnguyen_player_info [] = {169, 127, 0x00000000};
-const image_info minhphan_player_info [] = {169, 127, 0x00000000};
+const image_info bird_player_info = {169, 127, 0x00000000};
+const image_info bird_player_info_2 = {391, 354, 0x009d22b2};
+const image_info nhung_player_info = {169, 127, 0x00000000};
+const image_info khanh_player_info = {169, 127, 0x00000000};
+const image_info minhnguyen_player_info = {169, 127, 0x00000000};
+const image_info minhphan_player_info = {169, 127, 0x00000000};
 
-
-const image_info* bird_info_allArray[5] = {
-	bird_player_info,
-	bird_player_info2,
-	nhung_player_info,
-	khanh_player_info,
-	minhnguyen_player_info,
-	minhphan_player_info
+const image_info* bird_info_allArray[6] = {
+	&bird_player_info,
+	&bird_player_info_2,
+	&nhung_player_info,
+	&khanh_player_info,
+	&minhnguyen_player_info,
+	&minhphan_player_info
 };
-
-const unsigned long* bird_allArray[5] = {
+const unsigned long* bird_allArray[6] = {
 	bird_player,
-	bird_player2,
+	bird_player_2,
 	nhung_player,
 	khanh_player,
 	minhnguyen_player,
@@ -231,18 +226,18 @@ const unsigned long* obstacle_balloon_list[6] = {
 	obstacle_balloon_6
 };
 
-const image_info balloon_info_1 [] = { 269, 835, 0x00e91e63 };
-const image_info balloon_info_2 [] = { 365, 677, 0x00cddc39 };
-const image_info balloon_info_3 [] = { 410, 467, 0x0000bdd5 };
-const image_info balloon_info_4 [] = { 177, 895, 0x00cedd36 };
-const image_info balloon_info_5 [] = { 153, 269, 0x00ff9900 };
-const image_info balloon_info_6 [] = { 394, 624, 0x008cc449 };
+const image_info balloon_info_2 = { 365, 677, 0x00cddc39 };
+const image_info balloon_info_1 = { 269, 835, 0x00e91e63 };
+const image_info balloon_info_3 = { 410, 467, 0x0000bdd5 };
+const image_info balloon_info_4 = { 177, 895, 0x00cedd36 };
+const image_info balloon_info_5 = { 153, 269, 0x00ff9900 };
+const image_info balloon_info_6 = { 394, 624, 0x008cc449 };
 
 const image_info* obstacle_balloon_info_allArray[6] = {
-	balloon_info_1,
-	balloon_info_2,
-	balloon_info_3,
-	balloon_info_4,
-	balloon_info_5,
-	balloon_info_6
+	&balloon_info_1,
+	&balloon_info_2,
+	&balloon_info_3,
+	&balloon_info_4,
+	&balloon_info_5,
+	&balloon_info_6
 };

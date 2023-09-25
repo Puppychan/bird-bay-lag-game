@@ -16,35 +16,17 @@ extern const unsigned long* background_allArray[];
 extern const int bird_allArray_LEN;
 extern const unsigned long* bird_allArray[];
 extern const image_info* bird_info_allArray[];
-extern const image_info bird_player_info;
-extern const image_info bird_player_info_2;
 // obstacles
 // tube
 extern const unsigned long obstacle_tube[];
 extern const unsigned long obstacle_tube_up[];
 extern const image_info tube_info;
 extern const image_info tube_up_info;
-// balloon
-extern const int obstacle_balloon_allArray_LEN;
-extern const unsigned long* obstacle_balloon_list[];
-extern const image_info balloon_info_1;
-extern const image_info balloon_info_2;
-extern const image_info balloon_info_3;
-extern const image_info balloon_info_4;
-extern const image_info balloon_info_5;
-extern const image_info balloon_info_6;
-
-// obstacles
-// tube
-extern const unsigned long obstacle_tube[];
-extern const unsigned long obstacle_tube_up[];
-extern const image_info tube_info;
-extern const image_info tube_up_info;
-
 // balloon
 extern const int obstacle_balloon_allArray_LEN;
 extern const unsigned long* obstacle_balloon_list[];
 extern const image_info* obstacle_balloon_info_allArray[];
+
 
 // arrow
 extern const unsigned long arrow [];

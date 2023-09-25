@@ -4,6 +4,7 @@
 #include "uart.h"
 #include "../data/fontAutolova.h"
 #include "mylib.h"
+#include "printf.h"
 
 
 #define MAX_WIDTH 1080   // maximum expected width
@@ -15,11 +16,6 @@ uint32_t backupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
 #define PIXEL_ORDER 0
-
-#define MAX_WIDTH 1080   // maximum expected width
-#define MAX_HEIGHT 675  // maximum expected height
-uint32_t backupBuffer[MAX_WIDTH * MAX_HEIGHT];
-
 
 //Screen info
 unsigned int width, height, pitch;
@@ -327,27 +323,6 @@ void move_image(const unsigned long* bitmap, sizing img_size, sizing screen_size
     }
 }
 
-void clearImageOverlay(int x, int y, int width, int height) {
-    // int index = 0;
-    for (int h = y; h < y + height; h++) {
-        for (int w = x; w < x + width; w++) {
-            // unsigned int originalColor = backupBuffer[index++];
-
-            unsigned int originalColor = backupBuffer[h * MAX_WIDTH + w];
-            drawPixelARGB32(w, h, originalColor);
-            // printf("Clear image overlay: %x\n", originalColor);
-        }
-    }
-}
-
-void clearImage(int x, int y, int width, int height) {
-    // clear image
-    for (int h = y; h < y + height; h++) {
-        for (int w = x; w < x + width; w++) {
-            drawPixelARGB32(w, h, 0x00000000);
-        }
-    }
-}
 
 position identify_next_position(direction direction, position current_position, sizing img_size, sizing screen_size, int index) {
     position new_pos = current_position;
@@ -391,19 +366,4 @@ position identify_next_position(direction direction, position current_position, 
         break;
     }
     return new_pos;
-}
-
-void backupRegion(int x, int y, int width, int height) {
-    int backupIndex = 0;
-    // printf("Pitch backup region: %d\n", pitch);
-    for (int h = y; h < y + height; h++) {
-        for (int w = x; w < x + width; w++) {
-            backupIndex = h * MAX_WIDTH + w;
-
-            int offs = (h * pitch) + (COLOR_DEPTH / 8 * w);
-            uint32_t pixel_value = *((unsigned int*)(fb + offs));
-            backupBuffer[backupIndex] = pixel_value;
-            // printf("Backup: offs (%d, %d): %d, pixel: %x, current buffer: %x \n", w, h, offs, pixel_value, backupBuffer[index]);
-        }
-    }
 }

@@ -20,22 +20,6 @@ void wait_msec(unsigned int n) {
     } while (r < expiredTime);
 }
 
-
-// https://stackoverflow.com/questions/6417113/c-custom-random-function
-// https://cplusplus.com/reference/cstdlib/srand/
-// Initialize the random number generator with a seed
-void srand_custom(uint32_t seed) {
-    current_seed = seed;
-}
-
-// Get a pseudo-random number
-uint32_t rand(void) {
-    current_seed = (A * current_seed + C) % M;
-    return current_seed;
-}
-
-
-
 /* Function to start a timer (set = 1) or wait for it to expire (set = 0) */
 void set_wait_timer(int set, unsigned int msVal) {
     // set = 1: Sets the timer, calculates when the delay should expire, but then returns immediately without waiting.

@@ -3,6 +3,7 @@
 #include "framebf.h"
 #include "mylib.h"
 #include "game.h"
+#include "printf.h"
 #include "../gcclib/stddef.h"
 #define MAX_CMD_SIZE 100
 #define MAX_HISTORY 10
@@ -245,7 +246,6 @@ void printName() {
 	drawLetter('h', 720, 200, 0x00FF7F00);
 }
 
-<<<<<<< HEAD
 void main() {
 	// current time
 	int time = get_current_time(); // get time to have different seed for testing purpose
@@ -254,10 +254,6 @@ void main() {
 	// srand_custom(time);
 	// set up serial console
 	uart_init();
-=======
-/* CLI read and handle actions */
-void cli() {
->>>>>>> khanh
 
 	static char cli_buffer[MAX_CMD_SIZE];
 	static int index = 0;
@@ -423,19 +419,4 @@ void cli() {
 		displayPrompt();
 	}
 	
-}
-
-void main()
-{
-    // set up serial console
-	uart_init();
-	
-	// Initialize frame buffer
-	framebf_init();
-
-	//WelcomeMessage
-	welcomeMessage();
-	while(1) {
-		cli();
-	}
 }
