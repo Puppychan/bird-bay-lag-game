@@ -44,15 +44,18 @@ void end_game_over() {
     bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
     bird.vertical_velocity = 0;  // Reset velocity
 }
+
 void end_game_over_action() {
     gameoverDisplay();
     gameOver = false;
 }
+
 void end_game_win() {
     gameWin = true;
     bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
     bird.vertical_velocity = 0;  // Reset velocity
 }
+
 void end_game_win_action() {
     gameoverDisplay();
     gameWin = false;
@@ -166,6 +169,7 @@ bool validate_bird_passing_pipe() {
         return true;
     return false;
 }
+
 void update_bird() {
     clear_bird();
     
@@ -242,12 +246,14 @@ void game_run() {
 
 }
 
+//Handle game state
 void gameMenu() {
     int arrowPos = mainMenu;
     int currState = mainMenu;
     int nextState = mainMenu;
     char c;
     while (1) {
+        //Display corresponding views and reset nextState variable.
         switch (nextState) {
         case mainMenu:
             mainMenuDisplay();
@@ -303,6 +309,7 @@ void gameMenu() {
             break;
         }
 
+        //Waiting for input at current state
         switch (currState) {
         case mainMenu:
             c = getUart();
@@ -392,20 +399,18 @@ void gameMenu() {
 
         case setDifficult:
             c = getUart();
-            //Enter to choose option
+            //Enter to choose option difficulty
             if (c == '\n') {
                 if (arrowPos == easy) {
                     difficulty = 1;
-                    nextState = playGame;
                 }
                 else if (arrowPos == normal) {
                     difficulty = 2;
-                    nextState = playGame;
                 }
                 else if (arrowPos == extreme) {
                     difficulty = 3;
-                    nextState = playGame;
                 }
+                nextState = playGame;
             }
             //Delete Arrow Position
             if (c == 's') {
