@@ -170,6 +170,7 @@ void display_image() {
 
 void display_video() {
 	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
+	wait_msec(100);
 }
 
 
@@ -184,7 +185,7 @@ void display_moving_background() {
 
 void printName() {
 	// Background color
-	drawRectARGB32(0, 0, 1024, 768, 0x00B8C3E3, 1);
+	drawRectARGB32(0, 0, screenWidth, screenHeight, 0x00B8C3E3, 1);
 
 	//Group name
 	drawLetter('P', 20, 20, 0x009400D3);
@@ -419,6 +420,7 @@ void cli() {
 		else {
 			uart_puts("Unrecognized as an internal command!\n");
 		}
+		wait_msec(100);
 
 		//Return to command line
 		index = 0;

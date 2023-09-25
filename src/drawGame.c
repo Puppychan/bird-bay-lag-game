@@ -80,14 +80,7 @@ void displayArrow(const unsigned long* arr, int x, int y) { //
 
 //Delete the arrow in the menu screen
 void deleteArrow(int x, int y) {
-    int index = x + y * screenWidth;
-    for (int i = 0; i < 40; i++) {
-        for (int j = 0; j < 80; j++) {
-            drawPixelARGB32(x + j, y + i, background_allArray[current_bg][index]);
-            index++;
-        }
-        index += screenWidth - 80;
-    }
+    clearImageOverlay( x, y, 80, 40);
 }
 
 void helpMenuDisplay() {
@@ -101,6 +94,7 @@ void helpMenuDisplay() {
 
 void mainMenuDisplay() {
     backgroundDisplay();
+    backupRegion(0, 0, screenWidth, screenHeight);
     drawWord("Welcome", 300, 150, startColorCode);
     drawWord("To", 620, 150, startColorCode);
     drawWord("Bird", 200, 250, startColorCode);
@@ -158,10 +152,11 @@ void clearGameScoresDisplay() {
 
 void difficultSelectDisplay() {
     backgroundDisplay();
-    drawSentence("LAG Selection", 200, 100, helpColorCode);
-    drawSentence("Less Lag", 300, 350, helpColorCode);
-    drawSentence("Normal Lag", 300, 400, helpColorCode);
-    drawSentence("Extreme Lag", 300, 450, helpColorCode);
+    backupRegion(0, 0, screenWidth, screenHeight);
+    drawSentence("LAG Selection", 240, 100, helpColorCode);
+    drawSentence("Less", 380, 250, helpColorCode);
+    drawSentence("Normal", 380, 350, helpColorCode);
+    drawSentence("Extreme", 380, 450, helpColorCode);
 }
 
 void gamingScoresDisplay() {
