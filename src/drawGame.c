@@ -33,18 +33,22 @@ void draw_pipe(pipe p) {
 }
 
 void clear_pipe(pipe p) {
-    // clearImageOverlay(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    // clearImageOverlay(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
-    clearImage(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    clearImage(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+    clearImageOverlay(p.top.x, 0, PIPE_WIDTH, p.top.y);
+    clearImageOverlay(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+    // clearImage(p.top.x, 0, PIPE_WIDTH, p.top.y);
+    // clearImage(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
 }
 
 void clear_bird() {
-    clearImage(bird.x, bird.y, bird_width, bird_height);
+    // clearImage(bird.x, bird.y, bird_width, bird_height);
+    clearImageOverlay(bird.x, bird.y, bird_width, bird_height); 
 }
 void backup_pipe(pipe p) {
     backupRegion(p.top.x, 0, PIPE_WIDTH, p.top.y);
     backupRegion(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+}
+void backup_bird() {
+    backupRegion(bird.x, bird.y, bird_width, bird_height);
 }
 
 void draw_bird(Bird bird, int width, int height) {
