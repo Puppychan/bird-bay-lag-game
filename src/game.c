@@ -319,9 +319,6 @@ void gameMenu() {
                     nextState = helpMenu;
                 }
                 else if (arrowPos == playOption) {
-                    // //Play Game Here
-                    // playGame();
-                    // nextState = mainMenu;
                     nextState = setBackground;
                 }
                 else if (arrowPos == exitOption) {
