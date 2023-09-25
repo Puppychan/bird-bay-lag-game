@@ -17,6 +17,8 @@ static int is_diplay_image = 0;
 
 //History Terminal CMD
 char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
+int is_display_something;
+
 int history_cmd = 0;
 int current_cmd = 0;
 
@@ -184,7 +186,7 @@ void display_moving_background() {
 
 void printName() {
 	// Background color
-	drawRectARGB32(0, 0, 1024, 768, 0x00B8C3E3, 1);
+	drawRectARGB32(0, 0, screenWidth, screenHeight, 0x00B8C3E3, 1);
 
 	//Group name
 	drawLetter('P', 20, 20, 0x009400D3);

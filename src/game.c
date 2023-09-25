@@ -128,7 +128,7 @@ void move_pipes() {
 
         // if in the screen, draw it
         if (pipes[index].top.x + PIPE_WIDTH <= screenWidth) {
-            backup_pipe(pipes[index]);
+            // backup_pipe(pipes[index]);
             // Display the pipe on the screen at its new position.
             draw_pipe(pipes[index]);
         }
@@ -279,12 +279,12 @@ void gameMenu() {
             // init
             game_scores = 0;
             backgroundDisplay();
+            backupRegion(0, 0, screenWidth, screenHeight);
 
             // scores
             convert_scores_to_str();
             gamingScoresDisplay();
             
-            backupRegion(0, 0, screenWidth, screenHeight);
             init_bird();
             init_pipes();
             nextState = 0;
