@@ -169,7 +169,6 @@ void drawWord(const char* word, int x, int y, unsigned int colorCode) {
     }
 }
 
-
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
     int index = 0;
     for (int h = y; h < y + height; h++) {

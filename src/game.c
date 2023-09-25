@@ -40,8 +40,6 @@ void end_game() {
     gameOver = 1;
 }
 
-
-
 // Bird
 void set_bird_position(float x, float y) {
     bird.x = x;

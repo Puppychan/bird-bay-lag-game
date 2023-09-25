@@ -103,10 +103,11 @@ void helpMenuDisplay() {
 
 void mainMenuDisplay() {
     backgroundDisplay();
-    drawWord("Welcome", 80, 170, startColorCode);
-    drawWord("To", 400, 170, startColorCode);
-    drawWord("Flappy", 520, 170, startColorCode);
-    drawWord("Bird", 800, 170, startColorCode);
+    drawWord("Welcome", 300, 150, startColorCode);
+    drawWord("To", 620, 150, startColorCode);
+    drawWord("Bird", 200, 250, startColorCode);
+    drawWord("Bay", 460, 220, startColorCode);
+    drawWord("LAG", 700, 280, startColorCode);
 
     drawWord("Start", 400, 350, startColorCode);
     drawWord("Help", 400, 400, startColorCode);
