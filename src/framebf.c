@@ -2,8 +2,14 @@
 #include "framebf.h"
 #include "mbox.h"
 #include "uart.h"
-#include "fontAutolova.h"
+#include "../data/fontAutolova.h"
 #include "mylib.h"
+#include "printf.h"
+
+
+#define MAX_WIDTH 1080   // maximum expected width
+#define MAX_HEIGHT 675  // maximum expected height
+uint32_t backupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
 //Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -13,6 +19,15 @@
 
 //Screen info
 unsigned int width, height, pitch;
+
+
+//Virtual screen height and width (from frambuffer setup)
+const int virScreenHeight = 675;
+const int virScreenWidth = 1080;
+
+//Physical width/height (from frambuffer setup)
+const int screenHeight = 640;
+const int screenWidth = 1024;
 
 /* Frame buffer address
  * (declare as pointer of unsigned char to access each byte) */
@@ -31,14 +46,14 @@ void framebf_init() {
     mBuf[4] = 0; // REQUEST CODE = 0
 
     // ratio: 16/10
-    mBuf[5] = 1024; // Value(width)
-    mBuf[6] = 640; // Value(height)
+    mBuf[5] = screenWidth; // Value(width)
+    mBuf[6] = screenHeight; // Value(height)
 
     mBuf[7] = MBOX_TAG_SETVIRTWH; //Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
-    mBuf[10] = 1080;
-    mBuf[11] = 675;
+    mBuf[10] = virScreenWidth;
+    mBuf[11] = virScreenHeight;
 
     mBuf[12] = MBOX_TAG_SETVIRTOFF; //Set virtual offset
     mBuf[13] = 8;
@@ -86,17 +101,18 @@ void framebf_init() {
 
         // Access frame buffer as 1 byte per each address
         fb = (unsigned char*)((unsigned long)mBuf[28]);
-        uart_puts("Got allocated Frame Buffer at RAM physical address: ");
-        uart_hex(mBuf[28]);
-        uart_puts("\n");
+        // uart_puts("Got allocated Frame Buffer at RAM physical address: ");
+        // uart_hex(mBuf[28]);
+        // uart_puts("\n");
 
-        uart_puts("Frame Buffer Size (bytes): ");
-        uart_dec(mBuf[29]);
-        uart_puts("\n");
+        // uart_puts("Frame Buffer Size (bytes): ");
+        // uart_dec(mBuf[29]);
+        // uart_puts("\n");
 
         width = mBuf[5];     	// Actual physical width
         height = mBuf[6];     	// Actual physical height
         pitch = mBuf[33];       // Number of bytes per line
+        printf("Pitch: %d\n", pitch);
 
     }
     else {
@@ -128,6 +144,10 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
         }
 }
 
+void clear_screen() {
+    drawRectARGB32(0, 0, virScreenWidth, virScreenHeight, 0x00000000, 1);
+}
+
 void drawLetter(char ch, int x, int y, unsigned int colorCode) {
     int indexCount = 0;
     //Nest loop run through 40x40 pixel area
@@ -141,6 +161,30 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
     }
 }
 
+void drawWord(const char* word, int x, int y, unsigned int colorCode) {
+    int offset = 0;
+    for (int i = 0; word[i] != '\0'; i++) {
+        drawLetter(word[i], x + offset, y, colorCode);
+        offset += 40; // assuming each letter is 40 pixels wide
+    }
+}
+
+void drawSentence(const char* word, int x, int y, unsigned int colorCode) {
+    int offset = 0;
+    for (int i = 0; word[i] != '\0'; i++) {
+        if (word[i] != ' ') drawLetter(word[i], x + offset, y, colorCode);
+        offset += 40; // assuming each letter is 40 pixels wide
+    }
+}
+void drawSentenceOffset(char* word, int x, int y, unsigned int colorCode, int space) {
+    int offset = 0;
+    for (int i = 0; word[i] != '\0'; i++) {
+        if (word[i] != ' ') drawLetter(word[i], x + offset, y, colorCode);
+        offset += space; // add space
+    }
+}
+
+
 void drawImage(const unsigned long* bitmap, int width, int height, int x, int y) {
     int index = 0;
     for (int h = y; h < y + height; h++) {
@@ -151,96 +195,190 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
     }
 }
 
-// void drawVideo(const unsigned long* frames, int num_frames, int img_width, int img_height, int width, int height) {
-//     // // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
-//     // int prev_x = 0; // Store the previous X value for efficient redrawing
-//     // // optimize to reduce calculation inside loops
-//     // int max_x = width - img_width;
+void backupRegion(int x, int y, int width, int height) {
+    int backupIndex = 0;
+    // printf("Pitch backup region: %d\n", pitch);
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            backupIndex = h * MAX_WIDTH + w;
 
-//     // for (int i = 0; i < num_frames; i++) {
-//     //     // calculate new x position
-//     //     // simple linear movement for demonstration
-//     //     int x = max_x;
+            int offs = (h * pitch) + (COLOR_DEPTH / 8 * w);
+            uint32_t pixel_value = *((unsigned int*)(fb + offs));
+            backupBuffer[backupIndex] = pixel_value;
+            // printf("Backup: offs (%d, %d): %d, pixel: %x, current buffer: %x \n", w, h, offs, pixel_value, backupBuffer[index]);
+        }
+    }
+}
 
-//     //     drawImage(frames[i], img_width, img_height, x, 0);
+void clearImageOverlay(int x, int y, int width, int height) {
+    // int index = 0;
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            // unsigned int originalColor = backupBuffer[index++];
 
-//     //     delay(FRAME_DURATION);
-//     //     prev_x = x;
-//     // }
-//         // Assuming you have a function to display an image from binary data
-//     // void displayImage(const unsigned char* imageData, unsigned int length);
-//     int IMAGE_SIZE = img_width * img_height;
-//     // display images in a loop
-//     for (int i = 0; i < num_frames; i++) {
-//         drawImage(frames + IMAGE_SIZE * i, img_width, img_height, 0, 0);
-//         delay(FRAME_DURATION);
-//     }
-// }
+            unsigned int originalColor = backupBuffer[h * MAX_WIDTH + w];
+            drawPixelARGB32(w, h, originalColor);
+            // printf("Clear image overlay: %x\n", originalColor);
+        }
+    }
+}
+void clearImage(int x, int y, int width, int height) {
+    // clear image
+    for (int h = y; h < y + height; h++) {
+        for (int w = x; w < x + width; w++) {
+            drawPixelARGB32(w, h, 0x00000000);
+        }
+    }
+}
 
+void drawScaledImage(const unsigned long* bitmap, int orig_width, int orig_height, int new_width, int new_height, int x, int y, unsigned int exclude_color) {
+    float x_scale = (float)orig_width / new_width;
+    float y_scale = (float)orig_height / new_height;
+    int orig_i, orig_j;
 
-void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height) {
-    // for (int i = 0; i < num_frames; i++) {
-    //     drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
-    //     delay(FRAME_DURATION);  // Delay for the next frame
-    // }
+    for (int i = 0; i < new_height; i++) {
+        orig_i = (int)(i * y_scale);
+        for (int j = 0; j < new_width; j++) {
+            // Find the corresponding pixel in the original image
+            orig_j = (int)(j * x_scale);
+
+            // Get the color of the original pixel
+            unsigned long color = bitmap[orig_i * orig_width + orig_j];
+
+            // Draw this pixel in the new image
+            if (color != exclude_color) {
+                drawPixelARGB32(j + x, i + y, color);
+            }
+        }
+    }
+}
+
+void drawScaledImage_byRatio(const unsigned long* bitmap, int orig_width, int orig_height, double x_scale, double y_scale, int x, int y, unsigned int exclude_color) {
+    
+    int new_width = orig_width*x_scale;
+    int new_height = orig_height*y_scale;
+
+    int orig_i, orig_j;
+
+    for (int i = 0; i < new_height; i++) {
+        orig_i = (int)(i / y_scale);
+
+        for (int j = 0; j < new_width; j++) {
+            // Find the corresponding pixel in the original image
+            orig_j = (int)(j / x_scale);
+
+            // Get the color of the original pixel
+            unsigned long color = bitmap[orig_i * orig_width + orig_j];
+
+            // draw
+            // drawPixelARGB32(j + x, i + y, color);
+            if (color != exclude_color) {
+                drawPixelARGB32(j + x, i + y, color);
+            }
+        }
+    }
+}
+
+void drawVideo(const unsigned long* videoArray[], int num_frames, int img_width, int img_height, int is_infinite) {
+    // is_infinite: if users want to loop the video - 1, if users dont want - 0
+    // define index for looping frames
     int i = 0;
     while (1) {
+        // if reaching final frame
         if (i == num_frames) {
-            i = 0;
+            if (is_infinite == 1) {
+                i = 0;
+            }
+            else {
+                return;
+            }
         }
+        // draw image
         drawImage(videoArray[i], img_width, img_height, 0, 0);  // Draw the image at the top-left corner
-        delay(FRAME_DURATION);  // Delay for the next frame
-        i ++;
+        // delay(FRAME_DURATION_VIDEO);  // Delay for the next frame
+        wait_msec(1000 / FRAME_DURATION_VIDEO);
+        i++;
     }
 }
 
-void move_image(const unsigned long* bitmap, int img_width, int img_height, int width, int height) {
-    // draw_video(video_frames, VIDEO_DURATION * FRAME_DURATION, img_width, img_height);
-    int prev_x = 0; // Store the previous X value for efficient redrawing
-    // optimize to reduce calculation inside loops
-    int max_x = width - img_width;
 
-    for (int i = 0; i < VIDEO_DURATION * FRAME_DURATION; i++) {
-        // calculate new x position
-        // simple linear movement for demonstration
-        int x = i % max_x;
+void move_image(const unsigned long* bitmap, sizing img_size, sizing screen_size, int speed, direction direction, int is_infinite) {
+    // speed: number > 0
+    // direction: 'l': left to right, 'r': right to left, 't': top to bottom, 'b': bottom to top
+    // is_infinite: the moving image loops or not? 1: true - 0: false
 
-        if (x != prev_x) {
-            if (x > prev_x + img_width || prev_x > x + img_width) {
-                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
+    position prev = { 0, 0 };
+    position current = { 0, 0 };
+    int index = 0;
+    int max_index = VIDEO_DURATION * FRAME_DURATION_MOVING;
+    if (speed <= 0) speed = 1;
+
+    while (1) {
+        if (current.x != prev.x || current.y != prev.y) {
+            if (current.x > prev.x + img_size.width || prev.x > current.x + img_size.width
+                || current.y > prev.y + img_size.height || prev.y > current.y + img_size.height) {
+                clearImage(prev.x, prev.y, prev.x + img_size.width, prev.y + img_size.height);
             }
             else {
-                drawImage(bitmap, img_width, img_height, x, 0);
+                drawImage(bitmap, img_size.width, img_size.height, current.x, current.y);
             }
+            prev = current;
+
         }
 
-        delay(FRAME_DURATION);
-        prev_x = x;
+        // delay(FRAME_DURATION_MOVING);
+        set_wait_timer(1, FRAME_DURATION_MOVING);  // Delay for the next frame
+
+        current = identify_next_position(direction, current, img_size, screen_size, index);
+        index += speed;
+        if (index >= max_index) {
+            if (is_infinite == 0) break;
+            index = 0; // reset index for infinite loop
+        }
     }
 }
 
-void infinite_move_image(const unsigned long* bitmap, int img_width, int img_height, int screen_width, int screen_height) {
-    int prev_x = 0;
-    int x = 0;
-    int max_x = screen_width - img_width;
 
-    while (1) { // Infinite loop
+position identify_next_position(direction direction, position current_position, sizing img_size, sizing screen_size, int index) {
+    position new_pos = current_position;
 
-        if (x != prev_x) {
-            if (x > prev_x + img_width || prev_x > x + img_width) {
-                drawRectARGB32(prev_x, 0, prev_x + img_width, img_height, 0xFF000000, 1);
-            }
-            else {
-                drawImage(bitmap, img_width, img_height, x, 0);
-            }
-        }
-
-        delay(FRAME_DURATION);
-        prev_x = x;
-        x = (x + 1) % (screen_width + img_width); // Ensure x remains within bounds 
-
-        if (x == screen_width) {
-            x = -img_width + 1; // Reset the image to start just off the left edge of the screen
-        }
+    switch (direction) {
+    case LEFT:
+        // moving from left to right
+        // width + img_width: total space
+        // index % (width + img_width): avoid outbound - [0, width + img_width)
+        // if x reach (width + img_width - 1) % (width + img_width) = width + img_width - 1 => x returns 0
+        new_pos.x = (index + 1) % (screen_size.width + img_size.width);
+        break;
+    case RIGHT:
+        // moving from right to left
+        // width + img_width: total space
+        // index % (width + img_width): avoid outbound - [0, width + img_width)
+        // minus 1 -> to give new position in the left of the screen
+        new_pos.x = (screen_size.width + img_size.width) - (index % (screen_size.width + img_size.width)) - 1;
+        break;
+    case TOP:
+        new_pos.y = (index + 1) % (screen_size.height + img_size.height);
+        break;
+    case BOTTOM:
+        new_pos.y = (screen_size.height + img_size.height) - (index % (screen_size.height + img_size.height)) - 1;
+        break;
+    case TOP_LEFT:
+        new_pos.x = (index + 1) % (screen_size.width + img_size.width);
+        new_pos.y = (index + 1) % (screen_size.height + img_size.height);
+        break;
+    case TOP_RIGHT:
+        new_pos.x = (screen_size.width + img_size.width) - (index % (screen_size.width + img_size.width)) - 1;
+        new_pos.y = (index + 1) % (screen_size.height + img_size.height);
+        break;
+    case BOTTOM_LEFT:
+        new_pos.x = (index + 1) % (screen_size.width + img_size.width);
+        new_pos.y = (screen_size.height + img_size.height) - (index % (screen_size.height + img_size.height)) - 1;
+        break;
+    case BOTTOM_RIGHT:
+        new_pos.x = (screen_size.width + img_size.width) - (index % (screen_size.width + img_size.width)) - 1;
+        new_pos.y = (screen_size.height + img_size.height) - (index % (screen_size.height + img_size.height)) - 1;
+        break;
     }
+    return new_pos;
 }

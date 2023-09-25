@@ -5,6 +5,12 @@
         "mylib.h": "c",
         "fontautolova.h": "c",
         "firstvideo.h": "c",
-        "uart.h": "c"
+        "uart.h": "c",
+        "bird.h": "c",
+        "printf.h": "c",
+        "stdint.h": "c",
+        "game.h": "c",
+        "data.h": "c",
+        "drawgame.h": "c"
     }
 }

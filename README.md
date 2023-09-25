@@ -12,3 +12,12 @@
     => Run `make cleanall-run`
 - If you do not change any header files in `data` folder
     => Run `make test`
+
+- If want to run program again: 
+  - Close teraterm and reopen again
+  - Setuo again
+
+- Runnign:
+  - Game:
+    - w: move arrow up
+    - s: move arrow down
