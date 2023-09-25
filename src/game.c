@@ -344,15 +344,7 @@ void gameMenu() {
                 }
             }
             //Display Arrow Position
-            if (arrowPos == playOption) {
-                displayArrow(arrow, 300, 300 + arrowPos * 50);
-            }
-            else if (arrowPos == helpOption) {
-                displayArrow(arrow, 300, 300 + arrowPos * 50);
-            }
-            else if (arrowPos == exitOption) {
-                displayArrow(arrow, 300, 300 + arrowPos * 50);
-            }
+            displayArrow(arrow, 300, 300 + arrowPos * 50);
             break;
 
         case helpMenu:
@@ -426,15 +418,7 @@ void gameMenu() {
                 }
             }
             //Display Arrow Position
-            if (arrowPos == easy) {
-                displayArrow(arrow, 280, 150 + arrowPos * 100);
-            }
-            else if (arrowPos == normal) {
-                displayArrow(arrow, 280, 150 + arrowPos * 100);
-            }
-            else if (arrowPos == extreme) {
-                displayArrow(arrow, 280, 150 + arrowPos * 100);
-            }
+            displayArrow(arrow, 280, 150 + arrowPos * 100);
             break;
 
         case playGame:
