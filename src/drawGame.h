@@ -39,6 +39,8 @@ void gameoverDisplay();
 void setBackgroundStateDisplay();
 void setBirdStateDisplay();
 void difficultSelectDisplay();
+void endgameAnimation();
+unsigned int generateColor(int x, int y);
 
 void convert_scores_to_str();
 void clearGameScoresDisplay();

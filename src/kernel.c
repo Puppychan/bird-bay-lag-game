@@ -404,6 +404,11 @@ void cli() {
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
 			gameMenu();
+			
+
+
+
+
 			// printf("Game is running\n");
 
 			// setBackgroundStateDisplay();
