@@ -3,6 +3,7 @@
 #include "mbox.h"
 #include "framebf.h"
 #include "mylib.h"
+#include "printf.h"
 #include "game.h"
 #include "../gcclib/stddef.h"
 #define MAX_CMD_SIZE 100
@@ -402,6 +403,17 @@ void cli() {
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
 			gameMenu();
+			// printf("Game is running\n");
+
+			// setBackgroundStateDisplay();
+			// set_bird_position(500, 430);
+            // setBirdStateDisplay();
+			// clear_screen();
+            // init_bird();
+			
+            // init_pipes();
+
+			// game_run();
 		}
 		//Error handling
 		else {

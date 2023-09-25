@@ -9,6 +9,8 @@
         "bird.h": "c",
         "printf.h": "c",
         "stdint.h": "c",
-        "game.h": "c"
+        "game.h": "c",
+        "data.h": "c",
+        "drawgame.h": "c"
     }
 }
