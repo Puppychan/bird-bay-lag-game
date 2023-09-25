@@ -16,6 +16,7 @@ bool gameWin = 0;
 int current_round = 1;
 extern int current_bg;
 extern int current_bird;
+extern int game_scores;
 
 extern unsigned int arrowColorCode;
 extern unsigned int startColorCode;
@@ -23,10 +24,9 @@ extern unsigned int helpColorCode;
 extern unsigned int gameoverColorCode;
 
 bool _is_resumed = 0;
-int _is_game_window = 0; // change later for demo
-int _is_start_game = 0;
-int _num_active_pipes = 0;
-int _remaining_pipes = 0;
+int num_passed_pipes = 0;
+int current_pipe_index = 0;
+
 
 extern Bird bird;
 extern pipe pipes[PIPES_SIZE];
@@ -48,11 +48,14 @@ void end_game_over_action() {
 }
 void end_game_win() {
     gameWin = true;
+    bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
+    bird.vertical_velocity = 0;  // Reset velocity
 }
 void end_game_win_action() {
-    // gameoverDisplay();
+    gameoverDisplay();
     gameWin = false;
 }
+
 
 
 // Bird
@@ -73,6 +76,7 @@ int validate_tube_height(pipe prev_pipe, pipe current_pipe, int current_gap) {
 // handle game logics
 void init_pipes() {
     int current_offset_x = screenWidth / 2;
+    current_pipe_index = 0;
     for (int i = 0; i < PIPES_SIZE; i++) {
         // init pipes x and y
         // init x position
@@ -143,36 +147,51 @@ bool validate_bird_overflow() {
 }
 
 bool validate_bird_obstacle_collision() {
-    for (int index = 0; index < PIPES_SIZE; index++) {
-        // Check if the bird's right side is beyond the left edge of the pipe
-        // and if the bird's left side is before the right edge of the pipe
-        if (bird.x + bird_width >= pipes[index].top.x && bird.x <= pipes[index].top.x + PIPE_WIDTH) {
-            // Check for collisions with the top pipe
-            if (bird.y < pipes[index].top.y) {
-                return true; // collision with top pipe
-            }
+    if (bird.x + bird_width >= pipes[current_pipe_index].top.x && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH) {
+        // Check for collisions with the top pipe
+        if (bird.y < pipes[current_pipe_index].top.y) {
+            return true; // collision with top pipe
+        }
 
-            // Check for collisions with the bottom pipe
-            if (bird.y + bird_height > pipes[index].bottom.y) {
-                return true; // collision with bottom pipe
-            }
+        // Check for collisions with the bottom pipe
+        if (bird.y + bird_height > pipes[current_pipe_index].bottom.y) {
+            return true; // collision with bottom pipe
         }
     }
     return false;
 }
 
+bool validate_bird_passing_pipe() {
+    if (bird.x >= pipes[current_pipe_index].top.x + PIPE_WIDTH && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH + PIPE_MOVE_SPEED) 
+        return true;
+    return false;
+}
 void update_bird() {
     clear_bird();
+    
+    // Win game
+    if (current_pipe_index == PIPES_SIZE) {
+        end_game_win();
+        printf("Win\n");
+    }
 
     bird.vertical_velocity += GRAVITY;  // Gravity pulls the bird down
     bird.y += bird.vertical_velocity;   // Modify y-coordinate by vertical velocity
 
     // Check for ceiling collision
     if (validate_bird_overflow() || validate_bird_obstacle_collision()) {
+        // game over - lose
         // end_game_over();
 
         printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
     }
+    else if (validate_bird_passing_pipe()) {
+        num_passed_pipes++;
+        printf("Passed pipes: %d\n", num_passed_pipes);
+        current_pipe_index++;
+        game_scores ++;
+    }
+
     // backup_bird();
     draw_bird(bird, bird_width, bird_height);
 }
@@ -205,6 +224,10 @@ void game_run() {
         move_pipes();
         if (gameOver) {
             end_game_over_action();
+            break;
+        }
+        if (gameWin) {
+            end_game_win_action();
             break;
         }
         // set_wait_timer(0, 100);
@@ -251,6 +274,7 @@ void gameMenu() {
             clear_screen();
             // set_bird_position(200, 400);
             // bird.vertical_velocity = 3;
+            game_scores = 0;
             backgroundDisplay();
             backupRegion(0, 0, screenWidth, screenHeight);
             init_bird();

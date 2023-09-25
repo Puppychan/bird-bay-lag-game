@@ -6,6 +6,7 @@ int bird_width;
 int bird_height;
 int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
+int game_scores;
 
 unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
@@ -120,11 +121,9 @@ void mainMenuDisplay() {
 void gameoverDisplay() {
     backgroundDisplay();
     drawWord("GameOver!", 350, 80, gameoverColorCode);
-    //Test Score Data
-    int score = 10;
 
     char cScore[10];
-    citoa(score, cScore, 10);
+    citoa(game_scores, cScore, 10);
     drawWord("Highest", 150, 150, gameoverColorCode);
     drawWord("Score:", 500, 150, gameoverColorCode);
     drawWord(cScore, 800, 150, gameoverColorCode);
