@@ -65,7 +65,7 @@ void pause_game() {
 
 // Round Utilities
 void reset_round() {
-    current_round = 1;
+    current_round = 2;
 }
 void next_round() {
     current_round++;
@@ -223,7 +223,8 @@ void generate_obstacle(int type, int index, int pipe_distance, int* p_current_of
     else if (type == 1) {
         // generate balloon
         pipes[index].bottom.x = *p_current_offset_x + pipe_distance;
-        pipes[index].bottom.y = screenHeight;
+        // pipes[index].bottom.y = screenHeight;
+        pipes[index].bottom.y = rand_range(screenHeight / 2, screenHeight + 10);
         pipes[index].bottom.size.width = BALLOON_WIDTH;
         pipes[index].bottom.size.height = 150;
 
@@ -323,11 +324,11 @@ void move_pipes() {
         // Moving balloon
         else if (pipes[index].type == 1) {
             // clear balloon
-            if (pipes[index].bottom.x + pipes[index].bottom.size.width <= screenWidth && pipes[index].bottom.x > 0) {
+            if (pipes[index].bottom.x <= screenWidth && pipes[index].bottom.x > 0) {
                 clear_balloon(pipes[index]);
             }
 
-            pipes[index].bottom.x -= pipe_move_speed;
+            pipes[index].bottom.x -= (pipe_move_speed);
             int movement = vertical_directions[index] == 0 ? -BALLOON_RISE_SPEED : BALLOON_RISE_SPEED;
             pipes[index].bottom.y += movement; // Move balloon upwards.
 
