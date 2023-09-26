@@ -13,10 +13,9 @@
 
 bool gameOver = 0;
 bool gameWin = 0;
-extern int current_round;
 extern int current_bg;
 extern int current_bird;
-extern int game_scores;
+
 
 extern unsigned int arrowColorCode;
 extern unsigned int startColorCode;
@@ -25,9 +24,10 @@ extern unsigned int gameoverColorCode;
 
 
 bool _is_resumed = 0;
-int num_passed_pipes = 0;
+bool _is_vertical_move = false;
 int current_pipe_index = 0;
-
+extern int game_scores;
+extern int current_round;
 
 extern Bird bird;
 extern pipe pipes[PIPES_SIZE];
@@ -36,9 +36,8 @@ extern int bird_height;
 extern int difficulty = 0;
 
 int pipe_gap = PIPE_GAP_MIN;
-// backup_buffer pipeBackupBuffers[PIPES_SIZE];
-// unsigned long pipeBackupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
+// Game State Utilities
 void end_game_over() {
     gameOver = true;
     bird.y = (bird.y < 0) ? 0 : screenHeight;  // Reset position if overflow detected
@@ -47,7 +46,9 @@ void end_game_over() {
 
 void end_game_over_action() {
     gameoverDisplay();
+    // reset
     gameOver = false;
+    reset_round();
 }
 
 void end_game_win() {
@@ -58,6 +59,8 @@ void end_game_win() {
 
 void end_game_win_action() {
     gameoverDisplay();
+    // reset
+    reset_round();
     gameWin = false;
 }
 void resume_game() {
@@ -67,13 +70,66 @@ void pause_game() {
     _is_resumed = false;
 }
 
-// Bird
+// Round Utilities
+void reset_round() {
+    current_round = 1;
+}
+void next_round() {
+    current_round++;
+}
+bool check_last_round() {
+    return current_round == 3;
+}
+
+// Characteristic Utilities
+void enable_vertical_move() {
+    _is_vertical_move = true;
+}
+void disable_vertical_move() {
+    _is_vertical_move = false;
+}
+void reset_characteristics() {
+    _is_vertical_move = false;
+}
+
+// Bird Utilities
 void set_bird_position(float x, float y) {
     bird.x = x;
     bird.y = y;
 }
+bool validate_bird_overflow() {
+    if (bird.y + bird_height > screenHeight || bird.y < 0) {
+        return true;
+    }
+    return false;
+}
 
-// Pipe
+bool validate_bird_obstacle_collision() {
+    if (bird.x + bird_width >= pipes[current_pipe_index].top.x && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH) {
+        // Check for collisions with the top pipe
+        if (bird.y < pipes[current_pipe_index].top.y) {
+            return true; // collision with top pipe
+        }
+
+        // Check for collisions with the bottom pipe
+        if (bird.y + bird_height > pipes[current_pipe_index].bottom.y) {
+            return true; // collision with bottom pipe
+        }
+    }
+    return false;
+}
+
+bool validate_bird_passing_pipe() {
+    if (bird.x >= pipes[current_pipe_index].top.x + PIPE_WIDTH && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH + PIPE_MOVE_SPEED)
+        return true;
+    return false;
+}
+void flap_bird() {
+    bird.vertical_velocity = FLAP_STRENGTH;
+}
+
+
+// Pipe utilities
 int validate_tube_height(pipe prev_pipe, pipe current_pipe, int current_gap) {
     // TODO hard core - later + appear some times only
     printf("prev_pipe.top.y: %d - current_pipe.bottom.y: %d - current_gap: %d\n", prev_pipe.top.y, current_pipe.bottom.y, current_gap);
@@ -117,6 +173,14 @@ void init_pipes() {
 }
 
 void move_pipes() {
+    static int vertical_directions[PIPES_SIZE]; // 0 for up, 1 for down. Initialize all pipes to move up initially.
+    static int initialized = 0; // To check whether static variables are initialized or not.
+
+    if (!initialized) {
+        for (int i = 0; i < PIPES_SIZE; i++) vertical_directions[i] = 0; // Initialize all pipes to move up initially.
+        initialized = 1;
+    }
+
     for (int index = 0; index < PIPES_SIZE; index++) {
         if (pipes[index].top.x + PIPE_WIDTH <= screenWidth && pipes[index].top.x > 0) {
             clear_pipe(pipes[index]);
@@ -127,6 +191,17 @@ void move_pipes() {
         // Skip drawing if the pipe is off the screen
         if (pipes[index].top.x + PIPE_WIDTH <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
 
+        if (_is_vertical_move) {
+            // Vertical Movement
+            int movement = vertical_directions[index] == 0 ? -PIPE_VERTICAL_SPEED : PIPE_VERTICAL_SPEED;
+            pipes[index].top.y += movement;
+            pipes[index].bottom.y += movement;
+
+            // Change direction if hitting vertical limits
+            if (pipes[index].top.y <= PIPE_VERTICAL_LIMIT || pipes[index].top.y >= screenHeight - PIPE_VERTICAL_LIMIT - pipe_gap) {
+                vertical_directions[index] = 1 - vertical_directions[index]; // Toggle direction
+            }
+        }
 
         // if in the screen, draw it
         if (pipes[index].top.x + PIPE_WIDTH <= screenWidth) {
@@ -143,37 +218,9 @@ void init_bird() {
     bird_width = 60;
     bird_height = 60;
     // TODO: add round - change bird
-    set_bird_position(200, 400);
+    set_bird_position(200, screenHeight / 2);
     bird.vertical_velocity = 0;
     draw_bird(bird, bird_width, bird_height);
-}
-
-bool validate_bird_overflow() {
-    if (bird.y + bird_height > screenHeight || bird.y < 0) {
-        return true;
-    }
-    return false;
-}
-
-bool validate_bird_obstacle_collision() {
-    if (bird.x + bird_width >= pipes[current_pipe_index].top.x && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH) {
-        // Check for collisions with the top pipe
-        if (bird.y < pipes[current_pipe_index].top.y) {
-            return true; // collision with top pipe
-        }
-
-        // Check for collisions with the bottom pipe
-        if (bird.y + bird_height > pipes[current_pipe_index].bottom.y) {
-            return true; // collision with bottom pipe
-        }
-    }
-    return false;
-}
-
-bool validate_bird_passing_pipe() {
-    if (bird.x >= pipes[current_pipe_index].top.x + PIPE_WIDTH && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH + PIPE_MOVE_SPEED)
-        return true;
-    return false;
 }
 
 void update_bird() {
@@ -181,16 +228,7 @@ void update_bird() {
 
     // Win game
     if (current_pipe_index == PIPES_SIZE) {
-        if (check_last_round()) {
-            end_game_win();
-            printf("Win\n");
-        }
-        else {
-            current_round++;
-            pause_game();
-            changeRoundDisplay();
-            init_round_game();
-        }
+        end_game_win();
     }
 
     bird.vertical_velocity += GRAVITY;  // Gravity pulls the bird down
@@ -205,8 +243,6 @@ void update_bird() {
     }
     else if (validate_bird_passing_pipe()) {
         // if pass pipe, then increase score
-        num_passed_pipes++;
-        printf("Passed pipes: %d\n", num_passed_pipes);
         current_pipe_index++;
         game_scores++;
         convert_scores_to_str();
@@ -219,20 +255,7 @@ void update_bird() {
     draw_bird(bird, bird_width, bird_height);
 }
 
-void flap_bird() {
-    bird.vertical_velocity = FLAP_STRENGTH;
-}
-
 // Round
-void reset_round() {
-    current_round = 1;
-}
-void next_round() {
-    current_round++;
-}
-bool check_last_round() {
-    return current_round == 3;
-}
 void init_round_game() {
     // function to init game for each round
     switch (current_round) {
@@ -245,21 +268,31 @@ void init_round_game() {
         init_pipes();
         break;
     case 2:
+        // reset
+        gameWin = false;
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
 
         init_bird();
         init_pipes();
+
+        // set characteristics
+        enable_vertical_move();
+        // run game
         game_run();
         break;
     case 3:
+        // reset
+        gameWin = false;
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
 
         init_bird();
         init_pipes();
+        // run game
+        game_run();
         break;
     default:
         break;
@@ -301,7 +334,18 @@ void game_run() {
             break;
         }
         if (gameWin) {
-            end_game_win_action();
+            // if win, then check if last round
+            // if last round, then end game
+            if (check_last_round()) {
+                end_game_win_action();
+            }
+            // if not last round, then change round
+            else {
+                next_round();
+                pause_game();
+                changeRoundDisplay();
+                init_round_game();
+            }
             break;
         }
         // set_wait_timer(0, 100);
@@ -361,6 +405,7 @@ void gameMenu() {
             backupRegion(0, 0, screenWidth, screenHeight);
 
             reset_round();
+            reset_characteristics();
             init_round_game();
             nextState = 0;
             currState = playGame;

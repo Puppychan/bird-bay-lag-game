@@ -11,6 +11,8 @@
         "stdint.h": "c",
         "game.h": "c",
         "data.h": "c",
-        "drawgame.h": "c"
+        "drawgame.h": "c",
+        "complex": "cpp",
+        "cmath": "cpp"
     }
 }
