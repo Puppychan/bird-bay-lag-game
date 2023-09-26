@@ -1,6 +1,7 @@
 #include "drawGame.h"
 
-pipe pipes[PIPES_SIZE];  // We can have a maximum of 3 pipes on screen for simplicity.
+int pipes_size;
+pipe pipes[MAX_PIPES_SIZE];  // We can have a maximum of 3 pipes on screen for simplicity.
 Bird bird;
 int bird_width;
 int bird_height;
@@ -8,16 +9,19 @@ int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
 int game_scores;
 char game_scores_str[10];
+int current_round = 1;
 
 unsigned int arrowColorCode = 0x000000;
 unsigned int startColorCode = 0x000000;
 unsigned int helpColorCode = 0x000000;
+unsigned int endgameColor = 0xFF00000;
 unsigned int gameoverColorCode = 0x000000;
 unsigned int gamingScoresColorCode = 0x000000;
+unsigned int changeRoundColorCode = 0x000000;
 
 void draw_pipes() {
     // Draw the pipes
-    for (int i = 0; i < PIPES_SIZE; i++) {
+    for (int i = 0; i < pipes_size; i++) {
         if (pipes[i].top.x + PIPE_WIDTH <= screenWidth) {
             drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, PIPE_WIDTH, pipes[i].top.y, pipes[i].top.x, 0, tube_info.exclude_color);
             drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, PIPE_WIDTH, screenHeight - pipes[i].bottom.y, pipes[i].bottom.x, pipes[i].bottom.y, tube_up_info.exclude_color);
@@ -31,20 +35,26 @@ void draw_pipes() {
 
 void draw_pipe(pipe p) {
     // Draw the images for top and bottom pipe parts
-    drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, PIPE_WIDTH, p.top.y, p.top.x, 0, tube_info.exclude_color);
-    drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, PIPE_WIDTH, screenHeight - p.bottom.y, p.bottom.x, p.bottom.y, tube_up_info.exclude_color);
+    drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, p.top.size.width, p.top.y, p.top.x, 0, tube_info.exclude_color);
+    drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, p.bottom.size.width, screenHeight - p.bottom.y, p.bottom.x, p.bottom.y, tube_up_info.exclude_color);
 }
-
+void draw_balloon(pipe p) {
+    int temp_index = p.display_index;
+    drawScaledImage(obstacle_balloon_list[temp_index], obstacle_balloon_info_allArray[temp_index]->width, obstacle_balloon_info_allArray[temp_index]->height,
+                    p.bottom.size.width, p.bottom.size.height, p.bottom.x, p.bottom.y, obstacle_balloon_info_allArray[temp_index]->exclude_color);
+}
 void clear_pipe(pipe p) {
-    clearImageOverlay(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    clearImageOverlay(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+    clearImageOverlay(p.top.x, 0, p.top.size.width, p.top.y);
+    clearImageOverlay(p.bottom.x, p.bottom.y, p.bottom.size.width, screenHeight - p.bottom.y);
     // clearImage(p.top.x, 0, PIPE_WIDTH, p.top.y);
     // clearImage(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
 }
-
+void clear_balloon(pipe p) {
+    clearImageOverlay(p.bottom.x, p.bottom.y, p.bottom.size.width, p.bottom.size.height);
+}
 void clear_bird() {
     // clearImage(bird.x, bird.y, bird_width, bird_height);
-    clearImageOverlay(bird.x, bird.y, bird_width, bird_height); 
+    clearImageOverlay(bird.x, bird.y, bird_width, bird_height);
 }
 void backup_pipe(pipe p) {
     backupRegion(p.top.x, 0, PIPE_WIDTH, p.top.y);
@@ -52,6 +62,9 @@ void backup_pipe(pipe p) {
 }
 void backup_bird() {
     backupRegion(bird.x, bird.y, bird_width, bird_height);
+}
+void backup_game_scores() {
+    backupRegion(screenWidth - 100, 50, 100, 40);
 }
 
 void draw_bird(Bird bird, int width, int height) {
@@ -62,6 +75,7 @@ void draw_bird_ratio(Bird bird, double scale) {
     drawScaledImage_byRatio(bird_allArray[current_bird], bird_info_allArray[current_bird]->width, bird_info_allArray[current_bird]->height, scale, scale, bird.x, bird.y, bird_info_allArray[current_bird]->exclude_color);
 }
 
+//Function display background image
 void backgroundDisplay() {
     drawImage(background_allArray[current_bg], virScreenWidth, virScreenHeight, 0, 0);
 }
@@ -83,6 +97,7 @@ void deleteArrow(int x, int y) {
     clearImageOverlay(x, y, 80, 40);
 }
 
+//Display help menu
 void helpMenuDisplay() {
     backgroundDisplay();
     drawSentence("Instruction", 300, 100, helpColorCode);
@@ -92,6 +107,7 @@ void helpMenuDisplay() {
     drawSentence("Back", 420, 430, helpColorCode);
 }
 
+//Display main menu
 void mainMenuDisplay() {
     backgroundDisplay();
     backupRegion(0, 0, screenWidth, screenHeight);
@@ -106,26 +122,51 @@ void mainMenuDisplay() {
     drawWord("Exit", 400, 450, startColorCode);
 }
 
+void changeRoundDisplay() {
+    backgroundDisplay();
+    backupRegion(0, 0, screenWidth, screenHeight);
+    
+    // convert round to string
+    char round_str[2];
+    citoa(current_round, round_str, 10);
+
+    // display round
+    drawSentence("Round", 350, 80, changeRoundColorCode);
+    drawSentence(round_str, 600, 80, changeRoundColorCode);
+    // prevent debounce
+    wait_msec(1000);
+
+}
+void changeRoundRemove() {
+    clearImageOverlay(350, 80, 200, 40);
+    clearImageOverlay(600, 80, 100, 40);
+}
+//Display game over summary
 void gameoverDisplay() {
     backgroundDisplay();
     drawSentence("GameOver!", 350, 80, gameoverColorCode);
 
     char cScore[10];
     citoa(game_scores, cScore, 10);
-    drawSentence("Highest Score", 150, 150, helpColorCode);
+    drawSentence("Highest Score:", 150, 150, helpColorCode);
     drawSentence(cScore, 800, 150, gameoverColorCode);
 
     drawSentence("Press any key", 250, 320, helpColorCode);
     drawSentence("to continue", 290, 390, helpColorCode);
 
+    //Wait until any key is pressed
     char c = 0;
     do {
         c = getUart();
     } while (c == 0);
-
+    // prevent debounce
+    wait_msec(300);
+    //Draw end game animation;
+    endgameAnimation();
     return;
 }
 
+//Display instruction to select background
 void setBackgroundStateDisplay() {
     backgroundDisplay();
     drawSentence("Instruction", 300, 100, helpColorCode);
@@ -133,7 +174,7 @@ void setBackgroundStateDisplay() {
     drawSentence("Enter to set background", 30, 300, helpColorCode);
 }
 
-
+//Display instruction to select bird costume
 void setBirdStateDisplay() {
     backgroundDisplay();
     drawSentence("Instruction", 300, 100, helpColorCode);
@@ -141,15 +182,49 @@ void setBirdStateDisplay() {
     drawSentence("Enter to set bird", 160, 300, helpColorCode);
     draw_bird(bird, 120, 100);
 }
+
 void convert_scores_to_str() {
-    
     citoa(game_scores, game_scores_str, 10);
 }
+
 void clearGameScoresDisplay() {
     // assume max width
     clearImageOverlay(screenWidth - 100, 50, 100, 40);
 }
 
+void difficultSelectDisplay() {
+    backgroundDisplay();
+    backupRegion(0, 0, screenWidth, screenHeight);
+    drawSentence("LAG Selection", 240, 100, helpColorCode);
+    drawSentence("Less", 380, 250, helpColorCode);
+    drawSentence("Normal", 380, 350, helpColorCode);
+    drawSentence("Extreme", 380, 450, helpColorCode);
+}
+
 void gamingScoresDisplay() {
     drawSentenceOffset(game_scores_str, screenWidth - 100, 50, gamingScoresColorCode, 20);
+}
+
+//Display end game animation to
+void endgameAnimation() {
+    unsigned int currentColor;
+    for(int y = 0; y < screenHeight; y += 40) {
+        for(int x = 0; x < screenWidth; x += 40) {
+            currentColor = generateColor(x, y);
+            drawRectARGB32(x, y, x + 40, y + 40, currentColor, 1);
+            //Monitor speed of screen cleaning
+            set_wait_timer(1, 5);
+            set_wait_timer(0, 5);
+        }
+    }
+}
+
+//Produce color base on position x and y
+unsigned int generateColor(int x, int y) {
+    unsigned char r = (x + y) % 255;
+    unsigned char g = x % 255;
+    unsigned char b = y % 255;
+    unsigned char a = 255; // Full alpha for visibility
+
+    return (a << 24) | (r << 16) | (g << 8) | b; // Return as ARGB32
 }

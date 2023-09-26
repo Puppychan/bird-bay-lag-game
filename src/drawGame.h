@@ -6,12 +6,19 @@
 #define DEFAULT_BACKGROUND 0
 #define DEFAULT_BIRD 0
 
+#define FRAME_MOVING_GAME 1000/8
 // Constants for the game mechanics
-#define PIPES_SIZE 10
-// #define PIPES_SIZE 3
+// #define pipes_size 10
+
+#define EASY_pipes_size 2
+#define MEDIUM_pipes_size 5
+#define HARD_pipes_size 10
+#define MAX_PIPES_SIZE 50
+
 #define PIPE_DISTANCE 100 // make it modifiable later
 #define PIPE_GAP 50 // make it modifiable later
 #define PIPE_WIDTH 50 
+#define BALLOON_WIDTH 70
 
 #define PIPE_DISTANCE_MIN 170 // easy
 // #define PIPE_DISTANCE_MIN 150 // easy
@@ -26,10 +33,15 @@
 
 void draw_pipes();
 void draw_pipe(pipe p);
+void draw_balloon(pipe p);
 void clear_pipe(pipe p);
+void clear_balloon(pipe p);
 void clear_bird();
+
 void backup_pipe(pipe p);
 void backup_bird();
+void backup_game_scores();
+
 void draw_bird(Bird bird, int width, int height);
 void draw_bird_ratio(Bird bird, double scale);
 
@@ -40,6 +52,11 @@ void mainMenuDisplay();
 void gameoverDisplay();
 void setBackgroundStateDisplay();
 void setBirdStateDisplay();
+void difficultSelectDisplay();
+void endgameAnimation();
+unsigned int generateColor(int x, int y);
+void changeRoundDisplay();
+void changeRoundRemove();
 
 void convert_scores_to_str();
 void clearGameScoresDisplay();

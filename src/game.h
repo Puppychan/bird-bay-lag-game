@@ -8,21 +8,28 @@
 #define helpMenu 2
 #define setBackground 3
 #define setBird 4
-#define playGame 5
+#define setDifficult 5
+#define playGame 6
 
 
 #define playOption 1
 #define helpOption 2
 #define exitOption 3
 
+#define easy 1
+#define normal 2
+#define extreme 3
+
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
 // Constants for the bird
-#define GRAVITY 8
+#define GRAVITY 9.8
 #define FLAP_STRENGTH -30
-#define MOVE_SPEED 10 // pixels per frame
-#define PIPE_MOVE_SPEED 10 // pixels per frame
+#define PIPE_VERTICAL_SPEED 15 // pixels per frame
 
+#define VERTICAL_MOVEMENT_AMPLITUDE 10 // This is the maximum amount a pipe will move up or down from its initial position.
+#define BALLOON_RISE_SPEED 10 // pixels per frame
+#define PIPE_VERTICAL_LIMIT 0.01 // This controls how fast the pipes move up and down.
 
 void end_game();
 
@@ -51,10 +58,12 @@ extern int is_set_bg;
 
 void gameMenu();
 void backgroundDisplay();
-void birdDisplay();
 
 void set_bird_position(float x, float y);
 void init_bird();
 
-void selectBackground();
-void selectBird();
+void reset_round();
+void next_round();
+bool check_last_round();
+void init_round_game();
+

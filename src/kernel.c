@@ -172,6 +172,7 @@ void display_image() {
 
 void display_video() {
 	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
+	wait_msec(100);
 }
 
 
@@ -389,10 +390,10 @@ void cli() {
 						else current_bg++;
 						display_image();
 				}
-				else if (c == 'w') { // slide to previous image
+				else if (c == 'w') { // scroll up image
 					scroll_up_image();
 				}
-				else if (c == 's') { // slide to next image
+				else if (c == 's') { // scroll down image
 					scroll_down_image();
 				}
 			}
@@ -405,22 +406,13 @@ void cli() {
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
 			gameMenu();
-			// printf("Game is running\n");
-
-			// setBackgroundStateDisplay();
-			// set_bird_position(500, 430);
-            // setBirdStateDisplay();
-			// clear_screen();
-            // init_bird();
 			
-            // init_pipes();
-
-			// game_run();
 		}
 		//Error handling
 		else {
 			uart_puts("Unrecognized as an internal command!\n");
 		}
+		wait_msec(100);
 
 		//Return to command line
 		index = 0;
@@ -443,6 +435,7 @@ void main() {
 
 	//WelcomeMessage
 	welcomeMessage();
+	displayPrompt();
 	while (1) {
 		cli();
 	}
