@@ -34,17 +34,23 @@ void draw_pipes() {
 
 void draw_pipe(pipe p) {
     // Draw the images for top and bottom pipe parts
-    drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, PIPE_WIDTH, p.top.y, p.top.x, 0, tube_info.exclude_color);
-    drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, PIPE_WIDTH, screenHeight - p.bottom.y, p.bottom.x, p.bottom.y, tube_up_info.exclude_color);
+    drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, p.top.size.width, p.top.y, p.top.x, 0, tube_info.exclude_color);
+    drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, p.bottom.size.width, screenHeight - p.bottom.y, p.bottom.x, p.bottom.y, tube_up_info.exclude_color);
 }
-
+void draw_balloon(pipe p) {
+    int temp_index = p.display_index;
+    drawScaledImage(obstacle_balloon_list[temp_index], obstacle_balloon_info_allArray[temp_index]->width, obstacle_balloon_info_allArray[temp_index]->height,
+                    p.bottom.size.width, p.bottom.size.height, p.bottom.x, p.bottom.y, obstacle_balloon_info_allArray[temp_index]->exclude_color);
+}
 void clear_pipe(pipe p) {
-    clearImageOverlay(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    clearImageOverlay(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
+    clearImageOverlay(p.top.x, 0, p.top.size.width, p.top.y);
+    clearImageOverlay(p.bottom.x, p.bottom.y, p.bottom.size.width, screenHeight - p.bottom.y);
     // clearImage(p.top.x, 0, PIPE_WIDTH, p.top.y);
     // clearImage(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
 }
-
+void clear_balloon(pipe p) {
+    clearImageOverlay(p.bottom.x, p.bottom.y, p.bottom.size.width, p.bottom.size.height);
+}
 void clear_bird() {
     // clearImage(bird.x, bird.y, bird_width, bird_height);
     clearImageOverlay(bird.x, bird.y, bird_width, bird_height);

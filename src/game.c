@@ -25,6 +25,8 @@ extern unsigned int gameoverColorCode;
 
 bool _is_resumed = 0;
 bool _is_vertical_move = false;
+bool _is_have_balloon = false;
+bool _is_have_pipe = false;
 int current_pipe_index = 0;
 extern int game_scores;
 extern int current_round;
@@ -82,14 +84,41 @@ bool check_last_round() {
 }
 
 // Characteristic Utilities
+// enable
 void enable_vertical_move() {
     _is_vertical_move = true;
 }
+void enable_balloon() {
+    _is_have_balloon = true;
+}
+void enable_pipe() {
+    _is_have_pipe = true;
+}
+// disable
 void disable_vertical_move() {
     _is_vertical_move = false;
 }
+void disable_balloon() {
+    _is_have_balloon = false;
+}
+void disable_pipe() {
+    _is_have_pipe = false;
+}
+// check
+bool is_vertical_move() {
+    return _is_vertical_move;
+}
+bool is_have_balloon() {
+    return _is_have_balloon;
+}
+bool is_have_pipe() {
+    return _is_have_pipe;
+}
+// reset
 void reset_characteristics() {
     _is_vertical_move = false;
+    _is_have_balloon = false;
+    _is_have_pipe = true;
 }
 
 // Bird Utilities
@@ -105,22 +134,44 @@ bool validate_bird_overflow() {
 }
 
 bool validate_bird_obstacle_collision() {
-    if (bird.x + bird_width >= pipes[current_pipe_index].top.x && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH) {
-        // Check for collisions with the top pipe
-        if (bird.y < pipes[current_pipe_index].top.y) {
-            return true; // collision with top pipe
+    // For pipes, check collision with both top and bottom parts.
+    if (pipes[current_pipe_index].type == 0) {
+        // Check collision with top part of the pipe.
+        if (bird.x < pipes[current_pipe_index].top.x + PIPE_WIDTH &&
+            bird.x + bird_width > pipes[current_pipe_index].top.x &&
+            bird.y < pipes[current_pipe_index].top.y) {
+            return true;
         }
 
-        // Check for collisions with the bottom pipe
-        if (bird.y + bird_height > pipes[current_pipe_index].bottom.y) {
-            return true; // collision with bottom pipe
+        
+
+        // Check collision with bottom part of the pipe.
+        if (bird.x < pipes[current_pipe_index].bottom.x + PIPE_WIDTH &&
+            bird.x + bird_width > pipes[current_pipe_index].bottom.x &&
+            bird.y + bird_height > pipes[current_pipe_index].bottom.y) {
+            return true;
+        }
+    }
+    // For balloons, only check collision with the balloon's body (bottom).
+    else if (pipes[current_pipe_index].type == 1) {
+        if (bird.x < pipes[current_pipe_index].bottom.x + BALLOON_WIDTH &&
+            bird.x + bird_width > pipes[current_pipe_index].bottom.x) {
+            int balloon_upper_limit = pipes[current_pipe_index].bottom.y;
+            int balloon_lower_limit = pipes[current_pipe_index].bottom.y + pipes[current_pipe_index].bottom.size.height;
+
+            // Return true if bird passes above the upper limit or below the lower limit of the balloon
+            if (bird.y + bird_height >= balloon_upper_limit && bird.y <= balloon_lower_limit) {
+                return true;
+            }
+
         }
     }
     return false;
 }
 
 bool validate_bird_passing_pipe() {
-    if (bird.x >= pipes[current_pipe_index].top.x + PIPE_WIDTH && bird.x <= pipes[current_pipe_index].top.x + PIPE_WIDTH + PIPE_MOVE_SPEED)
+    if (bird.x >= pipes[current_pipe_index].bottom.x + pipes[current_pipe_index].bottom.size.width &&
+        bird.x <= pipes[current_pipe_index].bottom.x + pipes[current_pipe_index].bottom.size.width + PIPE_MOVE_SPEED)
         return true;
     return false;
 }
@@ -137,11 +188,60 @@ int validate_tube_height(pipe prev_pipe, pipe current_pipe, int current_gap) {
     if (prev_pipe.top.y >= current_pipe.top.y || prev_pipe.bottom.y <= current_pipe.top.y + PIPE_GAP_MIN) return 0;
     return 1;
 }
+void generate_obstacle(int type, int index, int pipe_distance, int* p_current_offset_x) {
+    // type: 0 - pipe, 1 - balloon
+    if (type == 0) {
+        pipes[index].type = 0; // pipe
+        pipes[index].top.x = *p_current_offset_x + pipe_distance;
+        pipes[index].top.size.width = PIPE_WIDTH;
+
+        // offset for next pipe or balloon
+        *p_current_offset_x = pipes[index].top.x + pipes[index].top.size.width;
+        pipes[index].bottom.x = pipes[index].top.x;
+        pipes[index].bottom.size.width = pipes[index].top.size.width;
+
+        pipes[index].top.y = rand_range(screenHeight - PIPE_GAP_MAX, PIPE_TOP_MIN);  // Random height for top pipe's bottom end
+        pipe_gap = rand_range(PIPE_GAP_MAX, PIPE_GAP_MIN);  // Random gap between pipes
+        pipes[index].bottom.y = pipes[index].top.y + pipe_gap;
+
+        if (pipes[index].top.x < screenWidth) {
+            draw_pipe(pipes[index]);
+        }
+    }
+    else if (type == 1) {
+        // generate balloon
+        pipes[index].bottom.x = *p_current_offset_x + pipe_distance;
+        pipes[index].bottom.y = screenHeight;
+        pipes[index].bottom.size.width = BALLOON_WIDTH;
+        pipes[index].bottom.size.height = 150; // random height can be added later
+
+        // offset for next pipe or balloon
+        *p_current_offset_x = pipes[index].bottom.x + pipes[index].bottom.size.width;
+        pipes[index].type = 1; // balloon
+
+        if (pipes[index].bottom.x < screenWidth) {
+            int temp_index = rand_range(0, obstacle_balloon_allArray_LEN - 1);
+            pipes[index].display_index = temp_index;
+            printf("Temp balloon index %d \n", temp_index);
+            draw_balloon(pipes[index]);
+        }
+    }
+}
 
 // handle game logics
 void init_pipes() {
     int current_offset_x = screenWidth / 2;
     current_pipe_index = 0;
+    int display_type = 0;
+    if (is_have_balloon() && is_have_pipe()) { // both have pipe and balloon
+        display_type = 3;
+    }
+    else if (is_have_pipe()) { // only have pipe
+        display_type = 1;
+    }
+    else { // only have balloon
+        display_type = 0;
+    }
     for (int i = 0; i < PIPES_SIZE; i++) {
         // init pipes x and y
         // init x position
@@ -150,17 +250,24 @@ void init_pipes() {
         // int pipe_distance = rand_range(PIPE_DISTANCE_MIN, PIPE_DISTANCE_MAX); // hard
         // pipes[i].top.x = 200 + i * PIPE_DISTANCE;
 
-        pipes[i].top.x = current_offset_x + pipe_distance;
-        current_offset_x = pipes[i].top.x + PIPE_WIDTH;
-        pipes[i].bottom.x = pipes[i].top.x;
 
-        pipes[i].top.y = rand_range(screenHeight - PIPE_GAP_MAX, PIPE_TOP_MIN);  // Random height for top pipe's bottom end
-        pipe_gap = rand_range(PIPE_GAP_MAX, PIPE_GAP_MIN);  // Random gap between pipes
-        pipes[i].bottom.y = pipes[i].top.y + pipe_gap;
-
-        if (pipes[i].top.x < screenWidth) {
-            draw_pipe(pipes[i]);
+        // Decide randomly whether to initialize a balloon or a pipe
+        if (display_type == 3) { // both have pipe and balloon
+            if (rand() % 2 == 0) { // 50% chance to create a balloon
+                generate_obstacle(1, i, pipe_distance, &current_offset_x);
+            }
+            else {
+                generate_obstacle(0, i, pipe_distance, &current_offset_x);
+            }
         }
+        else if (display_type == 1) { // only have pipe
+            generate_obstacle(0, i, pipe_distance, &current_offset_x);
+        }
+        else { // only have balloon
+            generate_obstacle(1, i, pipe_distance, &current_offset_x);
+        }
+
+
         // init y position
         // TODO: add hard core
         // do {
@@ -182,36 +289,56 @@ void move_pipes() {
     }
 
     for (int index = 0; index < PIPES_SIZE; index++) {
-        if (pipes[index].top.x + PIPE_WIDTH <= screenWidth && pipes[index].top.x > 0) {
-            clear_pipe(pipes[index]);
+        if (pipes[index].type == 0) {
+            // clear old
+            if (pipes[index].top.x + pipes[index].top.size.width <= screenWidth && pipes[index].top.x > 0) {
+                clear_pipe(pipes[index]);
+            }
+
+            pipes[index].top.x -= PIPE_MOVE_SPEED;
+            pipes[index].bottom.x -= PIPE_MOVE_SPEED;
+            // Skip drawing if the pipe is off the screen
+            if (pipes[index].top.x + pipes[index].top.size.width <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
+
+            if (is_vertical_move()) {
+                // Vertical Movement for balloon and pipe having vertical movement
+                int movement = vertical_directions[index] == 0 ? -PIPE_VERTICAL_SPEED : PIPE_VERTICAL_SPEED;
+                pipes[index].top.y += movement;
+                pipes[index].bottom.y += movement;
+
+                // Change direction if hitting vertical limits
+                if (pipes[index].top.y <= PIPE_VERTICAL_LIMIT || pipes[index].top.y >= screenHeight - PIPE_VERTICAL_LIMIT - pipe_gap) {
+                    vertical_directions[index] = 1 - vertical_directions[index]; // Toggle direction
+                }
+            }
+
+            // if in the screen, draw it
+            if (pipes[index].top.x + pipes[index].top.size.width <= screenWidth) {
+                // backup_pipe(pipes[index]);
+                // Display the pipe on the screen at its new position.
+                draw_pipe(pipes[index]);
+            }
         }
+        else if (pipes[index].type == 1) {
+            // clear balloon
+            if (pipes[index].bottom.x + pipes[index].bottom.size.width <= screenWidth && pipes[index].bottom.x > 0) {
+                clear_balloon(pipes[index]);
+            }
 
-        pipes[index].top.x -= PIPE_MOVE_SPEED;
-        pipes[index].bottom.x -= PIPE_MOVE_SPEED;
-        // Skip drawing if the pipe is off the screen
-        if (pipes[index].top.x + PIPE_WIDTH <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
+            pipes[index].bottom.x -= PIPE_MOVE_SPEED;
+            int movement = vertical_directions[index] == 0 ? -BALLOON_RISE_SPEED : BALLOON_RISE_SPEED;
+            pipes[index].bottom.y += movement; // Move balloon upwards.
 
-        if (_is_vertical_move) {
-            // Vertical Movement
-            int movement = vertical_directions[index] == 0 ? -PIPE_VERTICAL_SPEED : PIPE_VERTICAL_SPEED;
-            pipes[index].top.y += movement;
-            pipes[index].bottom.y += movement;
-
-            // Change direction if hitting vertical limits
-            if (pipes[index].top.y <= PIPE_VERTICAL_LIMIT || pipes[index].top.y >= screenHeight - PIPE_VERTICAL_LIMIT - pipe_gap) {
-                vertical_directions[index] = 1 - vertical_directions[index]; // Toggle direction
+            if (pipes[index].bottom.y < 0) { // If balloon goes off the screen at the top, reset position or remove it
+                pipes[index].bottom.y = screenHeight; // Reset balloon position to bottom.
+            }
+            // redraw
+            if (pipes[index].bottom.x + pipes[index].bottom.size.width <= screenWidth && pipes[index].bottom.x > 0) {
+                draw_balloon(pipes[index]);
             }
         }
 
-        // if in the screen, draw it
-        if (pipes[index].top.x + PIPE_WIDTH <= screenWidth) {
-            // backup_pipe(pipes[index]);
-            // Display the pipe on the screen at its new position.
-            draw_pipe(pipes[index]);
-        }
-
     }
-
 }
 
 void init_bird() {
@@ -229,6 +356,7 @@ void update_bird() {
     // Win game
     if (current_pipe_index == PIPES_SIZE) {
         end_game_win();
+        return;
     }
 
     bird.vertical_velocity += GRAVITY;  // Gravity pulls the bird down
@@ -237,9 +365,10 @@ void update_bird() {
     // Check for ceiling collision
     if (validate_bird_overflow() || validate_bird_obstacle_collision()) {
         // game over - lose
-        // end_game_over();
+        end_game_over();
 
         printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
+        return;
     }
     else if (validate_bird_passing_pipe()) {
         // if pass pipe, then increase score
@@ -263,9 +392,14 @@ void init_round_game() {
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
+        // temp set characteristics
+        // disable_pipe();
+        // enable_balloon();
 
         init_bird();
         init_pipes();
+        // run game
+        game_run();
         break;
     case 2:
         // reset
@@ -274,11 +408,13 @@ void init_round_game() {
         convert_scores_to_str();
         gamingScoresDisplay();
 
+        // set characteristics
+        disable_pipe();
+        enable_balloon();
+
+        // setting up game
         init_bird();
         init_pipes();
-
-        // set characteristics
-        enable_vertical_move();
         // run game
         game_run();
         break;
@@ -289,6 +425,11 @@ void init_round_game() {
         convert_scores_to_str();
         gamingScoresDisplay();
 
+        // set characteristics
+        enable_vertical_move();
+        enable_pipe();
+
+        // setting up game
         init_bird();
         init_pipes();
         // run game
@@ -406,7 +547,6 @@ void gameMenu() {
 
             reset_round();
             reset_characteristics();
-            init_round_game();
             nextState = 0;
             currState = playGame;
             break;
@@ -525,7 +665,8 @@ void gameMenu() {
             break;
 
         case playGame:
-            game_run();
+            // game_run();
+            init_round_game();
             nextState = mainMenu;
             break;
 

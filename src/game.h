@@ -30,6 +30,7 @@
 #define PIPE_VERTICAL_SPEED 15 // pixels per frame
 
 #define VERTICAL_MOVEMENT_AMPLITUDE 10 // This is the maximum amount a pipe will move up or down from its initial position.
+#define BALLOON_RISE_SPEED 10 // pixels per frame
 #define PIPE_VERTICAL_LIMIT 0.01 // This controls how fast the pipes move up and down.
 
 void end_game();

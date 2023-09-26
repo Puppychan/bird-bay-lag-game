@@ -8,10 +8,11 @@
 
 // Constants for the game mechanics
 // #define PIPES_SIZE 10
-#define PIPES_SIZE 3
+#define PIPES_SIZE 2
 #define PIPE_DISTANCE 100 // make it modifiable later
 #define PIPE_GAP 50 // make it modifiable later
 #define PIPE_WIDTH 50 
+#define BALLOON_WIDTH 70
 
 #define PIPE_DISTANCE_MIN 170 // easy
 // #define PIPE_DISTANCE_MIN 150 // easy
@@ -26,7 +27,9 @@
 
 void draw_pipes();
 void draw_pipe(pipe p);
+void draw_balloon(pipe p);
 void clear_pipe(pipe p);
+void clear_balloon(pipe p);
 void clear_bird();
 
 void backup_pipe(pipe p);
