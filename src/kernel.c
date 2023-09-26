@@ -13,8 +13,6 @@
 
 static int y_offset = 0;
 
-static int is_diplay_image = 0;
-
 //History Terminal CMD
 char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
 int is_display_something;
@@ -145,25 +143,23 @@ void set_color(const char *option, const char *color) {
 
 
 void scroll_up_image() {
-	if (y_offset + screenHeight < virScreenHeight) y_offset++;
-  unsigned int  *res_data = 0;
+	if (y_offset > 0)  y_offset--;
+  unsigned int *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
-  if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
-  }
-//   else {
-//     uart_puts("mbox_call failed\n");
-//   }
+  mbox_call(ADDR(mBuf), MBOX_CH_PROP);
 }
 
 void scroll_down_image() {
-	if (y_offset > 0)  y_offset--;
-  unsigned int  *res_data = 0;
+	if (y_offset + screenHeight < virScreenHeight) y_offset++;
+  unsigned int *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
-  if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
-  }
-//   else {
-//     uart_puts("mbox_call failed\n");
-//   }
+  mbox_call(ADDR(mBuf), MBOX_CH_PROP);
+}
+
+void reset_offset() {
+	unsigned int *res_data = 0;
+	mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, 0);
+	mbox_call(ADDR(mBuf), MBOX_CH_PROP);
 }
 
 void display_image() {
@@ -376,7 +372,6 @@ void cli() {
 		}
 		//displayImage Command
 		else if (strcmp(cli_buffer, commands[4]) == 0) {
-			is_diplay_image = 1;
 			display_image();
 			while (1) {
 				char c = uart_getc();
@@ -387,9 +382,9 @@ void cli() {
 					display_image();
 				}
 				else if (c == 'd') { // slide to next image
-						if (current_bg == background_LEN-1) current_bg = 0;
-						else current_bg++;
-						display_image();
+					if (current_bg == background_LEN-1) current_bg = 0;
+					else current_bg++;
+					display_image();
 				}
 				else if (c == 'w') { // scroll up image
 					scroll_up_image();
@@ -398,7 +393,10 @@ void cli() {
 					scroll_down_image();
 				}
 			}
+			// clear sreen and reset virtual offset when command finishes
 			clear_screen();
+			reset_offset();
+
 		}
 		//displayVideo Command
 		else if (strcmp(cli_buffer, commands[5]) == 0) {
