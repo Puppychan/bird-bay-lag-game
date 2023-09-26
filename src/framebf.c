@@ -9,6 +9,7 @@
 
 #define MAX_WIDTH 1080   // maximum expected width
 #define MAX_HEIGHT 675  // maximum expected height
+// Backup buffer for the screen
 uint32_t backupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
 //Use RGBA32 (32 bits for each pixel)
@@ -196,29 +197,31 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
 }
 
 void backupRegion(int x, int y, int width, int height) {
+    // Init backup index
     int backupIndex = 0;
-    // printf("Pitch backup region: %d\n", pitch);
+    // Loop through the region
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
+            // Calculate the index of the pixel in the backup buffer
             backupIndex = h * MAX_WIDTH + w;
-
+            // Calculate the offset of the pixel in the frame buffer
             int offs = (h * pitch) + (COLOR_DEPTH / 8 * w);
+            // Get the pixel value from the frame buffer
             uint32_t pixel_value = *((unsigned int*)(fb + offs));
+            // Store the pixel value in the backup buffer
             backupBuffer[backupIndex] = pixel_value;
-            // printf("Backup: offs (%d, %d): %d, pixel: %x, current buffer: %x \n", w, h, offs, pixel_value, backupBuffer[index]);
         }
     }
 }
 
 void clearImageOverlay(int x, int y, int width, int height) {
-    // int index = 0;
+    // loop through the region
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
-            // unsigned int originalColor = backupBuffer[index++];
-
+            // Get the pixel value from the backup buffer
             unsigned int originalColor = backupBuffer[h * MAX_WIDTH + w];
+            // Draw the pixel
             drawPixelARGB32(w, h, originalColor);
-            // printf("Clear image overlay: %x\n", originalColor);
         }
     }
 }
