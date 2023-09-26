@@ -17,6 +17,8 @@ static int is_diplay_image = 0;
 
 //History Terminal CMD
 char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
+int is_display_something;
+
 int history_cmd = 0;
 int current_cmd = 0;
 
@@ -170,6 +172,7 @@ void display_image() {
 
 void display_video() {
 	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
+	wait_msec(100);
 }
 
 
@@ -184,7 +187,7 @@ void display_moving_background() {
 
 void printName() {
 	// Background color
-	drawRectARGB32(0, 0, 1024, 768, 0x00B8C3E3, 1);
+	drawRectARGB32(0, 0, screenWidth, screenHeight, 0x00B8C3E3, 1);
 
 	//Group name
 	drawLetter('P', 20, 20, 0x009400D3);
@@ -403,22 +406,13 @@ void cli() {
 		//playGame Command
 		else if (strcmp(cli_buffer, commands[6]) == 0) {
 			gameMenu();
-			// printf("Game is running\n");
-
-			// setBackgroundStateDisplay();
-			// set_bird_position(500, 430);
-            // setBirdStateDisplay();
-			// clear_screen();
-            // init_bird();
 			
-            // init_pipes();
-
-			// game_run();
 		}
 		//Error handling
 		else {
 			uart_puts("Unrecognized as an internal command!\n");
 		}
+		wait_msec(100);
 
 		//Return to command line
 		index = 0;
@@ -441,6 +435,7 @@ void main() {
 
 	//WelcomeMessage
 	welcomeMessage();
+	displayPrompt();
 	while (1) {
 		cli();
 	}
