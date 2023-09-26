@@ -13,7 +13,7 @@ all: kernel8.img
 
 # Ensure necessary directories exist:
 $(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+	mkdir $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/data.o: $(DATA_DIR)/data.c | $(BUILD_DIR)
 	echo "Compiling data.c..."
