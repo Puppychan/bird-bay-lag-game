@@ -432,7 +432,9 @@ void init_round_game() {
         gamingScoresDisplay();
 
         // pipe size
-        pipes_size *= 2;
+        if (difficulty == 1) {
+            pipes_size = EASY_pipes_size;
+        }
         // set characteristics
         enable_vertical_move();
         enable_pipe();
