@@ -31,6 +31,9 @@ Please dont:
     - w: move arrow up
     - s: move arrow down
 
+# Extract Video
+- In terminal: run `ffmpeg -i Flappy-24fps.mp4 -vf "fps=24" ./flappy-24/frame_flappy_%04d.png` on MAC OS
 
 - Bugs:
   - Laggy when playing game on rpi4
+  - Laggy when on larger screen -> so should test on your laptop only ( depend on the screen size )

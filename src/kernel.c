@@ -144,24 +144,22 @@ void set_color(const char *option, const char *color) {
 
 void scroll_up_image() {
 	if (y_offset + screenHeight < virScreenHeight) y_offset++;
-  unsigned int  *res_data = 0;
+  unsigned int *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
-  if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
-  }
-  else {
-    uart_puts("mbox_call failed\n");
-  }
+  mbox_call(ADDR(mBuf), MBOX_CH_PROP);
 }
 
 void scroll_down_image() {
 	if (y_offset > 0)  y_offset--;
-  unsigned int  *res_data = 0;
+  unsigned int *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
-  if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
-  }
-  else {
-    uart_puts("mbox_call failed\n");
-  }
+  mbox_call(ADDR(mBuf), MBOX_CH_PROP);
+}
+
+void reset_offset() {
+	unsigned int *res_data = 0;
+	mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, 0);
+	mbox_call(ADDR(mBuf), MBOX_CH_PROP);
 }
 
 void display_image() {
@@ -169,6 +167,7 @@ void display_image() {
 }
 
 void display_video() {
+	clear_screen();
 	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
 	wait_msec(100);
 }
@@ -383,18 +382,21 @@ void cli() {
 					display_image();
 				}
 				else if (c == 'd') { // slide to next image
-						if (current_bg == background_LEN-1) current_bg = 0;
-						else current_bg++;
-						display_image();
+					if (current_bg == background_LEN-1) current_bg = 0;
+					else current_bg++;
+					display_image();
 				}
-				else if (c == 'w') { // scroll up
+				else if (c == 'w') { // scroll up image
 					scroll_up_image();
 				}
-				else if (c == 's') { // scroll down
+				else if (c == 's') { // scroll down image
 					scroll_down_image();
 				}
 			}
+			// clear sreen and reset virtual offset when command finishes
 			clear_screen();
+			reset_offset();
+
 		}
 		//displayVideo Command
 		else if (strcmp(cli_buffer, commands[5]) == 0) {
@@ -423,7 +425,8 @@ void main() {
 	// current time
 	int time = get_current_time(); // get time to have different seed for testing purpose
 	printf("time: %d\n", time);
-	srand_custom(6361625);
+	// srand_custom(6361625);
+	srand_custom(time);
 	// set up serial console
 	uart_init();
 
