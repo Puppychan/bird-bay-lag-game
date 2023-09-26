@@ -121,6 +121,12 @@ void reset_characteristics() {
     _is_have_pipe = true;
 }
 
+// Difficulty Utilities
+void init_difficulty_game() {
+    
+}
+
+
 // Bird Utilities
 void set_bird_position(float x, float y) {
     bird.x = x;
@@ -183,7 +189,6 @@ void flap_bird() {
 // Pipe utilities
 int validate_tube_height(pipe prev_pipe, pipe current_pipe, int current_gap) {
     // TODO hard core - later + appear some times only
-    printf("prev_pipe.top.y: %d - current_pipe.bottom.y: %d - current_gap: %d\n", prev_pipe.top.y, current_pipe.bottom.y, current_gap);
     // prev_pipe.top.y >= current_pipe.top.y || 
     if (prev_pipe.top.y >= current_pipe.top.y || prev_pipe.bottom.y <= current_pipe.top.y + PIPE_GAP_MIN) return 0;
     return 1;
@@ -222,7 +227,6 @@ void generate_obstacle(int type, int index, int pipe_distance, int* p_current_of
         if (pipes[index].bottom.x < screenWidth) {
             int temp_index = rand_range(0, obstacle_balloon_allArray_LEN - 1);
             pipes[index].display_index = temp_index;
-            printf("Temp balloon index %d \n", temp_index);
             draw_balloon(pipes[index]);
         }
     }
@@ -367,7 +371,7 @@ void update_bird() {
         // game over - lose
         end_game_over();
 
-        printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
+        // printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
         return;
     }
     else if (validate_bird_passing_pipe()) {
@@ -450,7 +454,7 @@ void game_run() {
                 changeRoundRemove();
             }
             resume_game();
-            wait_msec(1000 / 20);
+            wait_msec(FRAME_MOVING_GAME);
             break;
         }
     }
@@ -458,7 +462,7 @@ void game_run() {
     while (1) {
         // set_wait_timer(1, 100);
         // 10: easy - 15: normal - 20: extreme
-        set_wait_timer(1, 1000 / 11);
+        set_wait_timer(1, FRAME_MOVING_GAME);
         char play_char = getUart();
         if (play_char == ' ') {
             // bird.vertical_velocity -= 3;       // Gravity pulls the bird down
@@ -490,7 +494,7 @@ void game_run() {
             break;
         }
         // set_wait_timer(0, 100);
-        set_wait_timer(0, 1000 / 11);
+        set_wait_timer(0, FRAME_MOVING_GAME);
         // wait_msec(400);
     }
 

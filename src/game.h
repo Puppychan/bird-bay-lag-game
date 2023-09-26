@@ -25,7 +25,6 @@
 // Constants for the bird
 #define GRAVITY 8
 #define FLAP_STRENGTH -30
-#define MOVE_SPEED 10 // pixels per frame
 #define PIPE_MOVE_SPEED 15 // pixels per frame
 #define PIPE_VERTICAL_SPEED 15 // pixels per frame
 
