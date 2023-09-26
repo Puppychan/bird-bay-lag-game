@@ -426,7 +426,8 @@ void main() {
 	// current time
 	int time = get_current_time(); // get time to have different seed for testing purpose
 	printf("time: %d\n", time);
-	srand_custom(6361625);
+	// srand_custom(6361625);
+	srand_custom(time);
 	// set up serial console
 	uart_init();
 

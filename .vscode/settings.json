@@ -14,6 +14,7 @@
         "drawgame.h": "c",
         "complex": "cpp",
         "cmath": "cpp",
-        "firstvideo5.h": "c"
+        "firstvideo5.h": "c",
+        "firstvideo3.h": "c"
     }
 }
