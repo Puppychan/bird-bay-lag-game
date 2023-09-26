@@ -150,9 +150,9 @@ void scroll_up_image() {
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
   if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
   }
-  else {
-    uart_puts("mbox_call failed\n");
-  }
+//   else {
+//     uart_puts("mbox_call failed\n");
+//   }
 }
 
 void scroll_down_image() {
@@ -161,9 +161,9 @@ void scroll_down_image() {
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
   if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
   }
-  else {
-    uart_puts("mbox_call failed\n");
-  }
+//   else {
+//     uart_puts("mbox_call failed\n");
+//   }
 }
 
 void display_image() {
@@ -171,6 +171,7 @@ void display_image() {
 }
 
 void display_video() {
+	clear_screen();
 	drawVideo(first_video_array, first_video_array_LEN, 480, 636, 0);
 	wait_msec(100);
 }
