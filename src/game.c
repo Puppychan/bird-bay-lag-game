@@ -15,7 +15,7 @@ bool gameOver = 0;
 bool gameWin = 0;
 extern int current_bg;
 extern int current_bird;
-
+extern int pipes_size;
 
 extern unsigned int arrowColorCode;
 extern unsigned int startColorCode;
@@ -32,7 +32,7 @@ extern int game_scores;
 extern int current_round;
 
 extern Bird bird;
-extern pipe pipes[PIPES_SIZE];
+extern pipe pipes[MAX_PIPES_SIZE];
 extern int bird_width;
 extern int bird_height;
 extern int difficulty = 0;
@@ -122,8 +122,21 @@ void reset_characteristics() {
 }
 
 // Difficulty Utilities
-void init_difficulty_game() {
-    
+void init_difficulty_setting() {
+    switch (difficulty) {
+    case 1: // Easy
+        pipes_size = EASY_pipes_size;
+        break;
+    case 2: // Medium
+        pipes_size = MEDIUM_pipes_size;
+        break;
+    case 3: // Hard
+        pipes_size = HARD_pipes_size;
+        break;
+    default:
+        pipes_size = EASY_pipes_size; // Fallback to a default value
+        break;
+    }
 }
 
 
@@ -149,7 +162,7 @@ bool validate_bird_obstacle_collision() {
             return true;
         }
 
-        
+
 
         // Check collision with bottom part of the pipe.
         if (bird.x < pipes[current_pipe_index].bottom.x + PIPE_WIDTH &&
@@ -246,7 +259,7 @@ void init_pipes() {
     else { // only have balloon
         display_type = 0;
     }
-    for (int i = 0; i < PIPES_SIZE; i++) {
+    for (int i = 0; i < pipes_size; i++) {
         // init pipes x and y
         // init x position
         int pipe_distance = rand_range(PIPE_DISTANCE_MIN, screenWidth / 3); // easy
@@ -284,15 +297,15 @@ void init_pipes() {
 }
 
 void move_pipes() {
-    static int vertical_directions[PIPES_SIZE]; // 0 for up, 1 for down. Initialize all pipes to move up initially.
+    static int vertical_directions[MAX_PIPES_SIZE]; // 0 for up, 1 for down. Initialize all pipes to move up initially.
     static int initialized = 0; // To check whether static variables are initialized or not.
 
     if (!initialized) {
-        for (int i = 0; i < PIPES_SIZE; i++) vertical_directions[i] = 0; // Initialize all pipes to move up initially.
+        for (int i = 0; i < pipes_size; i++) vertical_directions[i] = 0; // Initialize all pipes to move up initially.
         initialized = 1;
     }
 
-    for (int index = 0; index < PIPES_SIZE; index++) {
+    for (int index = 0; index < pipes_size; index++) {
         if (pipes[index].type == 0) {
             // clear old
             if (pipes[index].top.x + pipes[index].top.size.width <= screenWidth && pipes[index].top.x > 0) {
@@ -358,7 +371,7 @@ void update_bird() {
     clear_bird();
 
     // Win game
-    if (current_pipe_index == PIPES_SIZE) {
+    if (current_pipe_index == pipes_size) {
         end_game_win();
         return;
     }
@@ -545,6 +558,7 @@ void gameMenu() {
             clear_screen();
 
             // init
+            init_difficulty_setting();
             game_scores = 0;
             backgroundDisplay();
             backupRegion(0, 0, screenWidth, screenHeight);

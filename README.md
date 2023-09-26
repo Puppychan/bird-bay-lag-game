@@ -34,3 +34,4 @@ Please dont:
 
 - Bugs:
   - Laggy when playing game on rpi4
+  - Laggy when on larger screen -> so should test on your laptop only ( depend on the screen size )

@@ -1,6 +1,7 @@
 #include "drawGame.h"
 
-pipe pipes[PIPES_SIZE];  // We can have a maximum of 3 pipes on screen for simplicity.
+int pipes_size;
+pipe pipes[MAX_PIPES_SIZE];  // We can have a maximum of 3 pipes on screen for simplicity.
 Bird bird;
 int bird_width;
 int bird_height;
@@ -20,7 +21,7 @@ unsigned int changeRoundColorCode = 0x000000;
 
 void draw_pipes() {
     // Draw the pipes
-    for (int i = 0; i < PIPES_SIZE; i++) {
+    for (int i = 0; i < pipes_size; i++) {
         if (pipes[i].top.x + PIPE_WIDTH <= screenWidth) {
             drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, PIPE_WIDTH, pipes[i].top.y, pipes[i].top.x, 0, tube_info.exclude_color);
             drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, PIPE_WIDTH, screenHeight - pipes[i].bottom.y, pipes[i].bottom.x, pipes[i].bottom.y, tube_up_info.exclude_color);
@@ -132,8 +133,8 @@ void changeRoundDisplay() {
     // display round
     drawSentence("Round", 350, 80, changeRoundColorCode);
     drawSentence(round_str, 600, 80, changeRoundColorCode);
-
-    wait_msec(500);
+    // prevent debounce
+    wait_msec(1000);
 
 }
 void changeRoundRemove() {
@@ -158,6 +159,8 @@ void gameoverDisplay() {
     do {
         c = getUart();
     } while (c == 0);
+    // prevent debounce
+    wait_msec(300);
     //Draw end game animation;
     endgameAnimation();
     return;
