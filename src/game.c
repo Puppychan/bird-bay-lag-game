@@ -316,7 +316,6 @@ void move_pipes() {
 
             // if in the screen, draw it
             if (pipes[index].top.x + pipes[index].top.size.width <= screenWidth) {
-                // backup_pipe(pipes[index]);
                 // Display the pipe on the screen at its new position.
                 draw_pipe(pipes[index]);
             }
@@ -384,7 +383,6 @@ void update_bird() {
         gamingScoresDisplay();
     }
 
-    // backup_bird();
     draw_bird(bird, bird_width, bird_height);
 }
 
@@ -512,6 +510,7 @@ void game_run() {
 
 //Handle game state
 void gameMenu() {
+    // Initialize the arrow position to the play option
     int arrowPos = mainMenu;
     int currState = mainMenu;
     int nextState = mainMenu;
@@ -520,47 +519,63 @@ void gameMenu() {
         //Display corresponding views and reset nextState variable.
         switch (nextState) {
         case mainMenu:
+            // Display the main menu
             mainMenuDisplay();
+            // Set the arrow position to the play option
             arrowPos = playOption;
+            // Set the current state to the main menu
             nextState = 0;
             currState = mainMenu;
             break;
 
         case helpMenu:
+            // Display the help menu
             helpMenuDisplay();
+            // Set the current state to the help menu
             nextState = 0;
             currState = helpMenu;
             break;
 
         case setBackground:
+            // Display the background selection menu
             setBackgroundStateDisplay();
+            // Set the current state to the background selection menu
             nextState = 0;
             currState = setBackground;
             break;
 
         case setBird:
+            // Set the bird position to the middle of the screen to display selected bird
             set_bird_position((screenWidth / 2) - 130, 430);
+            // Display the bird selection menu
             setBirdStateDisplay();
+            // Set the current state to the bird selection menu
             nextState = 0;
             currState = setBird;
             break;
 
         case setDifficult:
+            // Display the difficulty selection menu
             difficultSelectDisplay();
+            // Set the current state to the difficulty selection menu
             nextState = 0;
             currState = setDifficult;
             break;
 
         case playGame:
+            // Clear the screen
             clear_screen();
+            // Set the difficulty setting
             init_difficulty_setting();
             // init
             game_scores = 0;
+            // Display the background
             backgroundDisplay();
             backupRegion(0, 0, screenWidth, screenHeight);
-
+            // Reset the round and characteristics
             reset_round();
             reset_characteristics();
+            // Set the current state to the game
             nextState = 0;
             currState = playGame;
             break;
@@ -572,31 +587,43 @@ void gameMenu() {
         //Waiting for input at current state
         switch (currState) {
         case mainMenu:
+            // Get input from UART
             c = getUart();
             //Enter to choose option
-            if (c == '\n') {
+            if (c == '\n') { // enter
+                // Arrow position determines the next state
                 if (arrowPos == helpOption) {
+                    // Next state is help menu
                     nextState = helpMenu;
                 }
                 else if (arrowPos == playOption) {
+                    // Next state is background selection menu
                     nextState = setBackground;
                 }
                 else if (arrowPos == exitOption) {
                     //Clear screen
                     clear_screen();
+                    // Exit the game - back to console
                     return;
                 }
             }
-            //Delete Arrow Position
+            // Move down arrow position
             if (c == 's') {
+                // Prevent arrow from moving out of bounds
                 if (arrowPos != exitOption) {
+                    // Clear the arrow by using backup region
                     deleteArrow(300, 300 + arrowPos * 50);
+                    // Move the arrow down
                     arrowPos++;
                 }
             }
+            // Move up arrow position
             else if (c == 'w') {
+                // Prevent arrow from moving out of bounds
                 if (arrowPos != playOption) {
+                    // Clear the arrow by using backup region
                     deleteArrow(300, 300 + arrowPos * 50);
+                    // Move the arrow up
                     arrowPos--;
                 }
             }
@@ -605,7 +632,9 @@ void gameMenu() {
             break;
 
         case helpMenu:
+            // Get input from UART
             c = getUart();
+            // ENter to go back to main menu
             if (c == '\n') {
                 nextState = mainMenu;
             }
@@ -613,43 +642,61 @@ void gameMenu() {
             break;
 
         case setBackground:
+            // Get input from UART
             c = getUart();
+            // Enter to go to bird selection menu
             if (c == '\n') {
                 nextState = setBird;
             }
             else if (c == 'a') { // slide to previous image
+                // Prevent background from moving out of bounds
                 if (current_bg == 0) current_bg = background_LEN - 1;
+                // Move to previous background
                 else current_bg--;
+                // Display the background
                 setBackgroundStateDisplay();
             }
             else if (c == 'd') { // slide to next image
+                // Prevent background from moving out of bounds
                 if (current_bg == background_LEN - 1) current_bg = 0;
+                // Move to next background
                 else current_bg++;
+                // Display the background
                 setBackgroundStateDisplay();
             }
             break;
 
         case setBird:
+            // Get input from UART
             c = getUart();
+            // Enter to go to difficulty selection menu
             if (c == '\n') {
                 nextState = setDifficult;
             }
             else if (c == 'a') { // slide to previous image
+                // Prevent bird from moving out of bounds
                 if (current_bird == 0) current_bird = bird_allArray_LEN - 1;
+                // Move to previous bird
                 else current_bird--;
+                // Display the bird
                 setBirdStateDisplay();
             }
             else if (c == 'd') { // slide to next image
+                // Prevent bird from moving out of bounds
                 if (current_bird == bird_allArray_LEN - 1) current_bird = 0;
+                // Move to next bird
                 else current_bird++;
+                // Display the bird
                 setBirdStateDisplay();
             }
             break;
 
         case setDifficult:
+            // Get input from UART
             c = getUart();
             //Enter to choose option difficulty
             if (c == '\n') {
+                // Arrow position determines the choice
                 if (arrowPos == easy) {
                     difficulty = 1;
                 }
@@ -659,18 +706,26 @@ void gameMenu() {
                 else if (arrowPos == extreme) {
                     difficulty = 3;
                 }
+                // Next state is game
                 nextState = playGame;
             }
-            //Delete Arrow Position
+            // Move down arrow position
             if (c == 's') {
+                // Prevent arrow from moving out of bounds
                 if (arrowPos != extreme) {
+                    // Clear the arrow by using backup region
                     deleteArrow(280, 150 + arrowPos * 100);
+                    // Move the arrow down
                     arrowPos++;
                 }
             }
+            // Move up arrow position
             else if (c == 'w') {
+                // Prevent arrow from moving out of bounds
                 if (arrowPos != easy) {
+                    // Clear the arrow by using backup region
                     deleteArrow(280, 150 + arrowPos * 100);
+                    // Move the arrow up
                     arrowPos--;
                 }
             }
@@ -679,8 +734,9 @@ void gameMenu() {
             break;
 
         case playGame:
-            // game_run();
+            // Init game and start
             init_round_game();
+            // Next state is main menu
             nextState = mainMenu;
             break;
 

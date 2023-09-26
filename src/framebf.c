@@ -136,8 +136,10 @@ void drawPixelARGB32(int x, int y, unsigned int attr) {
 }
 
 void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill) {
+    // Loop through the region
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++) {
+            // Draw the pixel if it is on the border or fill is enabled
             if ((x == x1 || x == x2) || (y == y1 || y == y2))
                 drawPixelARGB32(x, y, attr);
             else if (fill)
@@ -146,6 +148,7 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
 }
 
 void clear_screen() {
+    // Clear screen with black color
     drawRectARGB32(0, 0, virScreenWidth, virScreenHeight, 0x00000000, 1);
 }
 
@@ -163,17 +166,24 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
 }
 
 void drawWord(const char* word, int x, int y, unsigned int colorCode) {
+    // Define offset for each letter
     int offset = 0;
+    // Loop through the word
     for (int i = 0; word[i] != '\0'; i++) {
+        // Draw each letter
         drawLetter(word[i], x + offset, y, colorCode);
         offset += 40; // assuming each letter is 40 pixels wide
     }
 }
 
 void drawSentence(const char* word, int x, int y, unsigned int colorCode) {
+    // Define offset for each letter
     int offset = 0;
+    // Loop through the sentence
     for (int i = 0; word[i] != '\0'; i++) {
+        // If the character is not space, draw it
         if (word[i] != ' ') drawLetter(word[i], x + offset, y, colorCode);
+        // Add offset
         offset += 40; // assuming each letter is 40 pixels wide
     }
 }
