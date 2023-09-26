@@ -22,14 +22,12 @@ unsigned int changeRoundColorCode = 0x000000;
 void draw_pipes() {
     // Draw the pipes
     for (int i = 0; i < pipes_size; i++) {
+        // Only draw the pipe if it is on the screen
         if (pipes[i].top.x + PIPE_WIDTH <= screenWidth) {
+            // Draw the images for top and bottom pipe parts
             drawScaledImage(obstacle_tube, tube_info.width, tube_info.height, PIPE_WIDTH, pipes[i].top.y, pipes[i].top.x, 0, tube_info.exclude_color);
             drawScaledImage(obstacle_tube_up, tube_up_info.width, tube_up_info.height, PIPE_WIDTH, screenHeight - pipes[i].bottom.y, pipes[i].bottom.x, pipes[i].bottom.y, tube_up_info.exclude_color);
         }
-        // if (i != 0) {
-        // }
-        // drawRectARGB32(pipes[i].top.x, 0, pipes[i].top.x + PIPE_WIDTH, pipes[i].top.y, 0x0074c69d, 1);
-        // drawRectARGB32(pipes[i].bottom.x, pipes[i].bottom.y, pipes[i].bottom.x + PIPE_WIDTH, max_height, 0x0074c69d, 1);
     }
 }
 
@@ -41,7 +39,7 @@ void draw_pipe(pipe p) {
 void draw_balloon(pipe p) {
     int temp_index = p.display_index;
     drawScaledImage(obstacle_balloon_list[temp_index], obstacle_balloon_info_allArray[temp_index]->width, obstacle_balloon_info_allArray[temp_index]->height,
-                    p.bottom.size.width, p.bottom.size.height, p.bottom.x, p.bottom.y, obstacle_balloon_info_allArray[temp_index]->exclude_color);
+        p.bottom.size.width, p.bottom.size.height, p.bottom.x, p.bottom.y, obstacle_balloon_info_allArray[temp_index]->exclude_color);
 }
 void clear_pipe(pipe p) {
     clearImageOverlay(p.top.x, 0, p.top.size.width, p.top.y);
@@ -125,7 +123,7 @@ void mainMenuDisplay() {
 void changeRoundDisplay() {
     backgroundDisplay();
     backupRegion(0, 0, screenWidth, screenHeight);
-    
+
     // convert round to string
     char round_str[2];
     citoa(current_round, round_str, 10);
@@ -180,7 +178,9 @@ void setBirdStateDisplay() {
     drawSentence("Instruction", 300, 100, helpColorCode);
     drawSentence("Press 'a' or 'd' to slide", 20, 200, helpColorCode);
     drawSentence("Enter to set bird", 160, 300, helpColorCode);
+    // Draw bird
     draw_bird(bird, 120, 100);
+
 }
 
 void convert_scores_to_str() {
@@ -208,8 +208,8 @@ void gamingScoresDisplay() {
 //Display end game animation to
 void endgameAnimation() {
     unsigned int currentColor;
-    for(int y = 0; y < screenHeight; y += 40) {
-        for(int x = 0; x < screenWidth; x += 40) {
+    for (int y = 0; y < screenHeight; y += 40) {
+        for (int x = 0; x < screenWidth; x += 40) {
             currentColor = generateColor(x, y);
             drawRectARGB32(x, y, x + 40, y + 40, currentColor, 1);
             //Monitor speed of screen cleaning

@@ -13,10 +13,10 @@
 #define EASY_pipes_size 2
 #define MEDIUM_pipes_size 5
 #define HARD_pipes_size 10
-#define MAX_PIPES_SIZE 50
+#define MAX_PIPES_SIZE 100
 
-#define PIPE_DISTANCE 100 // make it modifiable later
-#define PIPE_GAP 50 // make it modifiable later
+#define PIPE_DISTANCE 100
+#define PIPE_GAP 50 
 #define PIPE_WIDTH 50 
 #define BALLOON_WIDTH 70
 

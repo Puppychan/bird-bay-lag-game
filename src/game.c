@@ -1,15 +1,4 @@
 #include "game.h"
-#include "printf.h"
-
-/*
-- Chim bay
-- Dynamic pipes
-- Game over / Win
-- Score
-- Other obstacle
-*/
-
-#define DEFAULT_BIRD_SHRINK_RATIO 2;
 
 bool gameOver = 0;
 bool gameWin = 0;
@@ -92,7 +81,6 @@ void enable_vertical_move() {
 }
 void enable_balloon() {
     _is_have_balloon = true;
-    printf("enable balloon: %d end \n", _is_have_balloon);
 }
 void enable_pipe() {
     _is_have_pipe = true;
@@ -271,10 +259,6 @@ void init_pipes() {
         // init pipes x and y
         // init x position
         int pipe_distance = rand_range(PIPE_DISTANCE_MIN, screenWidth / 3); // easy
-        // TODO: add hard-core
-        // int pipe_distance = rand_range(PIPE_DISTANCE_MIN, PIPE_DISTANCE_MAX); // hard
-        // pipes[i].top.x = 200 + i * PIPE_DISTANCE;
-
 
         // Decide randomly whether to initialize a balloon or a pipe
         if (display_type == 3) { // both have pipe and balloon
@@ -291,15 +275,6 @@ void init_pipes() {
         else { // only have balloon
             generate_obstacle(1, i, pipe_distance, &current_offset_x);
         }
-
-
-        // init y position
-        // TODO: add hard core
-        // do {
-        //     pipes[i].top.y = rand_range(max_height - PIPE_GAP_MAX, PIPE_TOP_MIN);  // Random height for top pipe's bottom end
-        //     pipe_gap = rand_range(PIPE_GAP_MAX, PIPE_GAP_MIN);  // Random gap between pipes
-        //     pipes[i].bottom.y = pipes[i].top.y + pipe_gap;
-        // } while (i > 0 && validate_tube_height(pipes[i - 1], pipes[i], pipe_gap) == 0);  // Make sure pipes don't overlap
 
     }
 }
@@ -382,7 +357,9 @@ void update_bird() {
 
     // Win game
     if (current_pipe_index == pipes_size) {
+        // win game
         end_game_win();
+        // exit
         return;
     }
 
@@ -393,8 +370,7 @@ void update_bird() {
     if (validate_bird_overflow() || validate_bird_obstacle_collision()) {
         // game over - lose
         end_game_over();
-
-        // printf("Bird overflow detected %d %d\n", bird.y, bird.vertical_velocity);
+        // exit
         return;
     }
     else if (validate_bird_passing_pipe()) {
@@ -416,7 +392,6 @@ void init_round_game() {
     // function to init game for each round
     switch (current_round) {
     case 1:
-        printf("Round 1: Difficulty %d \n", difficulty);
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
@@ -427,17 +402,16 @@ void init_round_game() {
         game_run();
         break;
     case 2:
-        printf("Round 2: Difficulty %d \n", difficulty);
         // reset
         gameWin = false;
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
 
-
-        // disable_pipe();
-        enable_balloon();
+        // pipe size
+        pipes_size *= 3;
         // set characteristics
+        enable_balloon();
         // extreme mode: have both balloon and pipe
         if (difficulty == 1 || difficulty == 2) { // only have balloon
             disable_pipe();
@@ -457,6 +431,8 @@ void init_round_game() {
         convert_scores_to_str();
         gamingScoresDisplay();
 
+        // pipe size
+        pipes_size *= 2;
         // set characteristics
         enable_vertical_move();
         enable_pipe();
@@ -560,7 +536,7 @@ void gameMenu() {
             break;
 
         case setBird:
-            set_bird_position(screenWidth / 2, 430);
+            set_bird_position((screenWidth / 2) - 130, 430);
             setBirdStateDisplay();
             nextState = 0;
             currState = setBird;
