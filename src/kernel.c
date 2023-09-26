@@ -13,8 +13,6 @@
 
 static int y_offset = 0;
 
-static int is_diplay_image = 0;
-
 //History Terminal CMD
 char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
 int is_display_something;
@@ -375,7 +373,6 @@ void cli() {
 		}
 		//displayImage Command
 		else if (strcmp(cli_buffer, commands[4]) == 0) {
-			is_diplay_image = 1;
 			display_image();
 			while (1) {
 				char c = uart_getc();
@@ -390,10 +387,10 @@ void cli() {
 						else current_bg++;
 						display_image();
 				}
-				else if (c == 'w') { // slide to previous image
+				else if (c == 'w') { // scroll up
 					scroll_up_image();
 				}
-				else if (c == 's') { // slide to next image
+				else if (c == 's') { // scroll down
 					scroll_down_image();
 				}
 			}
