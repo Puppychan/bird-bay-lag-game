@@ -13,6 +13,8 @@
         "data.h": "c",
         "drawgame.h": "c",
         "complex": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "firstvideo5.h": "c",
+        "firstvideo3.h": "c"
     }
 }

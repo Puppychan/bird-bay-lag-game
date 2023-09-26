@@ -13,7 +13,7 @@ all: kernel8.img
 
 # Ensure necessary directories exist:
 $(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+	mkdir "$(BUILD_DIR)"
 
 $(BUILD_DIR)/data.o: $(DATA_DIR)/data.c | $(BUILD_DIR)
 	echo "Compiling data.c..."
@@ -41,7 +41,7 @@ endif
 
 cleanall:
 ifeq ($(OS),Windows_NT)
-	del /Q *.img .\object\kernel8.elf .\object\*.o
+	if exist .\object (del /Q .\object\kernel8.elf .\object\*.o)
 else
 	rm -f *.img $(BUILD_DIR)/kernel8.elf $(BUILD_DIR)/*.o
 endif

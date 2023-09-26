@@ -24,7 +24,7 @@
 
 // Constants for the bird
 #define GRAVITY 9.8
-#define FLAP_STRENGTH -30
+#define FLAP_STRENGTH -32
 #define PIPE_VERTICAL_SPEED 15 // pixels per frame
 
 #define VERTICAL_MOVEMENT_AMPLITUDE 10 // This is the maximum amount a pipe will move up or down from its initial position.
