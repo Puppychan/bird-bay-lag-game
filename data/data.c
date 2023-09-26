@@ -226,12 +226,12 @@ const unsigned long* obstacle_balloon_list[6] = {
 	obstacle_balloon_6
 };
 
-const image_info balloon_info_2 = { 365, 677, 0x00cddc39 };
-const image_info balloon_info_1 = { 269, 835, 0x00e91e63 };
-const image_info balloon_info_3 = { 410, 467, 0x0000bdd5 };
-const image_info balloon_info_4 = { 177, 895, 0x00cedd36 };
-const image_info balloon_info_5 = { 153, 269, 0x00ff9900 };
-const image_info balloon_info_6 = { 394, 624, 0x008cc449 };
+const image_info balloon_info_1 = { 339, 714, 0x008cc449 };
+const image_info balloon_info_2 = { 479, 622, 0x009d91fd };
+const image_info balloon_info_3 = { 358, 286, 0x0000bdd5 };
+const image_info balloon_info_4 = { 317, 352, 0x009d22b2 };
+const image_info balloon_info_5 = { 327, 702, 0x009d22b2 };
+const image_info balloon_info_6 = { 313, 753, 0x004bb14f };
 
 const image_info* obstacle_balloon_info_allArray[6] = {
 	&balloon_info_1,

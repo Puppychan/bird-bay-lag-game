@@ -29,6 +29,7 @@ bool _is_vertical_move = false;
 bool _is_have_balloon = false;
 bool _is_have_pipe = false;
 int current_pipe_index = 0;
+int difficulty = 1;
 extern int game_scores;
 extern int current_round;
 
@@ -36,7 +37,7 @@ extern Bird bird;
 extern pipe pipes[MAX_PIPES_SIZE];
 extern int bird_width;
 extern int bird_height;
-extern int difficulty = 0;
+
 
 int pipe_gap = PIPE_GAP_MIN;
 
@@ -91,6 +92,7 @@ void enable_vertical_move() {
 }
 void enable_balloon() {
     _is_have_balloon = true;
+    printf("enable balloon: %d end \n", _is_have_balloon);
 }
 void enable_pipe() {
     _is_have_pipe = true;
@@ -235,15 +237,17 @@ void generate_obstacle(int type, int index, int pipe_distance, int* p_current_of
         pipes[index].bottom.x = *p_current_offset_x + pipe_distance;
         pipes[index].bottom.y = screenHeight;
         pipes[index].bottom.size.width = BALLOON_WIDTH;
-        pipes[index].bottom.size.height = 150; // random height can be added later
+        pipes[index].bottom.size.height = 150;
 
         // offset for next pipe or balloon
         *p_current_offset_x = pipes[index].bottom.x + pipes[index].bottom.size.width;
         pipes[index].type = 1; // balloon
-
+        // random balloon in the image list
+        int temp_index = rand_range(0, obstacle_balloon_allArray_LEN - 1);
+        pipes[index].display_index = temp_index;
+        
+        // if inside the screen, then draw it
         if (pipes[index].bottom.x < screenWidth) {
-            int temp_index = rand_range(0, obstacle_balloon_allArray_LEN - 1);
-            pipes[index].display_index = temp_index;
             draw_balloon(pipes[index]);
         }
     }
@@ -310,6 +314,7 @@ void move_pipes() {
     }
 
     for (int index = 0; index < pipes_size; index++) {
+        // Moving pipe
         if (pipes[index].type == 0) {
             // clear old
             if (pipes[index].top.x + pipes[index].top.size.width <= screenWidth && pipes[index].top.x > 0) {
@@ -340,6 +345,7 @@ void move_pipes() {
                 draw_pipe(pipes[index]);
             }
         }
+        // Moving balloon
         else if (pipes[index].type == 1) {
             // clear balloon
             if (pipes[index].bottom.x + pipes[index].bottom.size.width <= screenWidth && pipes[index].bottom.x > 0) {
@@ -410,6 +416,7 @@ void init_round_game() {
     // function to init game for each round
     switch (current_round) {
     case 1:
+        printf("Round 1: Difficulty %d \n", difficulty);
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
@@ -420,20 +427,22 @@ void init_round_game() {
         game_run();
         break;
     case 2:
+        printf("Round 2: Difficulty %d \n", difficulty);
         // reset
         gameWin = false;
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
 
+
+        // disable_pipe();
+        enable_balloon();
         // set characteristics
-        if (difficulty == 1 && difficulty == 2) { // only have balloon
+        // extreme mode: have both balloon and pipe
+        if (difficulty == 1 || difficulty == 2) { // only have balloon
             disable_pipe();
-            enable_balloon();
         }
-        else { // extreme mode: have both balloon and pipe
-            enable_balloon();
-        }
+
 
         // setting up game
         init_bird();
@@ -565,9 +574,8 @@ void gameMenu() {
 
         case playGame:
             clear_screen();
-
-            // init
             init_difficulty_setting();
+            // init
             game_scores = 0;
             backgroundDisplay();
             backupRegion(0, 0, screenWidth, screenHeight);
