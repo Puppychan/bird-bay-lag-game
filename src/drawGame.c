@@ -158,7 +158,7 @@ void gameoverDisplay() {
         c = getUart();
     } while (c == 0);
     // prevent debounce
-    wait_msec(300);
+    wait_msec(1000);
     //Draw end game animation;
     endgameAnimation();
     return;
