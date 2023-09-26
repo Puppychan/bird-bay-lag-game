@@ -65,7 +65,7 @@ void pause_game() {
 
 // Round Utilities
 void reset_round() {
-    current_round = 2;
+    current_round = 1;
 }
 void next_round() {
     current_round++;
