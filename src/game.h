@@ -23,9 +23,8 @@
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
 // Constants for the bird
-#define GRAVITY 8
+#define GRAVITY 9.8
 #define FLAP_STRENGTH -30
-#define PIPE_MOVE_SPEED 15 // pixels per frame
 #define PIPE_VERTICAL_SPEED 15 // pixels per frame
 
 #define VERTICAL_MOVEMENT_AMPLITUDE 10 // This is the maximum amount a pipe will move up or down from its initial position.

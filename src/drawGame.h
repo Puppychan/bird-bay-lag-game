@@ -6,7 +6,7 @@
 #define DEFAULT_BACKGROUND 0
 #define DEFAULT_BIRD 0
 
-#define FRAME_MOVING_GAME 1000/9
+#define FRAME_MOVING_GAME 1000/8
 // Constants for the game mechanics
 // #define pipes_size 10
 

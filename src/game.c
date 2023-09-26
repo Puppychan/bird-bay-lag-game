@@ -13,6 +13,7 @@
 
 bool gameOver = 0;
 bool gameWin = 0;
+int pipe_move_speed; // pixels per frame
 extern int current_bg;
 extern int current_bird;
 extern int pipes_size;
@@ -126,12 +127,15 @@ void init_difficulty_setting() {
     switch (difficulty) {
     case 1: // Easy
         pipes_size = EASY_pipes_size;
+        pipe_move_speed = 15;
         break;
     case 2: // Medium
         pipes_size = MEDIUM_pipes_size;
+        pipe_move_speed = 17;
         break;
     case 3: // Hard
         pipes_size = HARD_pipes_size;
+        pipe_move_speed = 25;
         break;
     default:
         pipes_size = EASY_pipes_size; // Fallback to a default value
@@ -190,7 +194,7 @@ bool validate_bird_obstacle_collision() {
 
 bool validate_bird_passing_pipe() {
     if (bird.x >= pipes[current_pipe_index].bottom.x + pipes[current_pipe_index].bottom.size.width &&
-        bird.x <= pipes[current_pipe_index].bottom.x + pipes[current_pipe_index].bottom.size.width + PIPE_MOVE_SPEED)
+        bird.x <= pipes[current_pipe_index].bottom.x + pipes[current_pipe_index].bottom.size.width + pipe_move_speed)
         return true;
     return false;
 }
@@ -312,8 +316,8 @@ void move_pipes() {
                 clear_pipe(pipes[index]);
             }
 
-            pipes[index].top.x -= PIPE_MOVE_SPEED;
-            pipes[index].bottom.x -= PIPE_MOVE_SPEED;
+            pipes[index].top.x -= pipe_move_speed;
+            pipes[index].bottom.x -= pipe_move_speed;
             // Skip drawing if the pipe is off the screen
             if (pipes[index].top.x + pipes[index].top.size.width <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
 
@@ -342,7 +346,7 @@ void move_pipes() {
                 clear_balloon(pipes[index]);
             }
 
-            pipes[index].bottom.x -= PIPE_MOVE_SPEED;
+            pipes[index].bottom.x -= pipe_move_speed;
             int movement = vertical_directions[index] == 0 ? -BALLOON_RISE_SPEED : BALLOON_RISE_SPEED;
             pipes[index].bottom.y += movement; // Move balloon upwards.
 
@@ -409,9 +413,6 @@ void init_round_game() {
         // scores
         convert_scores_to_str();
         gamingScoresDisplay();
-        // temp set characteristics
-        // disable_pipe();
-        // enable_balloon();
 
         init_bird();
         init_pipes();
@@ -426,8 +427,13 @@ void init_round_game() {
         gamingScoresDisplay();
 
         // set characteristics
-        disable_pipe();
-        enable_balloon();
+        if (difficulty == 1 && difficulty == 2) { // only have balloon
+            disable_pipe();
+            enable_balloon();
+        }
+        else { // extreme mode: have both balloon and pipe
+            enable_balloon();
+        }
 
         // setting up game
         init_bird();
@@ -445,6 +451,9 @@ void init_round_game() {
         // set characteristics
         enable_vertical_move();
         enable_pipe();
+        if (difficulty == 3) {
+            pipe_move_speed += 5;
+        }
 
         // setting up game
         init_bird();

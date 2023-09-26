@@ -390,10 +390,10 @@ void cli() {
 						else current_bg++;
 						display_image();
 				}
-				else if (c == 'w') { // slide to previous image
+				else if (c == 'w') { // scroll up image
 					scroll_up_image();
 				}
-				else if (c == 's') { // slide to next image
+				else if (c == 's') { // scroll down image
 					scroll_down_image();
 				}
 			}
