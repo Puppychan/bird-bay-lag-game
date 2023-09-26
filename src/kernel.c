@@ -143,14 +143,14 @@ void set_color(const char *option, const char *color) {
 
 
 void scroll_up_image() {
-	if (y_offset + screenHeight < virScreenHeight) y_offset++;
+	if (y_offset > 0)  y_offset--;
   unsigned int *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
   mbox_call(ADDR(mBuf), MBOX_CH_PROP);
 }
 
 void scroll_down_image() {
-	if (y_offset > 0)  y_offset--;
+	if (y_offset + screenHeight < virScreenHeight) y_offset++;
   unsigned int *res_data = 0;
   mbox_buffer_setup(ADDR(mBuf), MBOX_TAG_SETVIRTOFF, &res_data, 8, 8, 0, y_offset);
   mbox_call(ADDR(mBuf), MBOX_CH_PROP);
