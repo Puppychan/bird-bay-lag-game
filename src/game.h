@@ -35,7 +35,6 @@ void end_game();
 
 void clear_pipe(pipe p);
 void clear_bird();
-void backup_pipe(pipe p);
 
 void draw_pipes();
 void draw_pipe(pipe p);

@@ -9,6 +9,7 @@
 
 #define MAX_WIDTH 1080   // maximum expected width
 #define MAX_HEIGHT 675  // maximum expected height
+// Backup buffer for the screen
 uint32_t backupBuffer[MAX_WIDTH * MAX_HEIGHT];
 
 //Use RGBA32 (32 bits for each pixel)
@@ -135,8 +136,10 @@ void drawPixelARGB32(int x, int y, unsigned int attr) {
 }
 
 void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill) {
+    // Loop through the region
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++) {
+            // Draw the pixel if it is on the border or fill is enabled
             if ((x == x1 || x == x2) || (y == y1 || y == y2))
                 drawPixelARGB32(x, y, attr);
             else if (fill)
@@ -145,6 +148,7 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill)
 }
 
 void clear_screen() {
+    // Clear screen with black color
     drawRectARGB32(0, 0, virScreenWidth, virScreenHeight, 0x00000000, 1);
 }
 
@@ -162,17 +166,24 @@ void drawLetter(char ch, int x, int y, unsigned int colorCode) {
 }
 
 void drawWord(const char* word, int x, int y, unsigned int colorCode) {
+    // Define offset for each letter
     int offset = 0;
+    // Loop through the word
     for (int i = 0; word[i] != '\0'; i++) {
+        // Draw each letter
         drawLetter(word[i], x + offset, y, colorCode);
         offset += 40; // assuming each letter is 40 pixels wide
     }
 }
 
 void drawSentence(const char* word, int x, int y, unsigned int colorCode) {
+    // Define offset for each letter
     int offset = 0;
+    // Loop through the sentence
     for (int i = 0; word[i] != '\0'; i++) {
+        // If the character is not space, draw it
         if (word[i] != ' ') drawLetter(word[i], x + offset, y, colorCode);
+        // Add offset
         offset += 40; // assuming each letter is 40 pixels wide
     }
 }
@@ -196,29 +207,31 @@ void drawImage(const unsigned long* bitmap, int width, int height, int x, int y)
 }
 
 void backupRegion(int x, int y, int width, int height) {
+    // Init backup index
     int backupIndex = 0;
-    // printf("Pitch backup region: %d\n", pitch);
+    // Loop through the region
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
+            // Calculate the index of the pixel in the backup buffer
             backupIndex = h * MAX_WIDTH + w;
-
+            // Calculate the offset of the pixel in the frame buffer
             int offs = (h * pitch) + (COLOR_DEPTH / 8 * w);
+            // Get the pixel value from the frame buffer
             uint32_t pixel_value = *((unsigned int*)(fb + offs));
+            // Store the pixel value in the backup buffer
             backupBuffer[backupIndex] = pixel_value;
-            // printf("Backup: offs (%d, %d): %d, pixel: %x, current buffer: %x \n", w, h, offs, pixel_value, backupBuffer[index]);
         }
     }
 }
 
 void clearImageOverlay(int x, int y, int width, int height) {
-    // int index = 0;
+    // loop through the region
     for (int h = y; h < y + height; h++) {
         for (int w = x; w < x + width; w++) {
-            // unsigned int originalColor = backupBuffer[index++];
-
+            // Get the pixel value from the backup buffer
             unsigned int originalColor = backupBuffer[h * MAX_WIDTH + w];
+            // Draw the pixel
             drawPixelARGB32(w, h, originalColor);
-            // printf("Clear image overlay: %x\n", originalColor);
         }
     }
 }

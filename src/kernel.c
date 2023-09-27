@@ -6,18 +6,21 @@
 #include "printf.h"
 #include "game.h"
 #include "../gcclib/stddef.h"
+
+// Maximum command size
 #define MAX_CMD_SIZE 100
+// Maximum history size
 #define MAX_HISTORY 10
+// Define NULL
 #define NULL ((void *)0)
-// #include "./data/test.h"
 
 static int y_offset = 0;
 
 //History Terminal CMD
 char cmd_history[MAX_HISTORY][MAX_CMD_SIZE];
-int is_display_something;
-
+// Command history index
 int history_cmd = 0;
+// Current command index
 int current_cmd = 0;
 
 //Command list
@@ -30,7 +33,7 @@ char *commands[] = {
   "displayVideo",
   "playGame"
 };
-
+// Command info for help command
 char *commandsInfo[] = {
     "clear 					Clears the cmd screen\n",
     "setcolor -t <color> 			Sets text color\n",
@@ -41,7 +44,7 @@ char *commandsInfo[] = {
     "displayVideo 				Displays a video\n",
     "playGame 				Play flappy bird game\n"
 };
-
+// Command detail for help <command> command
 char *commandsDetail[] = {
 	"help		Show brief information of all commands\n",
     "clear		Clear screen (in our terminal it will scroll down to current position of the cursor).\n",
@@ -63,7 +66,8 @@ char *colors[] = {
     "CYAN",
     "WHITE"
 };
-
+// ANSI escape sequences for text and background colors
+// Text color
 char *ansiTextColors[] = {
     "\033[30m", // BLACK
     "\033[31m", // RED
@@ -74,7 +78,7 @@ char *ansiTextColors[] = {
     "\033[36m", // CYAN
     "\033[37m", // WHITE
 };
-
+// Background color
 char *ansiBackgroundColors[] = {
     "\033[40m", // BLACK
     "\033[41m", // RED
@@ -86,6 +90,7 @@ char *ansiBackgroundColors[] = {
     "\033[47m", // WHITE
 };
 
+// Get History Command
 char *get_history_command(int direction) {
     if (direction == 1 && current_cmd != history_cmd) {
         // DOWN: Navigate to the newer command
@@ -98,6 +103,7 @@ char *get_history_command(int direction) {
     return cmd_history[current_cmd];
 }
 
+// Handle history key (UP and DOWN)
 void handle_history_key(char c, char *cli_buffer, int *index) {
     int direction = (c == '+') ? 1 : -1;
     char *historic_command = get_history_command(direction);
@@ -117,6 +123,7 @@ void handle_history_key(char c, char *cli_buffer, int *index) {
     return;
 }
 
+// Set color
 void set_color(const char *option, const char *color) {
 	if (!option || !color) {
         return;

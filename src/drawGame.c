@@ -1,14 +1,14 @@
 #include "drawGame.h"
 
 int pipes_size;
-pipe pipes[MAX_PIPES_SIZE];  // We can have a maximum of 3 pipes on screen for simplicity.
+pipe pipes[MAX_PIPES_SIZE];
 Bird bird;
 int bird_width;
 int bird_height;
 int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
-int game_scores;
-char game_scores_str[10];
+int game_scores; // The player's score
+char game_scores_str[10]; // The player's score in string
 int current_round = 1;
 
 unsigned int arrowColorCode = 0x000000;
@@ -54,16 +54,6 @@ void clear_bird() {
     // clearImage(bird.x, bird.y, bird_width, bird_height);
     clearImageOverlay(bird.x, bird.y, bird_width, bird_height);
 }
-void backup_pipe(pipe p) {
-    backupRegion(p.top.x, 0, PIPE_WIDTH, p.top.y);
-    backupRegion(p.bottom.x, p.bottom.y, PIPE_WIDTH, screenHeight - p.bottom.y);
-}
-void backup_bird() {
-    backupRegion(bird.x, bird.y, bird_width, bird_height);
-}
-void backup_game_scores() {
-    backupRegion(screenWidth - 100, 50, 100, 40);
-}
 
 void draw_bird(Bird bird, int width, int height) {
     drawScaledImage(bird_allArray[current_bird], bird_info_allArray[current_bird]->width, bird_info_allArray[current_bird]->height, width, height, bird.x, bird.y, bird_info_allArray[current_bird]->exclude_color);
@@ -75,16 +65,20 @@ void draw_bird_ratio(Bird bird, double scale) {
 
 //Function display background image
 void backgroundDisplay() {
+    // Draw the background
     drawImage(background_allArray[current_bg], virScreenWidth, virScreenHeight, 0, 0);
 }
 
 // 'arrow', 80x40px
-void displayArrow(const unsigned long* arr, int x, int y) { //
+void displayArrow(const unsigned long* arr, int x, int y) { 
+    // Loop through the array and draw the arrow
     for (int i = 0; i < 40; i++) {
         for (int j = 0; j < 80; j++) {
+            // Only draw the pixel if it is not transparent
             if (*arr != 0x00FFFFFF) {
                 drawPixelARGB32(x + j, y + i, arrowColorCode);
             }
+            // Move to the next pixel
             arr++;
         }
     }
@@ -92,29 +86,38 @@ void displayArrow(const unsigned long* arr, int x, int y) { //
 
 //Delete the arrow in the menu screen
 void deleteArrow(int x, int y) {
+    // Clear the arrow by using backup region
     clearImageOverlay(x, y, 80, 40);
 }
 
 //Display help menu
 void helpMenuDisplay() {
+    // Display the help menu
+    // Draw the background
     backgroundDisplay();
+    // Draw the instruction
     drawSentence("Instruction", 300, 100, helpColorCode);
     drawSentence("Press Space To Play", 140, 200, helpColorCode);
     drawSentence("Dodge Obstacles To", 140, 300, helpColorCode);
     drawSentence("Gain Point", 340, 350, helpColorCode);
+    // Draw the back button
     drawSentence("Back", 420, 430, helpColorCode);
 }
 
 //Display main menu
 void mainMenuDisplay() {
+    // Display the main menu
+    // Draw the background
     backgroundDisplay();
+    // Backup the background to restore later when moving arrow
     backupRegion(0, 0, screenWidth, screenHeight);
+    // Draw the title
     drawWord("Welcome", 300, 150, startColorCode);
     drawWord("To", 620, 150, startColorCode);
     drawWord("Bird", 200, 250, startColorCode);
     drawWord("Bay", 460, 220, startColorCode);
     drawWord("LAG", 700, 280, startColorCode);
-
+    // Draw the menu options
     drawWord("Start", 400, 350, startColorCode);
     drawWord("Help", 400, 400, startColorCode);
     drawWord("Exit", 400, 450, startColorCode);
@@ -166,7 +169,10 @@ void gameoverDisplay() {
 
 //Display instruction to select background
 void setBackgroundStateDisplay() {
+    // Display the background selection menu
+    // Draw the background
     backgroundDisplay();
+    // Display instruction to select background
     drawSentence("Instruction", 300, 100, helpColorCode);
     drawSentence("Press 'a' or 'd' to slide", 20, 200, helpColorCode);
     drawSentence("Enter to set background", 30, 300, helpColorCode);
@@ -174,7 +180,10 @@ void setBackgroundStateDisplay() {
 
 //Display instruction to select bird costume
 void setBirdStateDisplay() {
+    // Display the bird selection menu
+    // Draw the background
     backgroundDisplay();
+    // Display instruction to select bird
     drawSentence("Instruction", 300, 100, helpColorCode);
     drawSentence("Press 'a' or 'd' to slide", 20, 200, helpColorCode);
     drawSentence("Enter to set bird", 160, 300, helpColorCode);
@@ -193,9 +202,14 @@ void clearGameScoresDisplay() {
 }
 
 void difficultSelectDisplay() {
+    // Display the difficult selection menu
+    // Draw the background
     backgroundDisplay();
+    // Backup the background to restore later when moving arrow
     backupRegion(0, 0, screenWidth, screenHeight);
+    // Draw the title
     drawSentence("LAG Selection", 240, 100, helpColorCode);
+    // Draw the menu options
     drawSentence("Less", 380, 250, helpColorCode);
     drawSentence("Normal", 380, 350, helpColorCode);
     drawSentence("Extreme", 380, 450, helpColorCode);
@@ -207,10 +221,14 @@ void gamingScoresDisplay() {
 
 //Display end game animation to
 void endgameAnimation() {
+    // Display the end game animation
     unsigned int currentColor;
+    // Loop through the screen and draw the color
     for (int y = 0; y < screenHeight; y += 40) {
         for (int x = 0; x < screenWidth; x += 40) {
+            // Generate a color based on the position
             currentColor = generateColor(x, y);
+            // Draw the color
             drawRectARGB32(x, y, x + 40, y + 40, currentColor, 1);
             //Monitor speed of screen cleaning
             set_wait_timer(1, 5);
@@ -221,6 +239,7 @@ void endgameAnimation() {
 
 //Produce color base on position x and y
 unsigned int generateColor(int x, int y) {
+    // Generate a color based on the position
     unsigned char r = (x + y) % 255;
     unsigned char g = x % 255;
     unsigned char b = y % 255;
