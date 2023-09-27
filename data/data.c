@@ -10,9 +10,6 @@
 #include "firstVideo4.h"
 
 // first video
-// extern const int first_video_array_LEN;
-// extern const unsigned long* first_video_array[];
-// Array of all bitmaps for convenience. (Total bytes used to store images in = 305760)
 const int first_video_array_LEN = 75;
 const unsigned long* first_video_array[75] = {
 	first_video_flappy_frames_frame_flappy_0001,

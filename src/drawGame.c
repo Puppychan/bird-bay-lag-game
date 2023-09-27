@@ -1,14 +1,14 @@
 #include "drawGame.h"
 
 int pipes_size;
-pipe pipes[MAX_PIPES_SIZE];  // We can have a maximum of 3 pipes on screen for simplicity.
+pipe pipes[MAX_PIPES_SIZE];
 Bird bird;
 int bird_width;
 int bird_height;
 int current_bird = DEFAULT_BIRD;
 int current_bg = DEFAULT_BACKGROUND;
-int game_scores;
-char game_scores_str[10];
+int game_scores; // The player's score
+char game_scores_str[10]; // The player's score in string
 int current_round = 1;
 
 unsigned int arrowColorCode = 0x000000;
@@ -221,10 +221,14 @@ void gamingScoresDisplay() {
 
 //Display end game animation to
 void endgameAnimation() {
+    // Display the end game animation
     unsigned int currentColor;
+    // Loop through the screen and draw the color
     for (int y = 0; y < screenHeight; y += 40) {
         for (int x = 0; x < screenWidth; x += 40) {
+            // Generate a color based on the position
             currentColor = generateColor(x, y);
+            // Draw the color
             drawRectARGB32(x, y, x + 40, y + 40, currentColor, 1);
             //Monitor speed of screen cleaning
             set_wait_timer(1, 5);
@@ -235,6 +239,7 @@ void endgameAnimation() {
 
 //Produce color base on position x and y
 unsigned int generateColor(int x, int y) {
+    // Generate a color based on the position
     unsigned char r = (x + y) % 255;
     unsigned char g = x % 255;
     unsigned char b = y % 255;

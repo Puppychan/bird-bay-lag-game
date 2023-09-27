@@ -71,6 +71,7 @@ void next_round() {
     current_round++;
 }
 bool check_last_round() {
+    // check if last round
     return current_round == 3;
 }
 
@@ -107,6 +108,8 @@ bool is_have_pipe() {
 }
 // reset
 void reset_characteristics() {
+    // reset
+    // vertical move: none, balloon: none, pipe: yes
     _is_vertical_move = false;
     _is_have_balloon = false;
     _is_have_pipe = true;
@@ -116,15 +119,21 @@ void reset_characteristics() {
 void init_difficulty_setting() {
     switch (difficulty) {
     case 1: // Easy
+        // set number of pipes
         pipes_size = EASY_pipes_size;
+        // set pipe speed
         pipe_move_speed = 15;
         break;
     case 2: // Medium
+        // set number of pipes
         pipes_size = MEDIUM_pipes_size;
+        // set pipe speed
         pipe_move_speed = 17;
         break;
     case 3: // Hard
+        // set number of pipes
         pipes_size = HARD_pipes_size;
+        // set pipe speed
         pipe_move_speed = 25;
         break;
     default:
@@ -244,8 +253,11 @@ void generate_obstacle(int type, int index, int pipe_distance, int* p_current_of
 
 // handle game logics
 void init_pipes() {
+    // define current offset x
     int current_offset_x = screenWidth / 2;
+    // define current pipe index
     current_pipe_index = 0;
+    // define display type based on characteristics
     int display_type = 0;
     if (is_have_balloon() && is_have_pipe()) { // both have pipe and balloon
         display_type = 3;
@@ -283,7 +295,7 @@ void init_pipes() {
 void move_pipes() {
     static int vertical_directions[MAX_PIPES_SIZE]; // 0 for up, 1 for down. Initialize all pipes to move up initially.
     static int initialized = 0; // To check whether static variables are initialized or not.
-
+    // Initialize vertical_directions array
     if (!initialized) {
         for (int i = 0; i < pipes_size; i++) vertical_directions[i] = 0; // Initialize all pipes to move up initially.
         initialized = 1;
@@ -296,15 +308,16 @@ void move_pipes() {
             if (pipes[index].top.x + pipes[index].top.size.width <= screenWidth && pipes[index].top.x > 0) {
                 clear_pipe(pipes[index]);
             }
-
+            // Move the pipe to the left
             pipes[index].top.x -= pipe_move_speed;
             pipes[index].bottom.x -= pipe_move_speed;
             // Skip drawing if the pipe is off the screen
             if (pipes[index].top.x + pipes[index].top.size.width <= 0 || pipes[index].top.x <= 0) continue;  // If this pipe skip the screen, skip it
-
+            // Check if the pipe is moving vertically
             if (is_vertical_move()) {
                 // Vertical Movement for balloon and pipe having vertical movement
                 int movement = vertical_directions[index] == 0 ? -PIPE_VERTICAL_SPEED : PIPE_VERTICAL_SPEED;
+                // Move the pipe up or down
                 pipes[index].top.y += movement;
                 pipes[index].bottom.y += movement;
 
@@ -326,7 +339,7 @@ void move_pipes() {
             if (pipes[index].bottom.x <= screenWidth && pipes[index].bottom.x > 0) {
                 clear_balloon(pipes[index]);
             }
-
+            // Move the balloon to the left
             pipes[index].bottom.x -= (pipe_move_speed);
             int movement = vertical_directions[index] == 0 ? -BALLOON_RISE_SPEED : BALLOON_RISE_SPEED;
             pipes[index].bottom.y += movement; // Move balloon upwards.
@@ -415,7 +428,6 @@ void init_round_game() {
         if (difficulty == 1 || difficulty == 2) { // only have balloon
             disable_pipe();
         }
-
 
         // setting up game
         init_bird();
