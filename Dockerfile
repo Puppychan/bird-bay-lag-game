@@ -1,21 +1,27 @@
-FROM debian:bullseye-slim
+# Using a base image which includes necessary tools and libraries
+FROM debian:buster-slim
 
-# Update and install necessary tools and dependencies
-RUN apt-get update && apt-get install -y \
+# Updating and Installing necessary packages
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
     build-essential \
     gcc-aarch64-linux-gnu \
-    qemu-system \
-    qemu-arch-extra \
-    make \
-    && rm -rf /var/lib/apt/lists/*
+    binutils-aarch64-linux-gnu \
+    qemu-system-arm \
+    qemu-system-x86 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
+# Set up environment variables for cross compilation
+ENV CC=aarch64-linux-gnu-gcc
+ENV LD=aarch64-linux-gnu-ld
+ENV OBJCOPY=aarch64-linux-gnu-objcopy
+
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the project files to the working directory
+# Copy the contents of the current directory (on host) to the working directory (in container)
 COPY . .
 
-# Build the project
-RUN make
-
-# Run QEMU with the created image when the container starts
-CMD ["qemu-system-aarch64", "-M", "raspi3b", "-kernel", "kernel8.img", "-serial", "null", "-serial", "stdio"]
+# Run the 'make test' command when the container starts
+CMD ["make", "test"]

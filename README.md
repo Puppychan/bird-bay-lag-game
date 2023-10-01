@@ -1,13 +1,14 @@
-# Group Project - Group 13 OS - Game
-
-**_NOTE_**: There is no difference in running Windows, or Mac OS systems, because the Makefile handles different OS system cases. By testing on both the team members' MAC and Windows, you also do not need to create **_object_** folder by yourself. However, if you still cannot run by following these below steps [here](#instruction):
-
-- Firstly, creating **_object_** folder in the root.
-- If you still cannot run, run `make cleanall-run` in the terminal/ console in the root.
-- If you still cannot run, please contact us [here](#contact-us).
-
+# Bird Bay Lag Game Project
+Group Project - Group 13 OS - Game 
+EEET2490_G13_GroupProject
 # Instruction
-
+## Prerequisites
+- You have installed latest version of [Docker Desktop](https://docs.docker.com/get-docker/)
+- You have installed [Git Client](https://git-scm.com/downloads) - if you want to clone the project using git in terminal.
+- You have IDE or text edit files. (I use Visual Studio Code in this case).
+## Clone project
+-  Clone the project `git clone https://github.com/Puppychan/bird-bay-lag-game`
+-  
 ## Running on QUEMU
 
 - Open terminal or console in the root
@@ -64,6 +65,12 @@
   - Delete
   - Simple Autocompletion (only suggest with simple features) by pressing `tab`
   - Enter to generate command
+## Not Be Able To Run
+**_NOTE_**: There is no difference in running Windows, or Mac OS systems, because the Makefile handles different OS system cases. By testing on both the team members' MAC and Windows, you also do not need to create **_object_** folder by yourself. However, if you still cannot run by following these below steps [here](#instruction):
+
+- Firstly, creating **_object_** folder in the root.
+- If you still cannot run, run `make cleanall-run` in the terminal/ console in the root.
+- If you still cannot run, please contact us [here](#contact-us).
 
 # For developers
 
