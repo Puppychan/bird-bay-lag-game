@@ -5,87 +5,149 @@ EEET2490_G13_GroupProject
 
 # Table of Content
 
-- [Bird Bay Lag Game Project](#bird-bay-lag-game-project)
-- [Table of Content](#table-of-content)
-- [Introduction](#introduction)
-- [Instruction](#instruction)
-  - [Prerequisites](#prerequisites)
-    - [General](#general)
-      - [Windows](#windows)
-      - [MacOS](#macos)
-    - [Computer not intention to run on RPI4](#computer-not-intention-to-run-on-rpi4)
-      - [Windows](#windows-1)
-      - [MacOS](#macos-1)
-      - [Computer wants to run using Docker](#computer-wants-to-run-using-docker)
-    - [Computer intention to run on RPI4](#computer-intention-to-run-on-rpi4)
-  - [Clone project](#clone-project)
-  - [Running on QUEMU](#running-on-quemu)
-    - [The Team OS System](#the-team-os-system)
-  - [Running on RPI4](#running-on-rpi4)
-  - [Please DON'T](#please-dont)
-  - [Others](#others)
-  - [Not Be Able To Run](#not-be-able-to-run)
-- [For developers](#for-developers)
-- [Extract Video](#extract-video)
-- [Contact Us](#contact-us)
+1. 📝 [Introduction](#introduction)
+2. 📚 [Instruction](#instruction)
+   - [Prerequisites](#prerequisites)
+   - [Setup](#setup)
+   - [Running on QUEMU](#running-on-quemu)
+   - [Running on RPI4](#running-on-rpi4)
+   - [Additional Notes](#additional-notes)
+3. 💻 [For Developers](#for-developers)
+4. 📨 [Contact Us](#contact-us)
 
 # Introduction
 
+- The project is a game application designed to operate on a custom-built OS system.
+- The game is developed using the C programming language <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C icon" width="45" height="20">.
+- It's inspired by the popular game [Flappy Bird](https://thanhnien.vn/chang-trai-viet-game-flappy-bird-gay-sot-toan-cau-18584583.htm), and we've named our rendition "<span style="color: khaki;">**_Bird Bay Lag_**</span>".
+- The primary purpose behind this project is to gain insights into OS development and dive deep into game creation.
+- This endeavor was carried out by a team of four members participating in the "Embedded System: OS and Interfacing" course.
+- The entire game development process takes approximately a month.
+- As the core focus was on the gaming aspects, we decided to utilize a pre-developed OS system from one of our team members.
+
+<h2 style="color: pink;">Game Introduction <img src="./assets/player/player.png" alt="" width="48"></h2>
+
+- <span style="color: lightgreen">**Bird Bay Lag** <img src="./assets/player/player.png" alt="" width="28"></span> is a game that the player controls a bird to fly through obstacles.
+- This game is single-player, and the player can choose different bird skins, backgrounds, and difficulties.
+- The game has three rounds, and each round has a different game setting for increasing difficulty.
+
+### Game Mechanics
+
+**Obstacles:**
+In the game, if the bird collides with any obstacles or the screen boundaries, the game ends. There are two main types of obstacles:
+
+1. **Tube or Pipe:**  
+   <img src="./assets/obstacle/tube.png" alt="" width="50" height="150">
+
+2. **Balloon:**  
+Various balloons act as obstacles, some examples are shown below:
+
+| <img src="./assets/obstacle/balloon-1.png" alt="" width="180" height="220"> | <img src="./assets/obstacle/balloon-2.png" alt="" width="180" height="220"> |
+| :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
+| <img src="./assets/obstacle/balloon-3.png" alt="" width="180" height="220"> | <img src="./assets/obstacle/balloon-4.png" alt="" width="180" height="220"> |
+
+
+## Gameplay and Features
+
+### <span style="background-color: lavenderblush; padding: 1px 2px; border-radius: 5px;">🎮</span> Controls:
+
+- **Start Game:** `Enter` key.
+- **Flap Bird:** `Space` key. If not pressed, the bird will fall due to gravity.
+
+###  Scoring:
+
+- Earn **1 point** every time the bird successfully passes an obstacle.
+-
+
+### Customizations:
+
+- **Bird Skin:** Players can choose different appearances for their bird.
+- **Background:** Players can select various backdrops for the gameplay.
+- **Difficulty:** Choose between varying game difficulties. As the player progresses through the game's three rounds, they'll encounter different obstacles and increased challenges.
+
+### Post-Game:
+
+- After all three rounds, players are directed to a **Results Page** displaying their final score.
+- Option to replay the game or view individual round scores.
+
+### Instructions:
+
+- A comprehensive **Help Menu** within the game offers guidance and clarifies game mechanics.
+
 # Instruction
+
+The instruction includes 3 main parts:
+
+- Setting up the development environment:
+  - [Prerequisites](#prerequisites)
+  - [Clone project](#clone-project)
+- Running the project:
+  - [Running on QUEMU](#running-on-quemu)
+  - [Running on RPI4](#running-on-rpi4)
+- Some additional notes:
+  - [Please DON'T](#please-dont)
+  - [Others](#others)
 
 ## Prerequisites
 
-- You have installed [Git Client](https://git-scm.com/downloads) - if you want to clone the project using git in terminal.
-- You have IDE or text edit files. (I use Visual Studio Code in this case).
+- **Git**: [Git Client](https://git-scm.com/downloads) installed.
+- **Editor**: Any IDE or text editor (Example: Visual Studio Code).
 
 ### General
 
-#### Windows
+#### Windows - [Detailed](./assets/readme/setup-development-environment-win.pdf)
 
-- You have installed [GCC tool chain](https://github.com/◊niXman/mingw-builds-binaries/releases) with **_x86_64 release-posix-seh-ucrt-rt_** latest version, and done all setup steps.
-- You have installed gcc-arm toolchain:
-  - Select [GNU ARM Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) for **_32-bit gcc-arm_**
-  - Select [64 Bit GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-a) for **_64-bit gcc-arm_**
-- You have installed [GNU Make](https://www.gnu.org/software/make/).
-- Detailed [See here](./assets/readme/setup-development-environment-win.pdf)
+- **GCC Toolchain**: [GCC tool chain](https://github.com/◊niXman/mingw-builds-binaries/releases) with **_x86_64 release-posix-seh-ucrt-rt_** latest version.
+- **ARM GCC**:
+  - 32-bit one: [GNU ARM Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) for 32-bit.
+  - 64-bit one: [64 Bit GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-a) for 64-bit.
+- **Make**: [GNU Make](https://www.gnu.org/software/make/).
 
 #### MacOS
 
-- You have installed [Homebrew](https://brew.sh/) on your Mac.
-- You have installed [Make](https://www.gnu.org/software/make/) by `brew install make`.
-- You have installed **_arm-gcc_** toolchain by:
-  - 64-bit:
-    ```bash
+- **Homebrew**: Installed from [Homebrew](https://brew.sh/).
+- Open terminal and run these commands:
+  - **Make**: `brew install make`.
+  - **ARM GCC**:
+    - 64-bit:
+      ```
       brew tap ArmMbed/homebrew-formulae
       brew install arm-none-eabi-gcc
-    ```
-  - 32-bit:
-    ```bash
+      ```
+    - 32-bit:
+      ```
       brew tap SergioBenitez/osxct
       brew install aarch64-none-elf
-    ```
+      ```
 
-### Computer not intention to run on RPI4
-#### Windows
-- You have installed [QUEMU](https://www.qemu.org/download/) - if you want to run the project on QUEMU.
-#### MacOS
-- You have installed [QUEMU](https://www.qemu.org/download/) by `brew install quemu` to run the project emulation on QUEMU.
+| Requirement                    | Windows                                                                                                                                        | MacOS                                                                        |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Installation Tool**          | -                                                                                                                                              | [Homebrew](https://brew.sh/)                                                 |
+| **GCC Toolchain**              | [GCC tool chain](https://github.com/◊niXman/mingw-builds-binaries/releases) with **_x86_64 release-posix-seh-ucrt-rt_** (Latest Version)       | -                                                                            |
+| **ARM GCC Toolchain (32-bit)** | [GNU ARM Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) | `bash brew tap SergioBenitez/osxct && brew install aarch64-none-elf `        |
+| **ARM GCC Toolchain (64-bit)** | [64 Bit GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-a)                                                               | `bash brew tap ArmMbed/homebrew-formulae && brew install arm-none-eabi-gcc ` |
+| **Make Utility**               | [GNU Make](https://www.gnu.org/software/make/)                                                                                                 | `brew install make`                                                          |
+| **Detailed Setup**             | [Setup Details](./assets/readme/setup-development-environment-win.pdf)                                                                         | -                                                                            |
 
+### Detailed Setup
 
-#### Computer wants to run using Docker
+#### Computer intention to run on QUEMU
 
-- You have installed [Docker](https://www.docker.com/products/docker-desktop) on your computer.
-- You have installed [QUEMU](https://www.qemu.org/download/) - if you want to run the project on QUEMU.
-- You have installed [GNU Make](https://www.gnu.org/software/make/).
+| Requirement            | Windows                                 | MacOS                |
+| ---------------------- | --------------------------------------- | -------------------- |
+| **QUEMU Installation** | [QUEMU](https://www.qemu.org/download/) | `brew install quemu` |
 
-### Computer intention to run on RPI4
+#### Computer intention to run on RPI4
 
-- You have installed [QUEMU](https://www.qemu.org/download/) - if you want to run the project on QUEMU.
--
+- Please follow step by step instruction in this section [here](#running-on-rpi4)
 
 ## Clone project
 
-- Clone the project `git clone https://github.com/Puppychan/bird-bay-lag-game`
+- Open terminal and navigate to the folder you want to clone the project
+- Clone the project with this command on the terminal:
+  ```shell
+    git clone https://github.com/Puppychan/bird-bay-lag-game
+  ```
 
 ## Running on QUEMU
 
@@ -126,12 +188,14 @@ EEET2490_G13_GroupProject
 
 - In `gpio.h`: change line `#define RBP3 //for emulation with QEMU` to `#define RBP4`
 - Run `make cleanall-run` if you haven't run this project before, or if you modify anything in _data_ folder, or you delete or modify in _object_ folder. Or you only need to run `make test` if you modify code excepting `data` folder.
-- Afterwards, copy `kernel8.img` in the root folder and follow these steps [here](https://rmit.instructure.com/courses/121602/files/34052795?wrap=1).
+- Afterwards, copy `kernel8.img` in the root folder and follow these steps [here](./assets/readme/setup-rpi4.docx).
 - After following and complete these steps, please wait for a few minutes to let the **Welcome Message** appearing on the TeraTerm, because TeraTerm is slow in recognizing unicode displaying character.
 - To run the OS system, the TeraTerm now is the console/ terminal when the user runs on QUEMU.
 - Refer to [The Team OS System](#the-team-os-system) to see how to use the team OS system and play game application inside the system.
 
 ## Please DON'T
+
+### Computer having intention to run on RPI4
 
 - Zoom the TeraTerm before or during the running
 - Disconnect TeraTerm and then connect again -> Nothing will display
@@ -144,7 +208,7 @@ EEET2490_G13_GroupProject
   - Simple Autocompletion (only suggest with simple features) by pressing `tab`
   - Enter to generate command
 
-## Not Be Able To Run
+### Not Be Able To Run
 
 **_NOTE_**: There is no difference in running Windows, or Mac OS systems, because the Makefile handles different OS system cases. By testing on both the team members' MAC and Windows, you also do not need to create **_object_** folder by yourself. However, if you still cannot run by following these below steps [here](#instruction):
 
@@ -157,7 +221,9 @@ EEET2490_G13_GroupProject
 - Store all files being relevant to images, and videos inside `data` folder
 - When adding files, make sure modify both `data.h` and `data.c` files to use the medias.
 
-# Extract Video
+## Extract Video
+
+If you want to extract video, please follow these steps:
 
 - In MacOS terminal:
   - Ensure the Mac has Brew, then run `brew install ffmpeg`
