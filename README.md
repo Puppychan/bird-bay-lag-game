@@ -1,19 +1,53 @@
 # Bird Bay Lag Game Project
 
-Group Project - Group 13 OS - Game
-EEET2490_G13_GroupProject
+> Dive into the thrill of a bird's journey!
 
-# Table of Content
+**Group Odyssey** 🚀 - Group 13 OS - Game Adventure  
 
-1. 📝 [Introduction](#introduction)
-2. 📚 [Instruction](#instruction)
-   - [Prerequisites](#prerequisites)
-   - [Setup](#setup)
-   - [Running on QUEMU](#running-on-quemu)
-   - [Running on RPI4](#running-on-rpi4)
-   - [Additional Notes](#additional-notes)
-3. 💻 [For Developers](#for-developers)
-4. 📨 [Contact Us](#contact-us)
+_Code Quest: **EEET2490_G13_GroupProject**_
+
+# 🚀 Table of Adventures 🚀
+
+- 🌍 [**Welcome to Bird Bay Lag Game Project**](#bird-bay-lag-game-project)
+- 📖 [**Navigating the Adventure**](#table-of-content)
+- 💡 [**Diving In: Introduction**](#introduction)
+  - 🌟 [**Highlights & Features**](#features-at-a-glance)
+- 🛠 [**Crafted Tools**](#built-with)
+- 🎮 [**The Game's Lore 🐦**](#game-content)
+  - ⚔ [**Gameplay Mechanics**](#game-mechanics)
+    - 🚧 [**Challenges & Obstacles**](#obstacles)
+    - ⚙️ [**Tailoring Your Experience**](#customizations)
+    - 🌄 [**Backdrop of Adventure**](#background)
+    - 🐤 [**Choosing Your Hero**](#bird)
+    - 🔥 [**Modulating Challenge**](#difficulty)
+    - 🎞 [**The Visual Epic**](#final-product)
+    - 🕹 [**Mastering Controls**](#controls)
+    - 🏆 [**Scoring & Achievements**](#scoring)
+    - 📊 [**After the Game**](#post-game)
+    - 📖 [**Instructions & Guide**](#instructions)
+- 🌌 [**Beyond the Game**](#other-content)
+  - 🎨 [**Visual Arts: Images**](#displaying-images)
+  - 🍿 [**Cinematic Experience**](#displaying-video)
+  - 📜 [**Narratives & Text**](#displaying-text)
+- 📚 [**Installation**](#installation)
+  - 📋 [**Adventurer's Checklist**](#prerequisites)
+    - 🌐 [**Universal Guides**](#general)
+      - 💻 [**Windows Walkthrough**](#windows---detailed)
+      - 🍎 [**MacOS Methods**](#macos)
+    - 📘 [**Step-by-Step Manuals**](#detailed-setup)
+      - 🎥 [**QUEMU Quest**](#computer-intention-to-run-on-quemu)
+      - 🥧 [**Raspberry Pi4 Adventure**](#computer-intention-to-run-on-rpi4)
+  - ⬇️ [**Cloning Magic Scrolls**](#clone-project)
+  - 🎥 [**QUEMU Quests**](#running-on-quemu)
+    - 🛡 [**The Team's OS Treasury**](#the-team-os-system)
+  - 🥧 [**Embarking on RPI4**](#running-on-rpi4)
+  - ❌ [**Cautions & Warnings**](#please-dont)
+    - ⚠️ [**RPI4 Relics & Runes**](#computer-having-intention-to-run-on-rpi4)
+  - 🧙‍♂️ [**Other Magics**](#others)
+    - ⛔ [**Challenges & Barriers**](#not-be-able-to-run)
+- 🔧 [**For Enchanters & Developers**](#for-developers)
+  - 🎞 [**Extracting Visual Elixirs**](#extract-video)
+- 💌 [**Contact the Adventurers**](#contact-us)
 
 # Introduction
 
@@ -21,59 +55,114 @@ The project is a game application designed to operate on a custom-built OS syste
 
 As the core focus was on the gaming aspects, we decided to utilize a pre-developed OS system from one of our team members. The OS system is based on the [Raspberry Pi OS](https://www.raspberrypi.org/software/operating-systems/) and is developed using the _C programming language_.
 
-This endeavor as carried out by a team of four members participating in the "Embedded System: OS and Interfacing" course. Besides, there are also some additional features that we've implemented:
+This endeavor as carried out by a team of four members participating in the "**_Embedded System: OS and Interfacing_**" course. Besides, there are also some additional features that we've implemented:
 
-- Displaying images, having a list of images to scroll horizontally and moving image vertically
-- Displaying video
-- Display text in Raspberry Pi 4 window or QEMU window
-  **_Details of using OS System: [here](#the-team-os-system)_**
+## Features at a Glance
 
-# Game Introduction <img src="./assets/player/player.png" alt="" width="48">
+- **🏞️ Dynamic Image Display**: Navigate through a library of images, effortlessly scrolling horizontally or adjusting the image vertically.
+- **🎞️ Engaging Video Playback**: Dive deep into our in-built video player, optimized for performance.
+- **🔡 Riveting Text Display**: Whether on a Raspberry Pi 4 or QEMU window, enjoy crisp, clear, and colorful text presentations.
+- **<img src="./assets/player/player.png" alt="" width="26" > Bird Bay Lag Game**: A game that the player controls a bird to fly through obstacles - most special feature of this project.
 
-- **Bird Bay Lag**<img src="./assets/player/player.png" alt="" width="28"> is a game that the player controls a bird to fly through obstacles.
-- The game section idea's inspired by the popular game [Flappy Bird](https://thanhnien.vn/chang-trai-viet-game-flappy-bird-gay-sot-toan-cau-18584583.htm), and we've named our rendition "<span style="color: khaki;">**_Bird Bay Lag_**</span>".
+**📘 Dive Deeper**: _Explore the intricacies of using our OS System [here](#the-team-os-system)_
+
+# Built With
+
+We've utilized a range of cutting-edge technologies and tools to bring the "***Bird Bay Lag***" game project to life. Here's a snapshot of our tech stack:
+
+### Core Technologies:
+<div align="center">
+    <a href="https://cmake.org/"><img src="https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white" alt="CMake"></a> &nbsp;
+    <a href="https://www.cprogramming.com/"><img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C Objective"></a> &nbsp;
+    <a href="https://www.raspberrypi.org/"><img src="https://img.shields.io/badge/Raspberry_Pi-A22846?style=for-the-badge&logo=raspberry-pi&logoColor=white" alt="Raspberry Pi"></a> &nbsp;
+    <a href="https://www.qemu.org/"><img src="https://img.shields.io/badge/QEMU-FFA000?style=for-the-badge&logo=qemu&logoColor=white" alt="QEMU"></a> &nbsp;
+</div>
+
+### Development & Build Tools:
+<div align="center">
+    <a href="https://www.gnu.org/software/make/"><img src="https://img.shields.io/badge/GNU_Make-003366?style=for-the-badge&logo=gnu-make&logoColor=white" alt="GNU Make"></a> &nbsp;
+    <a href="https://www.arm.com/"><img src="https://img.shields.io/badge/GNU_ARM-FFA000?style=for-the-badge&logo=gnu-arm&logoColor=white" alt="GNU ARM"></a> &nbsp;
+    <a href="https://www.gnu.org/"><img src="https://img.shields.io/badge/GNU-A42E2B?style=for-the-badge&logo=gnu&logoColor=white" alt="GNU"></a> &nbsp;
+</div>
+
+### MacOS Specific Tools:
+<div align="center">
+    <a href="https://ffmpeg.org/"><img src="https://img.shields.io/badge/FFmpeg-FFA000?style=for-the-badge&logo=ffmpeg&logoColor=white" alt="FFmpeg"></a> &nbsp;
+    <a href="https://brew.sh/"><img src="https://img.shields.io/badge/Homebrew-FFA000?style=for-the-badge&logo=homebrew&logoColor=white" alt="Homebrew"></a>
+</div>
+
+
+# 🎮 Game Content  🐦
+
+<div align="center">
+  <img src="./assets/player/player.png" alt="Bird Icon" width="65">
+  <p><strong>Bird Bay Lag</strong></p>
+</div>
+
+- Welcome to **Bird Bay Lag 🐤**! A flight through challenges and adventures where you control a bird navigating a world of obstacles. Drawing inspiration from the iconic [Flappy Bird](https://thanhnien.vn/chang-trai-viet-game-flappy-bird-gay-sot-toan-cau-18584583.htm), our rendition stands as a tribute named in golden hues as **🐤 Bird Bay Lag 🐤**.
 - This game is **_single-player_**, and the player can choose different bird skins, backgrounds, and difficulties.
 
----
+**🕹 Gameplay Features:**
 
-- The game has **_three rounds_**, and each round has a different game setting for increasing difficulty => the player needs to adapt to the new environment.
-- The player can win the game if they can pass all three rounds and lose if they collide with any obstacles or the screen boundaries.
+- **Single-Player Quest**: Take flight in a **single-player** experience, where customization is at the forefront. Choose from various *bird skins*, immersive *backgrounds*, and pick a *difficulty* that tests your mettle.
 
----
+- **Threefold Challenge**: The game spans three 3️⃣ dynamic rounds, each with its distinct environment and challenges. Adapt to the new setting and soar through the obstacles to claim victory.
+
+- **Victory & Defeat**: Soar through all three rounds to claim victory. But, beware! A single collision with an *obstacle* or straying off the *boundaries*, and it's game over.
+
+**🛠 Development Insights:**
 
 - The game is developed using the _C programming language_ and is designed to operate on a custom-built OS system.
 - The entire game development process takes approximately a month.
 
-## Game Mechanics
+## 🎮 Game Mechanics
 
-### Obstacles:
+### 📛 Obstacles 📛:
 
-In the game, if the bird collides with any obstacles or the screen boundaries, the game ends. There are two main types of obstacles:
+In the game, if the bird collides with any obstacles or the screen boundaries, the game ends. The bird must fly through the gap to pass the obstacle.
+
+There are two main types of obstacles:
 
 1. **Tube or Pipe:**  
-    The tube or pipe is a long vertical obstacle with a gap in the middle. The bird must fly through the gap to pass the obstacle. Some examples are shown below:
+    The tube or pipe is a long vertical obstacle with a gap in the middle.
+
+   Some examples are shown below:
 
    | <img src="./assets/obstacle/tube.png" alt="" width="70" height="200"> | <img src="./assets/obstacle/tube-up.png" alt="" width="70" height="200"> |
    | :-------------------------------------------------------------------: | :----------------------------------------------------------------------: |
 
 2. **Balloon:**  
-   Various balloons act as obstacles, some examples are shown below:
+   Various balloons act as obstacles. To pass the balloon, the bird must fly through the ballon when it appears in game.
+
+   Some examples are shown below:
 
 | <img src="./assets/obstacle/balloon-1.png" alt="" width="180" height="220"> | <img src="./assets/obstacle/balloon-2.png" alt="" width="180" height="220"> |
 | :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
 | <img src="./assets/obstacle/balloon-3.png" alt="" width="180" height="220"> | <img src="./assets/obstacle/balloon-4.png" alt="" width="180" height="220"> |
 
+**_Here is how obstacles look like in game_**
+
+1. **Tube or Pipe:**  
+   ![Pipe in game](./assets/readme/pipe-game.png)
+2. **Balloon:**  
+   ![Ballons in game](./assets/readme/balloon-game.png)
+   > The balloon is a bit different from the original one, because the original one is too small to see in the game.
+
 ---
 
-### Background:
+### ⚙️ Customizations:
 
-**🌄 Choosing Your Background 🌄**
+- **[Bird Skin:](#🐦-bird-🐤)** Players can choose different appearances for their bird. Details are provided.
+- **[Background:](#🌄-background-🌄)** Players can select various backdrops for the gameplay.
+- **[Difficulty:](#🎮-difficulty-🎮)** Choose between varying game difficulties. As the player progresses through the game's three rounds, they'll encounter different obstacles and increased challenges.
 
-<center>
+### 🌄 Background 🌄:
+
+<div align="center">
     <img src="./assets/background/cloud.png" alt="Background Icon" width="25" height="20">
     <strong>Make your gameplay unique by selecting a distinctive background!</strong>
     <img src="./assets/background/sky.png" alt="Background Icon" width="25" height="20">
-</center>
+</div>
 
 #### 🎨 Background Options:
 
@@ -110,23 +199,20 @@ In the game, if the bird collides with any obstacles or the screen boundaries, t
 1. **Start with the Background Selection:**  
    ![When in choose background](./assets/readme/choose-background.png)
 2. **Navigate Options with `a` or `d`:**
-    Use the `a` or `d` keys to move the option to the left or right, respectively.  
+   Use the `a` or `d` keys to move the option to the left or right, respectively.
 3. **Press `Enter` to Confirm:**  
    Use the `a` or `d` keys to move the option to the left or right, respectively.  
    ![After changing background](./assets/readme/choose-background-2.png)
 
 ---
 
-### Bird:
+### 🐦 Bird 🐤:
 
-**🐦 Meet the Players! 🐦**
-<center>
+<div align="center">
     <img src="./assets/player/player.png" alt="Bird Icon" width="25">
     <strong>Make your gameplay unique by selecting a distinctive bird skin!</strong>
     <img src="./assets/player/player.png" alt="Bird Icon" width="25">
-</center>
-
----
+</div>
 
 > Choose your player and jump right into the action! 🚀
 
@@ -164,36 +250,49 @@ In the game, if the bird collides with any obstacles or the screen boundaries, t
     </tr>
 </table>
 
---- 
+---
+
 #### Steps to Choose:
+
 > The player can select their bird skin by navigating the options with the `a` or `d` keys.
 
 1. **Start with the Bird Skin Selection:**  
    ![When in choose bird skin](./assets/readme/choose-bird-skin.png)
 2. **Navigate Options with `a` or `d`:**  
-    Use the `a` or `d` keys to move the option to the left or right, respectively.  
-1. **Press `Enter` to Confirm:**  
-   
+   Use the `a` or `d` keys to move the option to the left or right, respectively.
+3. **Press `Enter` to Confirm:**
+
    ![After changing bird skin](./assets/readme/choose-bird-skin-2.png)
 
 ---
 
-### Difficulty:
-
-**🎮 Choose Your Difficulty 🎮**
+### 🎮 Difficulty 🎮:
 
 <div align="center">🚦 <strong>Choose your difficulty level!</strong> 🚦</div>
 
----
+###
 
 > The player can select their difficulty level by navigating the options vertically with the `w` or `s` keys.
 
-### *Final Product:*
+- **Less:** Easy mode
+- **Medium:** Normal mode
+- **More:** Hard mode
+
+---
+
+#### Steps to Choose:
+
+1. **Start with the Difficulty Selection:**  
+   ![When in choose difficulty](./assets/readme/choose-difficulty.png)
+2. **Navigate Options with `w` or `s`:**  
+   Use the `w` or `s` keys to move the option up or down, respectively.
+3. **Press `Enter` to Confirm:**
+
+### _Final Product:_
 
 > Here's a quick peek at how the bird skin and background look in the game:
 
 ![Bird Start Game](./assets/readme/bird-start-game.png)
-
 
 **Gameplay and Features**
 
@@ -209,17 +308,19 @@ In the game, if the bird collides with any obstacles or the screen boundaries, t
 - If the player earns enough points, they can progress to the next round.
 - Each round has a different game setting for increasing difficulty => the player needs to adapt to the new environment.
 
-### ⚙️ Customizations:
-
-- **Bird Skin:** Players can choose different appearances for their bird.
-- **Background:** Players can select various backdrops for the gameplay.
-- **Difficulty:** Choose between varying game difficulties. As the player progresses through the game's three rounds, they'll encounter different obstacles and increased challenges.
-
 ### 📈 Post-Game:
 
 - After all three rounds, players are directed to a **Results Page** displaying their final score.
+  ![Result page](./assets/readme/result-page.png)
 - The results page also appears if the player loses.
-- Press any button to back to main menu.
+- Press any button to back to main menu:
+  - There is a switching page between result page and main menu page.
+    Switching process:
+    ![Switching page](./assets/readme/switch-page.png)
+    Whole process:
+    ![Whole switching page](./assets/readme/switch-page-2.png)
+  - After switching page, the main menu page appears:
+    ![Main menu page](./assets/readme/main-menu.png)
 
 ### 📒 Instructions:
 
@@ -231,11 +332,13 @@ In the game, if the bird collides with any obstacles or the screen boundaries, t
   - **Exit:** Exit the game.
 - Use the `w` and `s` keys to navigate the menu.
 - Press `Enter` to select an option.
+  ![Main menu page](./assets/readme/main-menu.png)
 
 **2. Help Page**
 
 - The help page displays the game's instructions and clarifies game mechanics.
 - Press `Enter` to return to the main menu.
+  ![Help page](./assets/readme/help-page.png)
 
 **3. Start Game Option**
 
@@ -247,7 +350,66 @@ In the game, if the bird collides with any obstacles or the screen boundaries, t
 
 **_Details of the game: [here](#the-team-os-system)_**
 
-# Instruction
+# Other Content
+
+## Displaying Images
+
+- Our team has crafted a dedicated function for image display within the OS system.
+
+**How to Display an Image?**
+
+- Once in the OS system, type `displayImage` to unveil a gallery of images.
+- Navigate through the image list using your keyboard in the terminal or OS system console:
+  - `w` or `s`: Move the selected image vertically.
+  - `a` or `d`: Scroll horizontally through the image list.
+
+**Gallery Navigation Experience:**
+
+> Press `w` or `s` to move the image vertically.
+
+- **Initial State** - Before navigating:
+  ![Before moving the image](./assets/readme/display-image.png)
+- **After Vertical Movement** - Image movement post pressing `s`:
+  ![After moving the image by pressing `s`](./assets/readme/move-image-s.png)
+
+> Press `a` or `d` to scroll the image list horizontally.
+
+## 🎥 Displaying Video
+
+- Our team has crafted a dedicated function for video display within the OS system.
+  **🌟 Features:**
+- 🎞️ Videos generated from a list of frames encoded in hexadecimals.
+- ⏱️ Note: Due to the intricacy of video frames, the compile time may be slightly extended.
+- The video is displayed in the OS system console.
+
+**Engage with the Video Gallery:**
+
+- Have the OS system open.
+- Once in the OS system, type `displayVideo` to unveil a gallery of videos.
+
+**Visual Experience:**
+
+- Upon invoking `displayVideo`, you'll be seen a visual like this:
+  ![Video in OS system](./assets/readme/display-video.png)
+- The video is displayed in the QUEMU window or RPI4 window if the user runs on RPI4.
+  > 🔗 Dive deeper: Explore the full video [here](./assets/firstVideo/Flappy-24fps.mp4).
+
+## 📝 Displaying Text
+
+- In addition to the video, we’ve enhanced our text display capabilities.
+
+**✴️ Highlights**
+
+- 🖋️ Showcasing text with a specific, uniform font.
+- 🌈 The team’s touch: View team member names rendered in vibrant rainbow colors.
+
+  -> Can ensure the consistency of the font.
+
+**Visual Representation:**
+
+![Display Name With Font](./assets/readme/display-names.png)
+
+# Installation
 
 The instruction includes 3 main parts:
 
