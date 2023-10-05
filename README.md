@@ -25,10 +25,10 @@ EEET2490_G13_GroupProject
 - The entire game development process takes approximately a month.
 - As the core focus was on the gaming aspects, we decided to utilize a pre-developed OS system from one of our team members.
 
-<h2 style="color: pink;">Game Introduction <img src="./assets/player/player.png" alt="" width="48"></h2>
+## Game Introduction <img src="./assets/player/player.png" alt="" width="48">
 
-- <span style="color: lightgreen">**Bird Bay Lag** <img src="./assets/player/player.png" alt="" width="28"></span> is a game that the player controls a bird to fly through obstacles.
-- This game is single-player, and the player can choose different bird skins, backgrounds, and difficulties.
+- **Bird Bay Lag**<img src="./assets/player/player.png" alt="" width="28"> is a game that the player controls a bird to fly through obstacles.
+- This game is ***single-player***, and the player can choose different bird skins, backgrounds, and difficulties.
 - The game has three rounds, and each round has a different game setting for increasing difficulty.
 
 ### Game Mechanics
@@ -49,7 +49,7 @@ Various balloons act as obstacles, some examples are shown below:
 
 ## Gameplay and Features
 
-### <span style="background-color: lavenderblush; padding: 1px 2px; border-radius: 5px;">🎮</span> Controls:
+### <span style="font-size: 23px; border-radius: 50%; border: 1px solid #fff;">🎮</span> Controls:
 
 - **Start Game:** `Enter` key.
 - **Flap Bird:** `Space` key. If not pressed, the bird will fall due to gravity.
