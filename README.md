@@ -182,7 +182,7 @@ In the game, if the bird collides with any obstacles or the screen boundaries, t
 
 **🎮 Choose Your Difficulty 🎮**
 
-<strong align="center">🚦 Choose your difficulty level! 🚦</strong>
+<div align="center">🚦 <strong>Choose your difficulty level!</strong> 🚦</div>
 
 ---
 
