@@ -1,14 +1,92 @@
 # Bird Bay Lag Game Project
-Group Project - Group 13 OS - Game 
+
+Group Project - Group 13 OS - Game
 EEET2490_G13_GroupProject
+
+# Table of Content
+
+- [Bird Bay Lag Game Project](#bird-bay-lag-game-project)
+- [Table of Content](#table-of-content)
+- [Introduction](#introduction)
+- [Instruction](#instruction)
+  - [Prerequisites](#prerequisites)
+    - [General](#general)
+      - [Windows](#windows)
+      - [MacOS](#macos)
+    - [Computer not intention to run on RPI4](#computer-not-intention-to-run-on-rpi4)
+      - [Windows](#windows-1)
+      - [MacOS](#macos-1)
+      - [Computer wants to run using Docker](#computer-wants-to-run-using-docker)
+    - [Computer intention to run on RPI4](#computer-intention-to-run-on-rpi4)
+  - [Clone project](#clone-project)
+  - [Running on QUEMU](#running-on-quemu)
+    - [The Team OS System](#the-team-os-system)
+  - [Running on RPI4](#running-on-rpi4)
+  - [Please DON'T](#please-dont)
+  - [Others](#others)
+  - [Not Be Able To Run](#not-be-able-to-run)
+- [For developers](#for-developers)
+- [Extract Video](#extract-video)
+- [Contact Us](#contact-us)
+
+# Introduction
+
 # Instruction
+
 ## Prerequisites
-- You have installed latest version of [Docker Desktop](https://docs.docker.com/get-docker/)
+
 - You have installed [Git Client](https://git-scm.com/downloads) - if you want to clone the project using git in terminal.
 - You have IDE or text edit files. (I use Visual Studio Code in this case).
+
+### General
+
+#### Windows
+
+- You have installed [GCC tool chain](https://github.com/◊niXman/mingw-builds-binaries/releases) with **_x86_64 release-posix-seh-ucrt-rt_** latest version, and done all setup steps.
+- You have installed gcc-arm toolchain:
+  - Select [GNU ARM Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) for **_32-bit gcc-arm_**
+  - Select [64 Bit GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-a) for **_64-bit gcc-arm_**
+- You have installed [GNU Make](https://www.gnu.org/software/make/).
+- Detailed [See here](./assets/readme/setup-development-environment-win.pdf)
+
+#### MacOS
+
+- You have installed [Homebrew](https://brew.sh/) on your Mac.
+- You have installed [Make](https://www.gnu.org/software/make/) by `brew install make`.
+- You have installed **_arm-gcc_** toolchain by:
+  - 64-bit:
+    ```bash
+      brew tap ArmMbed/homebrew-formulae
+      brew install arm-none-eabi-gcc
+    ```
+  - 32-bit:
+    ```bash
+      brew tap SergioBenitez/osxct
+      brew install aarch64-none-elf
+    ```
+
+### Computer not intention to run on RPI4
+#### Windows
+- You have installed [QUEMU](https://www.qemu.org/download/) - if you want to run the project on QUEMU.
+#### MacOS
+- You have installed [QUEMU](https://www.qemu.org/download/) by `brew install quemu` to run the project emulation on QUEMU.
+
+
+#### Computer wants to run using Docker
+
+- You have installed [Docker](https://www.docker.com/products/docker-desktop) on your computer.
+- You have installed [QUEMU](https://www.qemu.org/download/) - if you want to run the project on QUEMU.
+- You have installed [GNU Make](https://www.gnu.org/software/make/).
+
+### Computer intention to run on RPI4
+
+- You have installed [QUEMU](https://www.qemu.org/download/) - if you want to run the project on QUEMU.
+-
+
 ## Clone project
--  Clone the project `git clone https://github.com/Puppychan/bird-bay-lag-game`
--  
+
+- Clone the project `git clone https://github.com/Puppychan/bird-bay-lag-game`
+
 ## Running on QUEMU
 
 - Open terminal or console in the root
@@ -65,7 +143,9 @@ EEET2490_G13_GroupProject
   - Delete
   - Simple Autocompletion (only suggest with simple features) by pressing `tab`
   - Enter to generate command
+
 ## Not Be Able To Run
+
 **_NOTE_**: There is no difference in running Windows, or Mac OS systems, because the Makefile handles different OS system cases. By testing on both the team members' MAC and Windows, you also do not need to create **_object_** folder by yourself. However, if you still cannot run by following these below steps [here](#instruction):
 
 - Firstly, creating **_object_** folder in the root.
