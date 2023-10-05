@@ -17,62 +17,235 @@ EEET2490_G13_GroupProject
 
 # Introduction
 
-- The project is a game application designed to operate on a custom-built OS system.
-- The game is developed using the C programming language <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C icon" width="45" height="20">.
-- It's inspired by the popular game [Flappy Bird](https://thanhnien.vn/chang-trai-viet-game-flappy-bird-gay-sot-toan-cau-18584583.htm), and we've named our rendition "<span style="color: khaki;">**_Bird Bay Lag_**</span>".
-- The primary purpose behind this project is to gain insights into OS development and dive deep into game creation.
-- This endeavor was carried out by a team of four members participating in the "Embedded System: OS and Interfacing" course.
-- The entire game development process takes approximately a month.
-- As the core focus was on the gaming aspects, we decided to utilize a pre-developed OS system from one of our team members.
+The project is a game application designed to operate on a custom-built OS system. The primary purpose behind this project is to gain insights into OS development and dive deep into game creation.
 
-## Game Introduction <img src="./assets/player/player.png" alt="" width="48">
+As the core focus was on the gaming aspects, we decided to utilize a pre-developed OS system from one of our team members. The OS system is based on the [Raspberry Pi OS](https://www.raspberrypi.org/software/operating-systems/) and is developed using the _C programming language_.
+
+This endeavor as carried out by a team of four members participating in the "Embedded System: OS and Interfacing" course. Besides, there are also some additional features that we've implemented:
+
+- Displaying images, having a list of images to scroll horizontally and moving image vertically
+- Displaying video
+- Display text in Raspberry Pi 4 window or QEMU window
+  **_Details of using OS System: [here](#the-team-os-system)_**
+
+# Game Introduction <img src="./assets/player/player.png" alt="" width="48">
 
 - **Bird Bay Lag**<img src="./assets/player/player.png" alt="" width="28"> is a game that the player controls a bird to fly through obstacles.
-- This game is ***single-player***, and the player can choose different bird skins, backgrounds, and difficulties.
-- The game has three rounds, and each round has a different game setting for increasing difficulty.
+- The game section idea's inspired by the popular game [Flappy Bird](https://thanhnien.vn/chang-trai-viet-game-flappy-bird-gay-sot-toan-cau-18584583.htm), and we've named our rendition "<span style="color: khaki;">**_Bird Bay Lag_**</span>".
+- This game is **_single-player_**, and the player can choose different bird skins, backgrounds, and difficulties.
 
-### Game Mechanics
+---
 
-**Obstacles:**
+- The game has **_three rounds_**, and each round has a different game setting for increasing difficulty => the player needs to adapt to the new environment.
+- The player can win the game if they can pass all three rounds and lose if they collide with any obstacles or the screen boundaries.
+
+---
+
+- The game is developed using the _C programming language_ and is designed to operate on a custom-built OS system.
+- The entire game development process takes approximately a month.
+
+## Game Mechanics
+
+### Obstacles:
+
 In the game, if the bird collides with any obstacles or the screen boundaries, the game ends. There are two main types of obstacles:
 
 1. **Tube or Pipe:**  
-   <img src="./assets/obstacle/tube.png" alt="" width="50" height="150">
+    The tube or pipe is a long vertical obstacle with a gap in the middle. The bird must fly through the gap to pass the obstacle. Some examples are shown below:
+
+   | <img src="./assets/obstacle/tube.png" alt="" width="70" height="200"> | <img src="./assets/obstacle/tube-up.png" alt="" width="70" height="200"> |
+   | :-------------------------------------------------------------------: | :----------------------------------------------------------------------: |
 
 2. **Balloon:**  
-Various balloons act as obstacles, some examples are shown below:
+   Various balloons act as obstacles, some examples are shown below:
 
 | <img src="./assets/obstacle/balloon-1.png" alt="" width="180" height="220"> | <img src="./assets/obstacle/balloon-2.png" alt="" width="180" height="220"> |
 | :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
 | <img src="./assets/obstacle/balloon-3.png" alt="" width="180" height="220"> | <img src="./assets/obstacle/balloon-4.png" alt="" width="180" height="220"> |
 
+---
 
-## Gameplay and Features
+### Background:
 
-### <span style="font-size: 23px; border-radius: 50%; border: 1px solid #fff;">🎮</span> Controls:
+**🌄 Choosing Your Background 🌄**
 
-- **Start Game:** `Enter` key.
+<center>
+    <img src="./assets/background/cloud.png" alt="Background Icon" width="25" height="20">
+    <strong>Make your gameplay unique by selecting a distinctive background!</strong>
+    <img src="./assets/background/sky.png" alt="Background Icon" width="25" height="20">
+</center>
+
+#### 🎨 Background Options:
+
+<table>
+    <thead>
+        <tr>
+            <th colspan="6" style="text-align:center; background-color:ivory; color: black;">Background Selections</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="center">
+                <img src="./assets/background/sky.png" alt="Sky Background" width="300" height="200">
+                <br><b>Sky Background</b>
+            </td>
+            <td align="center">
+                <img src="./assets/background/cloud.png" alt="Cloud Background" width="300" height="200">
+                <br><b>Cloud Background</b>
+            </td>
+            <td align="center">
+                <img src="./assets/background/sun.jpg" alt="Sun Background" width="300" height="200">
+                <br><b>Sun Background</b>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+---
+
+#### 🌅 Changing Backgrounds ⬅️ 🌅 ➡️:
+
+> Similar to choosing a bird skin, the player can select a background by navigating the options with the `a` or `d` keys.
+
+1. **Start with the Background Selection:**  
+   ![When in choose background](./assets/readme/choose-background.png)
+2. **Navigate Options with `a` or `d`:**
+    Use the `a` or `d` keys to move the option to the left or right, respectively.  
+3. **Press `Enter` to Confirm:**  
+   Use the `a` or `d` keys to move the option to the left or right, respectively.  
+   ![After changing background](./assets/readme/choose-background-2.png)
+
+---
+
+### Bird:
+
+**🐦 Meet the Players! 🐦**
+<center>
+    <img src="./assets/player/player.png" alt="Bird Icon" width="25">
+    <strong>Make your gameplay unique by selecting a distinctive bird skin!</strong>
+    <img src="./assets/player/player.png" alt="Bird Icon" width="25">
+</center>
+
+---
+
+> Choose your player and jump right into the action! 🚀
+
+<table>
+    <tr>
+        <th colspan="6" style="text-align:center; background-color:teal; color:white;">Player Avatars</th>
+    </tr>
+    <tr>
+        <td align="center">
+            <img src="./assets/player/player.png" alt="Player 1" width="60">
+            <br>Player 1
+        </td>
+        <td align="center">
+            <img src="./assets/player/player-2.png" alt="Player 2" width="60">
+            <br>Player 2
+        </td>
+        <td align="center">
+            <img src="./assets/player/khanh.png" alt="Player 3" width="60">
+            <br>Player 3
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <img src="./assets/player/minhnguyen.png" alt="Player 4" width="60">
+            <br>Player 4
+        </td>
+        <td align="center">
+            <img src="./assets/player/nhung.png" alt="Player 5" width="60">
+            <br>Player 5
+        </td>
+        <td align="center">
+            <img src="./assets/player/minhphan.png" alt="Player 6" width="60">
+            <br>Player 6
+        </td>
+    </tr>
+</table>
+
+--- 
+#### Steps to Choose:
+> The player can select their bird skin by navigating the options with the `a` or `d` keys.
+
+1. **Start with the Bird Skin Selection:**  
+   ![When in choose bird skin](./assets/readme/choose-bird-skin.png)
+2. **Navigate Options with `a` or `d`:**  
+    Use the `a` or `d` keys to move the option to the left or right, respectively.  
+1. **Press `Enter` to Confirm:**  
+   
+   ![After changing bird skin](./assets/readme/choose-bird-skin-2.png)
+
+---
+
+### Difficulty:
+
+**🎮 Choose Your Difficulty 🎮**
+
+<strong align="center">🚦 Choose your difficulty level! 🚦</strong>
+
+---
+
+> The player can select their difficulty level by navigating the options vertically with the `w` or `s` keys.
+
+### *Final Product:*
+
+> Here's a quick peek at how the bird skin and background look in the game:
+
+![Bird Start Game](./assets/readme/bird-start-game.png)
+
+
+**Gameplay and Features**
+
+### 🎮 Controls:
+
+- **Start Game:** After choosing game setting option, press `Enter` key.
 - **Flap Bird:** `Space` key. If not pressed, the bird will fall due to gravity.
 
-###  Scoring:
+### 💯 Scoring:
 
 - Earn **1 point** every time the bird successfully passes an obstacle.
--
+- Lose game if the bird collides with any obstacles or the screen boundaries.
+- If the player earns enough points, they can progress to the next round.
+- Each round has a different game setting for increasing difficulty => the player needs to adapt to the new environment.
 
-### Customizations:
+### ⚙️ Customizations:
 
 - **Bird Skin:** Players can choose different appearances for their bird.
 - **Background:** Players can select various backdrops for the gameplay.
 - **Difficulty:** Choose between varying game difficulties. As the player progresses through the game's three rounds, they'll encounter different obstacles and increased challenges.
 
-### Post-Game:
+### 📈 Post-Game:
 
 - After all three rounds, players are directed to a **Results Page** displaying their final score.
-- Option to replay the game or view individual round scores.
+- The results page also appears if the player loses.
+- Press any button to back to main menu.
 
-### Instructions:
+### 📒 Instructions:
 
-- A comprehensive **Help Menu** within the game offers guidance and clarifies game mechanics.
+**1. Main Menu**
+
+- The main menu displays the game's title and three options:
+  - **Start Game:** Begin playing the game.
+  - **Help:** View the game's instructions and clarifies game mechanics.
+  - **Exit:** Exit the game.
+- Use the `w` and `s` keys to navigate the menu.
+- Press `Enter` to select an option.
+
+**2. Help Page**
+
+- The help page displays the game's instructions and clarifies game mechanics.
+- Press `Enter` to return to the main menu.
+
+**3. Start Game Option**
+
+- The start game option allows the player to customize their game settings before beginning.
+- The player can choose their bird skin, background, and difficulty.
+- Use the `a` and `d` keys to navigate the options or `w` and `s` keys to scroll through the options.
+- Press `Enter` to select an option.
+- After selecting all three options, the game will begin.
+
+**_Details of the game: [here](#the-team-os-system)_**
 
 # Instruction
 
