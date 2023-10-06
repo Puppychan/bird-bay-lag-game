@@ -4,7 +4,7 @@
 
 **Group Odyssey** 🚀 - Group 13 OS - Game Adventure  
 
-_Code Quest: **EEET2490_G13_GroupProject**_
+_Code Quest: **G13_GroupProject**_
 
 # 🚀 Table of Adventures 🚀
 
@@ -30,21 +30,16 @@ _Code Quest: **EEET2490_G13_GroupProject**_
   - 🍿 [**Cinematic Experience**](#🎥-displaying-video)
   - 📜 [**Narratives & Text**](#📝-displaying-text)
 - 📚 [**Installation**](#installation)
-  - 📋 [**Adventurer's Checklist**](#📋-prerequisites)
-    - 🌐 [**Universal Guides**](#general)
-      - 💻 [**Windows Walkthrough**](#windows---detailed)
-      - 🍎 [**MacOS Methods**](#macos)
-    - 📘 [**Step-by-Step Manuals**](#detailed-setup)
-      - 🎥 [**QUEMU Quest**](#computer-intention-to-run-on-quemu)
-      - 🥧 [**Raspberry Pi4 Adventure**](#computer-intention-to-run-on-rpi4)
-  - ⬇️ [**Cloning Magic Scrolls**](#clone-project)
-  - 🎥 [**QUEMU Quests**](#running-on-quemu)
-    - 🛡 [**The Team's OS Treasury**](#the-team-os-system)
-  - 🥧 [**Embarking on RPI4**](#running-on-rpi4)
-  - ❌ [**Cautions & Warnings**](#please-dont)
-    - ⚠️ [**RPI4 Relics & Runes**](#computer-having-intention-to-run-on-rpi4)
-  - 🧙‍♂️ [**Other Magics**](#others)
-    - ⛔ [**Challenges & Barriers**](#🚫-not-be-able-to-run)
+  - 🌌 [**Environment Setup**](#1️⃣-environment-setup)
+    - 📋 [**Adventurer's Checklist**](#📋-prerequisites)
+    - 🪄 [**Additional Tools**](#🔩-additional-tools)
+    - ⬇️ [**Clone Project**](#clone-project)
+  - 🔏 [**Project Execution**](#2️⃣-project-execution)
+    - 🎥 [**QUEMU Quest**](#computer-intention-to-run-on-quemu)
+    - 🍇 [**Raspberry Pi4 Adventure**](#computer-intention-to-run-on-rpi4)
+  - 📜 [**Important Notes**](#3️⃣-important-notes)
+      - ❌ [**Cautions & Warnings**](#❌-cautionary-points)
+      - 📇 [**Miscellaneous Notes**](#📌-miscellaneous-notes)
 - 🔧 [**For Enchanters & Developers**](#for-developers)
   - 🎞 [**Extracting Visual Elixirs**](#extract-video)
 - 💌 [**Contact the Adventurers**](#contact-us)
@@ -114,6 +109,49 @@ We've utilized a range of cutting-edge technologies and tools to bring the "***B
 
 - The game is developed using the _C programming language_ and is designed to operate on a custom-built OS system.
 - The entire game development process takes approximately a month.
+
+## 🗺️ Gampelay Map
+The game consists of three rounds, each with its unique environment and challenges. 
+
+The flowchart below showcases the game's map and the player's journey through the three rounds.
+
+  ![Game Map](./assets/readme/game-map.png)
+  
+  **Before Starting Playing**
+  - Setting game based on player's choice:
+    - **Bird Skin:** Player can choose different bird skins.
+    - **Background:** Player can choose different backgrounds.
+    - **Difficulty:** Player can choose different difficulties.
+  - Initialize game based on current round:
+    - **Round 1:** The bird flies through the sky with clouds and balloons.
+    - **Round 2:** The bird flies through the sky with clouds and pipes.
+    - **Round 3:** The bird flies through the sky with clouds, pipes, and balloons.
+    > Current round is round 1
+  **Playing**
+  - Check if game is paused:
+    - If game is paused, wait for player to press `Space` to start playing.
+    - If game is not paused, continue playing.
+  - Set waiting time between each frame:
+    - Waiting time is based on current difficulty and round.
+  - Check if user input:
+    - If user input, check if it is `Space`:
+      - If it is `Space`, the bird will flap.
+      - If it is not `Space`, the bird will not flap.
+    - If user does not input, the bird will not flap.
+  - Update:
+    - Bird's position:
+      - If the bird flaps, the bird will fly up.
+      - If the bird does not flap, the bird will fall down.
+    - Obstacles' position:
+      - If the obstacle is a pipe, the pipe will move to the left.
+      - If the obstacle is a balloon, the balloon will move to the left.
+    - Score:
+      - If the bird passes an obstacle, the score will increase by 1.
+  - Validate game state:
+    - If the bird collides with any obstacles or the screen boundaries, the game ends.
+    - If the bird passes all obstacles, the game continues to the next round. \
+      **▶️ ->** Reset game based on next round.
+    - If the bird passes all obstacles in round 3, the game ends. 
 
 ## 🎮 Game Mechanics
 
