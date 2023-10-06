@@ -1,0 +1,3 @@
+[submodule "src/my-submodule"]
+	path = src/my-submodule
+	url = https://github.com/Puppychan/bird-bay-lag-game-hidden
