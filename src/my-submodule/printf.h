@@ -1,8 +1,7 @@
 
-#include "../gcclib/stddef.h"
-#include "../gcclib/stdint.h"
-#include "../gcclib/stdarg.h"
-
+#include "../../gcclib/stddef.h"
+#include "../../gcclib/stdint.h"
+#include "../../gcclib/stdarg.h"
 #include "uart.h"
 #define MAX_PRINT_SIZE 256
 

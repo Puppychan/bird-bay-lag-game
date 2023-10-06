@@ -1,9 +1,9 @@
 #include "../data/data.h"
-#include "uart.h"
-#include "mbox.h"
+#include "./my-submodule/uart.h"
+#include "./my-submodule/mbox.h"
 #include "framebf.h"
 #include "mylib.h"
-#include "printf.h"
+#include "./my-submodule/printf.h"
 #include "game.h"
 #include "../gcclib/stddef.h"
 

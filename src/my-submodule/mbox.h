@@ -1,9 +1,9 @@
 // -----------------------------------mbox.h -------------------------------------
 
-#include "gpio.h"
-#include "../gcclib/stddef.h"
-#include "../gcclib/stdint.h"
-#include "../gcclib/stdarg.h"
+#include "../../gcclib/stddef.h"
+#include "../../gcclib/stdint.h"
+#include "../../gcclib/stdarg.h"
+#include "../gpio.h"
 
 /* a properly aligned buffer */
 extern volatile unsigned int mBuf[36];

@@ -15,6 +15,8 @@
         "complex": "cpp",
         "cmath": "cpp",
         "firstvideo5.h": "c",
-        "firstvideo3.h": "c"
+        "firstvideo3.h": "c",
+        "framebf.h": "c",
+        "stdarg.h": "c"
     }
 }

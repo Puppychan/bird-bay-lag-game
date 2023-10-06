@@ -1,4 +1,4 @@
-#include "gpio.h"
+#include "../gpio.h"
 
 // -----------------------------------uart.h -------------------------------------
 /* Auxilary mini UART (UART1) registers */

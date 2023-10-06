@@ -1,10 +1,10 @@
 // ----------------------------------- framebf.c -------------------------------------
 #include "framebf.h"
-#include "mbox.h"
-#include "uart.h"
+#include "./my-submodule/mbox.h"
+#include "./my-submodule/uart.h"
 #include "../data/fontAutolova.h"
 #include "mylib.h"
-#include "printf.h"
+#include "./my-submodule/printf.h"
 
 
 #define MAX_WIDTH 1080   // maximum expected width
