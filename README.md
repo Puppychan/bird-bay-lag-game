@@ -13,24 +13,24 @@ _Code Quest: **EEET2490_G13_GroupProject**_
 - 💡 [**Diving In: Introduction**](#introduction)
   - 🌟 [**Highlights & Features**](#features-at-a-glance)
 - 🛠 [**Crafted Tools**](#built-with)
-- 🎮 [**The Game's Lore 🐦**](#game-content)
-  - ⚔ [**Gameplay Mechanics**](#game-mechanics)
-    - 🚧 [**Challenges & Obstacles**](#obstacles)
-    - ⚙️ [**Tailoring Your Experience**](#customizations)
-    - 🌄 [**Backdrop of Adventure**](#background)
-    - 🐤 [**Choosing Your Hero**](#bird)
-    - 🔥 [**Modulating Challenge**](#difficulty)
+- 🎮 [**The Game's Lore 🐦**](#🎮-game-content-🐦)
+  - ⚔ [**Gameplay Mechanics**](#🎮-game-mechanics)
+    - 🚧 [**Challenges & Obstacles**](#📛-obstacles-📛)
+    - ⚙️ [**Tailoring Your Experience**](#⚙️-customizations)
+    - 🌄 [**Backdrop of Adventure**](#🌄-background-🌄)
+    - 🐤 [**Choosing Your Hero**](#🐦-bird-🐤)
+    - 🔥 [**Modulating Challenge**](#🎮-difficulty-🎮)
     - 🎞 [**The Visual Epic**](#final-product)
-    - 🕹 [**Mastering Controls**](#controls)
-    - 🏆 [**Scoring & Achievements**](#scoring)
-    - 📊 [**After the Game**](#post-game)
-    - 📖 [**Instructions & Guide**](#instructions)
+    - 🕹 [**Mastering Controls**](#🕹️-controls)
+    - 🏆 [**Scoring & Achievements**](#💯-scoring)
+    - 📊 [**After the Game**](#📈-post-game)
+    - 📖 [**Instructions & Guide**](#📒-instructions)
 - 🌌 [**Beyond the Game**](#other-content)
   - 🎨 [**Visual Arts: Images**](#displaying-images)
-  - 🍿 [**Cinematic Experience**](#displaying-video)
-  - 📜 [**Narratives & Text**](#displaying-text)
+  - 🍿 [**Cinematic Experience**](#🎥-displaying-video)
+  - 📜 [**Narratives & Text**](#📝-displaying-text)
 - 📚 [**Installation**](#installation)
-  - 📋 [**Adventurer's Checklist**](#prerequisites)
+  - 📋 [**Adventurer's Checklist**](#📋-prerequisites)
     - 🌐 [**Universal Guides**](#general)
       - 💻 [**Windows Walkthrough**](#windows---detailed)
       - 🍎 [**MacOS Methods**](#macos)
@@ -44,7 +44,7 @@ _Code Quest: **EEET2490_G13_GroupProject**_
   - ❌ [**Cautions & Warnings**](#please-dont)
     - ⚠️ [**RPI4 Relics & Runes**](#computer-having-intention-to-run-on-rpi4)
   - 🧙‍♂️ [**Other Magics**](#others)
-    - ⛔ [**Challenges & Barriers**](#not-be-able-to-run)
+    - ⛔ [**Challenges & Barriers**](#🚫-not-be-able-to-run)
 - 🔧 [**For Enchanters & Developers**](#for-developers)
   - 🎞 [**Extracting Visual Elixirs**](#extract-video)
 - 💌 [**Contact the Adventurers**](#contact-us)
@@ -296,7 +296,7 @@ There are two main types of obstacles:
 
 **Gameplay and Features**
 
-### 🎮 Controls:
+### 🕹️ Controls:
 
 - **Start Game:** After choosing game setting option, press `Enter` key.
 - **Flap Bird:** `Space` key. If not pressed, the bird will fall due to gravity.
@@ -412,24 +412,29 @@ There are two main types of obstacles:
 # Installation
 
 The instruction includes 3 main parts:
+1. [Environment Setup](#1️⃣-environment-setup)
+    - [Prerequisites](#📋-prerequisites): Essential tools and libraries to get started.
+    - [Additional Tools](#🔩-additional-tools): Additional tools for each use cases, and OS system.
+    - [Clone Project](#clone-project): Get the latest version of the project.
 
-- Setting up the development environment:
-  - [Prerequisites](#prerequisites)
-  - [Clone project](#clone-project)
-- Running the project:
-  - [Running on QUEMU](#running-on-quemu)
-  - [Running on RPI4](#running-on-rpi4)
-- Some additional notes:
-  - [Please DON'T](#please-dont)
-  - [Others](#others)
+2. [Project Execution](#2️⃣-project-execution):
+    - [Gameplay on QUEMU](#🎉-gameplay-on-quemu): Instructions to play the game on QUEMU.
+    - [Gameplay on RPI4](#🍓-gameplay-on-rpi4): Dive into gameplay on Raspberry Pi 4.
 
-## Prerequisites
+3. [Important Notes](#3️⃣-important-notes)
+    - [Cautionary Points](#❌-cautionary-points): Things to avoid for a seamless experience.
+    - [Miscellaneous Notes](#📌-miscellaneous-notes): Additional information and helpful tips.
+
+## 1️⃣ Environment Setup
+### 📋 Prerequisites
 
 - **Git**: [Git Client](https://git-scm.com/downloads) installed.
 - **Editor**: Any IDE or text editor (Example: Visual Studio Code).
 
-### General
-
+### 🔩 Additional Tools
+<div align="center">
+  <h4>🔆 General 🔆</h4>
+</div>
 #### Windows - [Detailed](./assets/readme/setup-development-environment-win.pdf)
 
 - **GCC Toolchain**: [GCC tool chain](https://github.com/◊niXman/mingw-builds-binaries/releases) with **_x86_64 release-posix-seh-ucrt-rt_** latest version.
@@ -463,8 +468,10 @@ The instruction includes 3 main parts:
 | **ARM GCC Toolchain (64-bit)** | [64 Bit GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-a)                                                               | `bash brew tap ArmMbed/homebrew-formulae && brew install arm-none-eabi-gcc ` |
 | **Make Utility**               | [GNU Make](https://www.gnu.org/software/make/)                                                                                                 | `brew install make`                                                          |
 | **Detailed Setup**             | [Setup Details](./assets/readme/setup-development-environment-win.pdf)                                                                         | -                                                                            |
-
-### Detailed Setup
+---
+<div align="center">
+  <h4>🔆 Detailed 🔆</h4>
+</div>
 
 #### Computer intention to run on QUEMU
 
@@ -476,29 +483,30 @@ The instruction includes 3 main parts:
 
 - Please follow step by step instruction in this section [here](#running-on-rpi4)
 
-## Clone project
+### Clone project
 
 - Open terminal and navigate to the folder you want to clone the project
 - Clone the project with this command on the terminal:
   ```shell
     git clone https://github.com/Puppychan/bird-bay-lag-game
   ```
-
-## Running on QUEMU
+---
+## 2️⃣ Project Execution
+### 🎉 Gameplay on QUEMU
 
 - Open terminal or console in the root
 - Run `make cleanall-run` - please wait for a few minutes - the video frames make the compiling time a bit long.
 - If this run is not your first run, and you did not modify anything in `data` folder, or you did not delete or modify an `object` folder -> just run `make test` to save your time
 - When there is a black screen - QUEMU - OS system appearing:
 
-### The Team OS System
+#### OS System
 
 - Type **help** in terminal to see the instruction.
-  - Type `displayImage`: to view list of images, and type `w` or `s` to scroll the image vertically
-  - Type `displayVideo`: to view a video generating using a list of frames written in hexadecimals, a reason why the compiling time is so long
-  - Type `displayName`: to view list of all members' name with rainbow colors.
-  - Type `\n` - new line - return keyboard to exist the current command.
-  - Type `playGame`: to open a `Bird Bay Lag` game. In game:
+- Type `displayImage`: to view list of images, and type `w` or `s` to scroll the image vertically
+- Type `displayVideo`: to view a video generating using a list of frames written in hexadecimals, a reason why the compiling time is so long
+- Type `displayName`: to view list of all members' name with rainbow colors.
+- Type `\n` - new line - return keyboard to exist the current command.
+- Type `playGame`: to open a `Bird Bay Lag` game. In game:
     - To control the game, ensure you are still typing on the terminal/ console.
     - In **Menu**:
       - Type `s` to move down the selection and choose suitable option in Menu
@@ -519,7 +527,7 @@ The instruction includes 3 main parts:
       - There are 3 **_rounds_**, to start playing _next round_, press `\n`
     - After _loosing_ or _winning_, there is a result page displaying final scores. Pressing any key to back to main Menu.
 
-## Running on RPI4
+### 🍓 Gameplay on RPI4
 
 - In `gpio.h`: change line `#define RBP3 //for emulation with QEMU` to `#define RBP4`
 - Run `make cleanall-run` if you haven't run this project before, or if you modify anything in _data_ folder, or you delete or modify in _object_ folder. Or you only need to run `make test` if you modify code excepting `data` folder.
@@ -528,22 +536,25 @@ The instruction includes 3 main parts:
 - To run the OS system, the TeraTerm now is the console/ terminal when the user runs on QUEMU.
 - Refer to [The Team OS System](#the-team-os-system) to see how to use the team OS system and play game application inside the system.
 
-## Please DON'T
+--- 
+## 3️⃣ Important Notes
+### ❌ Cautionary Points:
 
-### Computer having intention to run on RPI4
+**Computer having intention to run on RPI4**
 
 - Zoom the TeraTerm before or during the running
 - Disconnect TeraTerm and then connect again -> Nothing will display
   => If you want to run the program on RPi4 again, make sure follow [these steps](#running-on-rpi4) instead of disconnecting then connecting the TeraTerm again.
 
-## Others
+### 📌 Miscellaneous Notes:
+**Others**
 
 - Things available in this OS system (because the team concentrates on displaying images, using font, and developing game this time):
   - Delete
   - Simple Autocompletion (only suggest with simple features) by pressing `tab`
   - Enter to generate command
 
-### Not Be Able To Run
+**🚫 Not Be Able To Run**
 
 **_NOTE_**: There is no difference in running Windows, or Mac OS systems, because the Makefile handles different OS system cases. By testing on both the team members' MAC and Windows, you also do not need to create **_object_** folder by yourself. However, if you still cannot run by following these below steps [here](#instruction):
 
