@@ -1,4 +1,4 @@
-#include "uart.h"
+#include "./my-submodule/uart.h"
 #include "../gcclib/stddef.h"
 #include "../gcclib/stdint.h"
 

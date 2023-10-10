@@ -36,25 +36,25 @@ kernel8.img: $(BUILD_DIR)/start.o $(OFILES)
 clean:
 ifeq ($(OS),Windows_NT)
 	del /Q *.img .\object\kernel8.elf
-	for %%f in (object\*.o) do if not "%%f"=="object\data.o" $(WIN_EXCEPTIONS) del /Q "%%f"
+	for %%f in (object\*.o) do if not "%%f"=="object\data.o" del /Q "%%f"
 else
 	rm -f *.img $(BUILD_DIR)/kernel8.elf
-	find $(BUILD_DIR) -type f ! -name 'data.o' $(MAC_EXCEPTIONS) -delete
+	find $(BUILD_DIR) -type f ! -name 'data.o' -delete
 endif
 
 cleanall:
 ifeq ($(OS),Windows_NT)
-# if exist .\object (del /Q .\object\kernel8.elf .\object\*.o)
-	if exist .\object (del /Q .\object\kernel8.elf)
-	for %%f in (object\*.o) do $(WIN_EXCEPTIONS) del /Q "%%f"
+	if exist .\object (del /Q .\object\kernel8.elf .\object\*.o)
+# if exist .\object (del /Q .\object\kernel8.elf)
+# for %%f in (object\*.o) do $(WIN_EXCEPTIONS) del /Q "%%f"
 
 else
-# rm -f *.img $(BUILD_DIR)/kernel8.elf $(BUILD_DIR)/*.o
+	rm -f *.img $(BUILD_DIR)/kernel8.elf $(BUILD_DIR)/*.o
 # -d checks if directory exists, `; \ ` is used to continue on next line
-	rm -f *.img $(BUILD_DIR)/kernel8.elf
-	if [ -d "$(BUILD_DIR)" ]; then \
-		find $(BUILD_DIR) -type f $(MAC_EXCEPTIONS) -delete; \
-	fi
+# rm -f *.img $(BUILD_DIR)/kernel8.elf
+# if [ -d "$(BUILD_DIR)" ]; then \
+# 	find $(BUILD_DIR) -type f $(MAC_EXCEPTIONS) -delete; \
+# fi
 endif
 
 run:

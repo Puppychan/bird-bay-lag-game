@@ -1,6 +1,6 @@
 #include "../data/data.h"
 #include "framebf.h"
-#include "uart.h"
+#include "./my-submodule/uart.h"
 #include "mylib.h"
 
 #define DEFAULT_BACKGROUND 0
