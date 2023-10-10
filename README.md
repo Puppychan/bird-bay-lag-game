@@ -5,6 +5,8 @@
 **Group Odyssey** 🚀 - Group 13 OS - Game Adventure  
 
 _Code Quest: **G13_GroupProject**_
+- Submodule Repository: [bird-bay-lag-game-hidden](https://github.com/Puppychan/bird-bay-lag-game-hidden)
+  If you want to see the source code, please contact us [here](#contact-us).
 
 # 🚀 Table of Adventures 🚀
 
